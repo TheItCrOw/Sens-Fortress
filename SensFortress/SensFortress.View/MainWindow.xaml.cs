@@ -23,6 +23,8 @@ namespace SensFortress.View
         public MainWindow()
         {
             InitializeComponent();
+            // For some reason, VS is firing an exceptionn when trying to do this in XAML...
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
     }
 }

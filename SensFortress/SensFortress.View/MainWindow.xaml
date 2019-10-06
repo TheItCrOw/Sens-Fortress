@@ -5,8 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SensFortress.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="750" Width="800"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="White" BorderThickness="0 0 0 1">
+            <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Entering Sen's Fortress" />
+        </Border>
+
+        <!--Start Button-->
+        <Button Style="{StaticResource MaterialDesignFloatingActionDarkButton}" ToolTip="Enter" Grid.Row="1" Height="150" Width="150">
+            <materialDesign:PackIcon Kind="Gate" Height="75" Width="75" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Button>
+        
+        <!--This is a transition someday-->
+        <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
+            <materialDesign:TransitionerSlide>
+                <materialDesign:TransitionerSlide.BackwardWipe>
+                    <materialDesign:CircleWipe />
+                </materialDesign:TransitionerSlide.BackwardWipe>
+                <materialDesign:TransitionerSlide.ForwardWipe>
+                    <materialDesign:SlideWipe Direction="Right"/>
+                </materialDesign:TransitionerSlide.ForwardWipe>
+            </materialDesign:TransitionerSlide>
+
+        </materialDesign:Transitioner>
 
     </Grid>
 </Window>
