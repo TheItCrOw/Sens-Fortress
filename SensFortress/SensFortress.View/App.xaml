@@ -8,7 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.dark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.teal.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.grey.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -17,6 +17,13 @@
                 <Setter Property="FontSize" Value="65" />
                 <Setter Property="FontWeight" Value="Regular" />
                 <Setter Property="Margin" Value="80"/>
+            </Style>
+
+            <!--A Button for going back in a menu-->
+            <Style TargetType="{x:Type Button}" x:Key="GoBackButtonStyle" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
+                <Setter Property="Height" Value="35" />
+                <Setter Property="Width" Value="35" />
+                <Setter Property="ToolTip" Value="Go back"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>
