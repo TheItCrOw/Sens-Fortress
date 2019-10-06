@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensFortress.View", "SensFortress.View\SensFortress.View.csproj", "{77539ADE-0B79-4C9C-A0F0-1283A63BD74F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77539ADE-0B79-4C9C-A0F0-1283A63BD74F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77539ADE-0B79-4C9C-A0F0-1283A63BD74F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77539ADE-0B79-4C9C-A0F0-1283A63BD74F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77539ADE-0B79-4C9C-A0F0-1283A63BD74F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0351DD05-1775-448F-9CD3-09553C6EC160}
+	EndGlobalSection
+EndGlobal
