@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <RootNamespace>Sen_s_Fortress</RootNamespace>
+    <RootNamespace>Sen_s_Fortress.View</RootNamespace>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

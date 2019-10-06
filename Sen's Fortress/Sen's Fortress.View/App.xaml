@@ -1,7 +1,7 @@
-﻿<Application x:Class="Sen_s_Fortress.App"
+﻿<Application x:Class="Sen_s_Fortress.View.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Sen_s_Fortress"
+             xmlns:local="clr-namespace:Sen_s_Fortress.View"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

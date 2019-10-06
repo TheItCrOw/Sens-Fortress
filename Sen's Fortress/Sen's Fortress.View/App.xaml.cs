@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Sen_s_Fortress
+namespace Sen_s_Fortress.View
 {
     /// <summary>
     /// Interaction logic for App.xaml
