@@ -23,11 +23,9 @@
         </Grid.RowDefinitions>
 
         <!--Header Title-->
-        <Border BorderThickness="2 2 2 0" BorderBrush="Gray">
-            <materialDesign:Card>
-                <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Entering Sen's Fortress"/>
-            </materialDesign:Card>
-        </Border>
+        <materialDesign:Card>
+            <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Entering Sen's Fortress"/>
+        </materialDesign:Card>
 
         <!--Go Back Button-->
         <Button Style="{StaticResource GoBackButtonStyle}" Grid.Row="2" HorizontalAlignment="Left" Margin="20 -20 0 0"

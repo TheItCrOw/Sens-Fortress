@@ -19,12 +19,29 @@
                 <Setter Property="Margin" Value="80"/>
             </Style>
 
+            <!--A Textblock for Information text-->
+            <Style TargetType="{x:Type TextBlock}" x:Key="InformationTextblockStyle">
+                <Setter Property="FontSize" Value="25" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+            </Style>
+
+            <!--A Textblock for small text-->
+            <Style TargetType="{x:Type TextBlock}" x:Key="SmallTextblockStyle">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+            </Style>
+
             <!--A Button for going back in a menu-->
             <Style TargetType="{x:Type Button}" x:Key="GoBackButtonStyle" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
                 <Setter Property="Height" Value="35" />
                 <Setter Property="Width" Value="35" />
                 <Setter Property="ToolTip" Value="Go back"/>
             </Style>
+            
         </ResourceDictionary>
     </Application.Resources>
     

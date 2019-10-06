@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SensFortress.View.Opening_Dialogs.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1100"
+        WindowState="Maximized"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"

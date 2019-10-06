@@ -24,6 +24,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
         <!--Header Title-->
@@ -31,15 +32,17 @@
             <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Welcome to Sen's Fortress."/>
         </materialDesign:Card>
 
-
         <!--Start Button-->
         <Button Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="Open the gates:" Height="150" Width="150" Grid.RowSpan="3" Grid.Row="0" 
                 Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Cursor="Hand">
             <materialDesign:PackIcon Kind="Gate" Height="75" Width="75" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Button>
-        
+
         <!--Explanation Text-->
-            <TextBlock Text="'An unbreakable fortress, that keeps your personal information save.'" Margin="20" FontSize="25" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        
+        <TextBlock Text="A reliable and secure program, that keeps your personal information save." Grid.Row="2" Style="{StaticResource InformationTextblockStyle}"/>
+
+        <!--Current Version Placeholder-->
+        <TextBlock Grid.Row="3" Text="Current Version Placeholder" Style="{StaticResource SmallTextblockStyle}"/>
+
     </Grid>
 </UserControl>
