@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SensFortress.Utility\SensFortress.Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\Fortress-Bridge.jpg" />
   </ItemGroup>
 

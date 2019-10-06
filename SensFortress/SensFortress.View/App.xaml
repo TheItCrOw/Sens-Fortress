@@ -17,6 +17,7 @@
                 <Setter Property="FontSize" Value="65" />
                 <Setter Property="FontWeight" Value="Regular" />
                 <Setter Property="Margin" Value="80"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
 
             <!--A Textblock for Information text-->
@@ -24,7 +25,9 @@
                 <Setter Property="FontSize" Value="25" />
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
                 <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+                <Setter Property="TextAlignment" Value="Center"/>
             </Style>
 
             <!--A Textblock for small text-->
@@ -33,6 +36,7 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
 
             <!--A Button for going back in a menu-->

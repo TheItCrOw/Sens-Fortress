@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Opening_Dialogs.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"           
+             d:DesignHeight="900" d:DesignWidth="1100"           
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -26,6 +26,66 @@
         <materialDesign:Card>
             <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Entering Sen's Fortress"/>
         </materialDesign:Card>
+
+        <!--Speak friend...-->
+        <Border Grid.Row="1" BorderThickness="0 2 2 0" BorderBrush="Black">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Speak friend and enter." TextWrapping="Wrap"/>
+
+                <!--Login Card-->
+                <materialDesign:Flipper HorizontalAlignment="Center">
+                    <materialDesign:Flipper.FrontContent>
+                        <Grid Height="500" Width="400">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
+                                <materialDesign:PackIcon Kind="AccountCircle" Height="300" Width="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                            </materialDesign:ColorZone>
+                            <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" 
+                                        Margin="0 4 0 0" Content="Login" BorderBrush="White" BorderThickness="1" FontSize="18"/>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Flipper.FrontContent>
+                    <materialDesign:Flipper.BackContent>
+                        <Grid Height="500" Width="400">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <materialDesign:ColorZone Mode="Accent" Padding="6">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                        <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                    </Button>
+                                    <TextBlock Margin="8 0 0 0" VerticalAlignment="Center" Text="Edit User"/>
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                            <Grid Grid.Row="1" Margin="0 6 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="172">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBox materialDesign:HintAssist.Hint="First name" materialDesign:HintAssist.IsFloating="True" Margin="0 12 0 0" Text="James"/>
+                                <TextBox Grid.Row="1" materialDesign:HintAssist.Hint="Last name" materialDesign:HintAssist.IsFloating="True" Margin="0 12 0 0" Text="Wohamn"/>
+                                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
+                                    <TextBlock VerticalAlignment="Center" Text="E-Mail"/>
+                                    <ToggleButton Margin="8 0 0 0"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
+                                    <TextBlock VerticalAlignment="Center" Text="Telephone"/>
+                                    <ToggleButton Margin="8 0 0 0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </materialDesign:Flipper.BackContent>
+                </materialDesign:Flipper>
+            </StackPanel>
+        </Border>
 
         <!--Go Back Button-->
         <Button Style="{StaticResource GoBackButtonStyle}" Grid.Row="2" HorizontalAlignment="Left" Margin="20 -20 0 0"

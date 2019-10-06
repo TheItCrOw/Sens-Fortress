@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SensFortress.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,9 +23,12 @@ namespace SensFortress.View
     {
         public MainWindow()
         {
+            LogHelper.Log(LogType.Info, "Building fortress...");
             InitializeComponent();
             // For some reason, VS is firing an exceptionn when trying to do this in XAML...
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            LogHelper.Log(LogType.Info, "Sen's fortress has been successfully built!");
         }
     }
 }
