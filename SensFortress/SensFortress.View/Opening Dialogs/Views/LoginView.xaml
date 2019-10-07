@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="SensFortress.View.Opening_Dialogs.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SensFortress.View.Opening_Dialogs.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="900" d:DesignWidth="1100"           
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <Grid>
+        <!--Background Image-->
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Opening-Gate.jpg"/>
+        </Grid.Background>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <!--Header Title-->
+        <materialDesign:Card>
+            <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Speak friend and enter."/>
+        </materialDesign:Card>
+
+        <!--Identify yourself...-->
+        <Border Grid.Row="1" BorderThickness="0 2 2 0" BorderBrush="Black">
+            <StackPanel VerticalAlignment="Top">
+                
+                <!--Identify yourself Card-->
+                <materialDesign:Flipper HorizontalAlignment="Center">
+                    <materialDesign:Flipper.FrontContent>
+                        <Grid Height="500" Width="400">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <!--Image-->
+                            <materialDesign:PackIcon Kind="SecurityAccount" Height="300" Width="300" Foreground="GhostWhite" HorizontalAlignment="Center" />
+                            <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                <!--Login Button-->
+                                <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                                        Content="Identify yourself" BorderBrush="Black" BorderThickness="1" FontSize="18" Foreground="Black" FontFamily="Microsoft YaHei Light"/>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Flipper.FrontContent>
+                    <materialDesign:Flipper.BackContent>
+                        <Grid Height="500" Width="400">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <!--Back Button and Who knocks?-->
+                            <materialDesign:ColorZone Mode="Dark" Padding="10">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                        <materialDesign:PackIcon Kind="ArrowLeftBold" HorizontalAlignment="Stretch"/>
+                                    </Button>
+                                    <TextBlock Margin="8 0 0 0" Style="{StaticResource InformationTextblockStyle}" VerticalAlignment="Center" Text="Who knocks?"/>
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                            <!--Enter Data Grid-->
+                            <materialDesign:Card Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                <Grid Margin="15">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <TextBox materialDesign:HintAssist.Hint="Username" materialDesign:HintAssist.IsFloating="True"
+                                         Margin="0 12 0 0" Text="" FontSize="20"/>
+                                    <TextBox Grid.Row="1" materialDesign:HintAssist.Hint="Password" materialDesign:HintAssist.IsFloating="True" Margin="0 12 0 0" Text="" FontSize="20"/>
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
+                                        <TextBlock VerticalAlignment="Center" Text="Remember me."/>
+                                        <ToggleButton Margin="8 0 0 0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </materialDesign:Card>
+
+                        </Grid>
+                    </materialDesign:Flipper.BackContent>
+                </materialDesign:Flipper>
+            </StackPanel>
+        </Border>
+
+        <!--Go Back Button-->
+        <Button Style="{StaticResource GoBackButtonStyle}" Grid.Row="2" HorizontalAlignment="Left" Margin="20 -20 0 0"
+                Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Cursor="Hand">
+            <materialDesign:PackIcon Kind="ArrowBack" Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Button>
+
+
+    </Grid>
+</UserControl>
