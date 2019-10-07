@@ -1,0 +1,16 @@
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\SensFortress.Models_MarkupCompile.cache
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\SensFortress.Models_MarkupCompile.lref
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\bin\Debug\netcoreapp3.0\SensFortress.Models.exe
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\bin\Debug\netcoreapp3.0\SensFortress.Models.deps.json
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\bin\Debug\netcoreapp3.0\SensFortress.Models.runtimeconfig.json
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\bin\Debug\netcoreapp3.0\SensFortress.Models.runtimeconfig.dev.json
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\bin\Debug\netcoreapp3.0\SensFortress.Models.dll
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\bin\Debug\netcoreapp3.0\SensFortress.Models.pdb
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\MainWindow.g.cs
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\App.g.cs
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\MainWindow.baml
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\SensFortress.Models.g.resources
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\SensFortress.Models.AssemblyInfoInputs.cache
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\SensFortress.Models.AssemblyInfo.cs
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\SensFortress.Models.dll
+E:\WPF Projects\Sens-Fortress\SensFortress\SensFortress.Models\obj\Debug\netcoreapp3.0\SensFortress.Models.pdb

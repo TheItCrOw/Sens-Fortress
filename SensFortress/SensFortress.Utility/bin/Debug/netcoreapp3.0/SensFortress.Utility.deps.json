@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "SensFortress.Utility/1.0.0": {
+        "runtime": {
+          "SensFortress.Utility.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SensFortress.Utility/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
