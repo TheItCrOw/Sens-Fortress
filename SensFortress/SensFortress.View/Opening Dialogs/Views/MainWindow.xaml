@@ -19,17 +19,25 @@
         <!--This is a transition that switches between: StartView and LoginView-->
         <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
             <Grid>
+                <!--Start View-->
                 <local:StartView/>
             </Grid>
+            
+            <!--Transition LoginView-->
             <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
                 <materialDesign:TransitionerSlide.BackwardWipe>
                     <materialDesign:CircleWipe />
                 </materialDesign:TransitionerSlide.BackwardWipe>
-                <materialDesign:TransitionerSlide.ForwardWipe>
-                    <materialDesign:SlideWipe Direction="Right"/>
-                </materialDesign:TransitionerSlide.ForwardWipe>
-            <local:LoginView/>
-        </materialDesign:TransitionerSlide>
+                <local:LoginView/>
+            </materialDesign:TransitionerSlide>
+            
+            <!--Transition RegisterView-->
+            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                <materialDesign:TransitionerSlide.BackwardWipe>
+                    <materialDesign:CircleWipe />
+                </materialDesign:TransitionerSlide.BackwardWipe>
+                <local:RegisterView/>
+            </materialDesign:TransitionerSlide>
 
         </materialDesign:Transitioner>
 
