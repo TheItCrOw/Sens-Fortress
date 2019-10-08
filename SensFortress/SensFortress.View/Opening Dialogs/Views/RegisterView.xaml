@@ -18,7 +18,7 @@
     <Grid>
         <!--Background Image-->
         <!--<Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Images/Fortress-Register-Room.png"/>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Worldmap.jpg"/>
         </Grid.Background>-->
 
         <Grid.RowDefinitions>
@@ -33,18 +33,51 @@
         </materialDesign:Card>
 
         <!--Main Content-->
+        
         <ScrollViewer Grid.Row="1" Margin="20" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="500"/>
                     <ColumnDefinition Width="500"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="850"/>
                 </Grid.ColumnDefinitions>
 
                 <!--Left side explanation text-->
-                <ScrollViewer Margin="10" VerticalScrollBarVisibility="Visible">
+                <ScrollViewer Margin="10 10 40 10" VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="0 0 20 0">
-                        <TextBlock Margin="0 0 0 15" Style="{StaticResource InformationTextblockStyle}" Text="It is very important that you read this before entering Sen's Fortress."/>
+                        <TextBlock Margin="0 0 0 15" Style="{StaticResource InformationTextblockStyle}" Text="How Sen's Fortress implements it's security:"/>
+                        <materialDesign:ColorZone BorderBrush="White" BorderThickness="1">
+                            <TextBlock Style="{StaticResource SmallTextblockStyle}" TextWrapping="Wrap" Margin="15" TextAlignment="Center">
+                            Sen's Fortress is a tool that encrypts the data that it's given (normally passwords) and stores them for you. <LineBreak/>
+                            The data is encrypted with the help of a cryptographic hash function: SHA-512. This method was designed by the National Security Agency (NSA).
+                            Just so you can understand the level of security this fortress has to offer. <LineBreak/>                           
+                            "512" represents the amount of Bits, that the function ends up producing. Everything that is being encrypted will be compromised into 512 Bits. <LineBreak/>
+                            As an example: A password such as "password123" (which is a very, very bad password) will look like this after the encryption: <LineBreak/>
+                            <LineBreak/>
+                            BED4EFA1D4FDBD954BD3705D6A2A78270EC9A52ECFBFB010C61862AF5C76AF1761FFEB1AEF6ACA1BF5D02B3781AA854FABD2B69C790DE74E17ECFEC3CB6AC4BF <LineBreak/>
+                            <LineBreak/>
+                            However, it is very important to understand that such encryption is a one-way compression. Once it's encrypted, there is no going back.
+                            There is no way to reproduce the data out of the hash.
+                            If you think about it - that does sound very logical. How could I leak such "dangerous" insights about the way this tool works, when it could be used 
+                            against us. The only way to crack the encrypted passwords is by brute forcing - which means guessing. <LineBreak/>
+                            The best way to avoid that is by choosing a strong password. A strong password has the minimum requierements of: <LineBreak/>
+                            At least 8 characters. <LineBreak/>
+                            At least one upper case character <LineBreak/>
+                            At least one number <LineBreak/>
+                            Sen's fortress offers a random password generator which makes sure, that you are picking a strong password. <LineBreak/>
+                            <LineBreak/>
+                            This tool also uses multi-factor authentication. This means that in order to enter the fortress, you have to at least enter your E-Mail adress
+                            or phone number. You then receive a message containing a code that you have to submit before the gates are opened.
+                            </TextBlock>
+
+                        </materialDesign:ColorZone>
+                    </StackPanel>
+                </ScrollViewer>
+                
+                <!--Middle Text-->
+                <ScrollViewer Grid.Column="1" Margin="40 10 10 10" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0 0 20 0">
+                        <TextBlock Margin="0 0 0 15" Style="{StaticResource InformationTextblockStyle}" Text="The importance of the masterkey you are about to create:"/>
                         <materialDesign:ColorZone BorderBrush="White" BorderThickness="1">
                             <TextBlock Style="{StaticResource SmallTextblockStyle}" TextWrapping="Wrap" Margin="15" TextAlignment="Center">
                             Sen's Fortress is a tool that encrypts the data that it's given (normally passwords) and stores them for you. <LineBreak/>
@@ -73,16 +106,23 @@
                     </StackPanel>
                 </ScrollViewer>
 
+                <!--Right side enter user input-->
+                <ScrollViewer Grid.Column="2" Margin="10 10 40 10" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0 0 20 0">
+                            <TextBlock Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 20" Text="Fill in your personal information."/>
+                        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Style="{StaticResource SmallTextblockStyle}">
+                            You do not need to worry: Sen's fortress does NOT save or collect any data. We do not act like your data could 'improve usability' which in the end 
+                            'benefits' you as we can then proceed to make the software the most fitting for your 'very own preferences'. Also, Sen's fortress does not need a running
+                            internet connection for it's usage. Only when multi-factor authentication is needed, for example for your registration, an internet connection is requiered.
+                        </TextBlock>
+                    </StackPanel>
 
+                </ScrollViewer>
 
-                <!--Middle Part-->
-                <materialDesign:ColorZone Grid.Column="1" Mode="Light" />
 
             </Grid>
         </ScrollViewer>
-        
-        
-        
+                    
 
         <!--Go Back Button-->
         <Button Style="{StaticResource GoBackButtonStyle}" Grid.Row="3" HorizontalAlignment="Left" Margin="20 -20 0 0"
