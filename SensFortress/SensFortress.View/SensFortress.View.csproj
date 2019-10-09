@@ -11,17 +11,9 @@
     <None Remove="Images\Fortress-Nature.jpg" />
     <None Remove="Images\Opening-Gate.jpg" />
     <None Remove="Images\Worldmap.jpg" />
-    <None Remove="Log\log4net.config" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Log\log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
     <PackageReference Include="Prism.Core" Version="7.2.0.1367" />
   </ItemGroup>
