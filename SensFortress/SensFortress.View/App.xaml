@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:SensFortress.View"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              StartupUri="Opening Dialogs/Views/MainWindow.xaml">
+    
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
