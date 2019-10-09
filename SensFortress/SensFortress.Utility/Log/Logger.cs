@@ -18,20 +18,38 @@ namespace SensFortress.Utility.Log
         /// </summary>
         internal static void EnsureLogger()
         {
-            XmlDocument log4netConfig = new XmlDocument();
-            log4netConfig.Load(File.OpenRead("E://WPF Projects//Sens-Fortress//SensFortress//SensFortress.Utility//Log//log4net.config"));
+            var log4netconfig = GetLogConfigAndSetCustomSettings();
             var repo = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
-            log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
+            log4net.Config.XmlConfigurator.Configure(repo, log4netconfig["log4net"]);
             log.Info("        ==========================  Started Logging  ==========================        ");
-
         }
 
         /// <summary>
-        /// Writes a statement into the log file
+        /// Gets the log Instance
         /// </summary>
         public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        /// <summary>
+        /// Get the logConfig and sets the custom settings
+        /// </summary>
+        /// <param name="logConfig"></param>
+        private static XmlDocument GetLogConfigAndSetCustomSettings()
+        {
+            // Open the logConfig
+            using (FileStream fs = new FileStream(DirectoryHelper.Getlog4netConfigDirectory(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+            {
+                XmlDocument log4netconfig = new XmlDocument();
+                log4netconfig.Load(fs);
+                var logPathNode = log4netconfig.SelectSingleNode("log4net/appender/file");
+                logPathNode.InnerXml = DirectoryHelper.GetLogFileDirectory();
+                fs.SetLength(0);
+                log4netconfig.Save(fs);
+                return log4netconfig;
+            }
+        }
+
     }
+    
 
     /// <summary>
     /// Helper class that initializes the Logger internally.
