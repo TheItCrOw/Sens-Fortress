@@ -23,12 +23,12 @@ namespace SensFortress.View
     {
         public MainWindow()
         {
-            LogHelper.Log(LogType.Info, "Building fortress...");
+            //LogHelper.Log(LogType.Info, "Building fortress...");
             InitializeComponent();
             // For some reason, VS is firing an exceptionn when trying to do this in XAML...
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            LogHelper.Log(LogType.Info, "Sen's fortress has been successfully built!");
+            //LogHelper.Log(LogType.Info, "Sen's fortress has been successfully built!");
         }
     }
 }
