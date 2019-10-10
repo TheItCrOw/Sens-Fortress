@@ -20,6 +20,7 @@ namespace SensFortress.Security
      * -> The data is then encrypted and stored as a *.sfdb (Sen's Fortress data base) file
      * -> To decrypt it, the IV Vector, salt and masterkey (hashed user input) is needed.
      * 
+     * Reference: https://stackoverflow.com/questions/13901529/symmetric-encryption-aes-is-saving-the-iv-and-salt-alongside-the-encrypted-da
      * */
 
     /// <summary>
@@ -27,7 +28,6 @@ namespace SensFortress.Security
     /// </summary>
     public static class CustomAES
     {
-
         /// <summary>
         /// Encrypts the data with the given password with the AES algorithm
         /// </summary>
@@ -73,6 +73,8 @@ namespace SensFortress.Security
             byte[] decryptedData = new byte[data.Length];
             using (AesCryptoServiceProvider provider = new AesCryptoServiceProvider())
             {
+                // Key must NOT be generated randomly again... When the XML-Cache is implemented, we need to recreate the key
+                // out of user input and the stored salt.
                 provider.Key = AESHelper.CreateKey(password, provider.KeySize);
                 provider.Mode = CipherMode.CBC;
                 provider.Padding = PaddingMode.PKCS7;

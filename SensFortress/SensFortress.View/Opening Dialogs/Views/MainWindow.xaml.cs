@@ -1,6 +1,7 @@
 ﻿using log4net;
 using log4net.Config;
 using SensFortress.Security;
+using SensFortress.Security.Testing;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
 using System;
@@ -36,17 +37,10 @@ namespace SensFortress.View
             // For some reason, VS is firing an exceptionn when trying to do this in XAML...
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            var data = "ThisIsATest123";
-            var stringInBytes = Encoding.ASCII.GetBytes(data);
-
-            var encrypted = CustomAES.Encrypt(stringInBytes, "password");
-            var decrypted = CustomAES.Encrypt(encrypted, "password");
-
-            var backToBack = System.Text.Encoding.UTF8.GetString(decrypted);
-
+            AesTests.TestFileEncryption();
+            AesTests.TestFileDecryption();
         }
 
     }
-
 
 }
