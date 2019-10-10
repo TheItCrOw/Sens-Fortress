@@ -17,7 +17,7 @@ namespace SensFortress.Utility
         public static string Getlog4netConfigDirectory()
         {
             // The user will adjust this in the UI later
-            return "E:\\WPF Projects\\Sens-Fortress\\SensFortress\\SensFortress.Utility\\Log//log4net.config"; 
+            return "E:\\WPF Projects\\Sens-Fortress\\SensFortress\\SensFortress.Utility\\Log\\log4net.config"; 
         }
 
         /// <summary>
