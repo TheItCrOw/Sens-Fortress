@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SensFortress.Security\SensFortress.Security.csproj" />
     <ProjectReference Include="..\SensFortress.Utility\SensFortress.Utility.csproj" />
   </ItemGroup>
 
