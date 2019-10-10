@@ -4,6 +4,7 @@ using SensFortress.Security;
 using SensFortress.Security.Testing;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
+using SensFortress.Utility.Testing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,6 +38,7 @@ namespace SensFortress.View
             // For some reason, VS is firing an exceptionn when trying to do this in XAML...
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
+            ZipTests.CustomZipHelper("", "", "");
             AesTests.TestFileEncryption();
             AesTests.TestFileDecryption();
         }

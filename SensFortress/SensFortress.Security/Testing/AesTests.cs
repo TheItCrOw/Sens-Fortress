@@ -125,19 +125,19 @@ namespace SensFortress.Security.Testing
             //    File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb", test);
             //}
 
-            var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\testDatei.txt");
+            var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\TestZip.zip");
             var test = CustomAES.Encrypt(file, "password");
-            File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.txt", test);
+            File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb", test);
 
         }
 
         public static void TestFileDecryption()
         {
 
-            var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.txt");
+            var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb");
             var decryptedBytes = CustomAES.Decrypt(file, "password");
             var decryptedString = System.Text.Encoding.UTF8.GetString(decryptedBytes);
-            File.WriteAllText("C:\\Users\\Nutzer\\Desktop\\decryptedTestFile.txt", decryptedString);
+            File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\decryptedTestFile.zip", decryptedBytes);
         }
     }
 }

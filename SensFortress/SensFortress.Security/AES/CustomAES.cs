@@ -28,6 +28,7 @@ namespace SensFortress.Security
     /// </summary>
     public static class CustomAES
     {
+        public static byte[] helperVairable;
         /// <summary>
         /// Encrypts the data with the given password with the AES algorithm
         /// </summary>
@@ -42,6 +43,7 @@ namespace SensFortress.Security
             {
                 provider.GenerateIV();
                 provider.Key = AESHelper.CreateKey(password, provider.KeySize);
+                helperVairable = provider.Key;
                 provider.Mode = CipherMode.CBC;
                 provider.Padding = PaddingMode.PKCS7;
 
@@ -76,6 +78,7 @@ namespace SensFortress.Security
                 // Key must NOT be generated randomly again... When the XML-Cache is implemented, we need to recreate the key
                 // out of user input and the stored salt.
                 provider.Key = AESHelper.CreateKey(password, provider.KeySize);
+                provider.Key = helperVairable;
                 provider.Mode = CipherMode.CBC;
                 provider.Padding = PaddingMode.PKCS7;
                 using (MemoryStream memStream = new MemoryStream(data))
