@@ -14,7 +14,7 @@ namespace SensFortress.Utility.Testing
         public static void CustomZipHelper(string startPath, string zipPath, string extractPath)
         {
             startPath = "C:\\Users\\Nutzer\\Desktop\\DateTickets";
-            zipPath = "C:\\Users\\Nutzer\\Desktop\\TestZip.zip";
+            zipPath = "C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf";
             extractPath = "C:\\Users\\Nutzer\\Desktop\\extract";
 
             ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);

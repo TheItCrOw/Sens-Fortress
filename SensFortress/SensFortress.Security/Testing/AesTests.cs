@@ -125,7 +125,7 @@ namespace SensFortress.Security.Testing
             //    File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb", test);
             //}
 
-            var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\TestZip.zip");
+            var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
             var test = CustomAES.Encrypt(file, "password");
             File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb", test);
 
