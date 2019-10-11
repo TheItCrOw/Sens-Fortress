@@ -24,11 +24,15 @@ namespace SensFortress.Utility
             Logger.log.Info("Zip successfull!");
         }
 
-        public static void UnzipSavedZip(string fullZipName)
+        /// <summary>
+        /// Unzips a saved file and returns the ZipArchive
+        /// </summary>
+        /// <param name="fullZipName"></param>
+        /// <returns></returns>
+        public static ZipArchive UnzipSavedZip(string fullZipName)
         {
-            var test = ZipFile.OpenRead(fullZipName);
-            var xd = File.ReadAllBytes(fullZipName);
-
+            Logger.log.Info($"Unzipping file from {fullZipName}.");
+            return ZipFile.OpenRead(fullZipName);
         }
 
     }

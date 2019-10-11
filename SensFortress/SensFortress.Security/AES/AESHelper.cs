@@ -22,18 +22,18 @@ namespace SensFortress.Security.AES
         /// <returns></returns>
         internal static byte[] CreateKey(string password, int keySize)
         {
-            Logger.log.Info("Trying to create a key out of th user input...");
+            Logger.log.Info("Trying to create a key out of the user input...");
             DeriveBytes derivedKey = new Rfc2898DeriveBytes(password, GenerateSalt(), ITERATIONS);
             Logger.log.Info("Derived Key has been created!");
             return derivedKey.GetBytes(keySize >> 3);
         }
 
         private static byte[] GenerateSalt()
-        {
-            Logger.log.Info("Generating random salt.");
+        {            
             RNGCryptoServiceProvider rncCsp = new RNGCryptoServiceProvider();
             byte[] salt = new byte[SaltByteLength];
             rncCsp.GetBytes(salt);
+            Logger.log.Info("Generated random salt.");
 
             return salt;
         }

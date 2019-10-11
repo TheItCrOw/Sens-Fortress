@@ -38,9 +38,13 @@ namespace SensFortress.View
             // For some reason, VS is firing an exceptionn when trying to do this in XAML...
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
+            Testing();
+        }
 
+        private void Testing()
+        {
             //ZipHelper.ZipSavedArchives("C:\\Users\\Nutzer\\Desktop\\DateTickets", "C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
-            ZipHelper.UnzipSavedZip("C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
+            //var testZip = ZipHelper.UnzipSavedZip("C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
             AesTests.TestFileEncryption();
             AesTests.TestFileDecryption();
         }

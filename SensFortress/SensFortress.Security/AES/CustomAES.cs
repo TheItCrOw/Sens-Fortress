@@ -47,6 +47,7 @@ namespace SensFortress.Security
                 provider.Mode = CipherMode.CBC;
                 provider.Padding = PaddingMode.PKCS7;
 
+
                 using (MemoryStream memStream = new MemoryStream())
                 {
                     memStream.Write(provider.IV, 0, 16);

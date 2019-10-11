@@ -5,6 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using SensFortress.Security.AES;
 using System.Xml;
+using SensFortress.Utility;
 
 namespace SensFortress.Security.Testing
 {
@@ -127,8 +128,12 @@ namespace SensFortress.Security.Testing
 
             var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
             var test = CustomAES.Encrypt(file, "password");
-            File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb", test);
+            var testSalt = "testSalt";
+            var testSaltBytes = Encoding.ASCII.GetBytes(testSalt);
+            var allBytes = ByteHelper.AppendTwoByteArrays(test,testSaltBytes);
 
+
+            File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb", allBytes);
         }
 
         public static void TestFileDecryption()
