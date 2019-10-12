@@ -52,6 +52,7 @@ namespace SensFortress.Security
                     using (SecureStringWrapper wrapper = new SecureStringWrapper(password))
                     {
                         byte[] passwordBytes = wrapper.ToByteArray();
+                        provider.Key = passwordBytes;
                         provider.Mode = CipherMode.CBC;
                         provider.Padding = PaddingMode.PKCS7;
 
@@ -87,7 +88,7 @@ namespace SensFortress.Security
         /// <param name="data"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public byte[] Decrypt(byte[] data, string password, byte[] salt)
+        public byte[] Decrypt(byte[] data, SecureString password, byte[] salt)
         {
             try
             {
@@ -98,21 +99,27 @@ namespace SensFortress.Security
                 {
                     // Key must NOT be generated randomly again... When the XML-Cache is implemented, we need to recreate the key
                     // out of user input and the stored salt.
-                    provider.Key = aesHelper.CreateKey(password, provider.KeySize, salt);
-                    provider.Mode = CipherMode.CBC;
-                    provider.Padding = PaddingMode.PKCS7;
-                    using (MemoryStream memStream = new MemoryStream(data))
+                    // Create a byte array out of the secure string
+                    using (SecureStringWrapper wrapper = new SecureStringWrapper(password))
                     {
-                        byte[] iv = new byte[16];
-                        memStream.Read(iv, 0, 16);
-                        using (ICryptoTransform decryptor = provider.CreateDecryptor(provider.Key, iv))
+                        byte[] passwordBytes = wrapper.ToByteArray();
+                        provider.Key = passwordBytes;
+                        provider.Mode = CipherMode.CBC;
+                        provider.Padding = PaddingMode.PKCS7;
+                        using (MemoryStream memStream = new MemoryStream(data))
                         {
-                            using (CryptoStream cryptoStream = new CryptoStream(memStream, decryptor, CryptoStreamMode.Read))
+                            byte[] iv = new byte[16];
+                            memStream.Read(iv, 0, 16);
+                            using (ICryptoTransform decryptor = provider.CreateDecryptor(provider.Key, iv))
                             {
-                                cryptoStream.Read(decryptedData, 0, decryptedData.Length);
+                                using (CryptoStream cryptoStream = new CryptoStream(memStream, decryptor, CryptoStreamMode.Read))
+                                {
+                                    cryptoStream.Read(decryptedData, 0, decryptedData.Length);
+                                }
                             }
                         }
                     }
+
                 }
                 return decryptedData;
             }

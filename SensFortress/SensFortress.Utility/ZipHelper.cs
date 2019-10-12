@@ -20,17 +20,9 @@ namespace SensFortress.Utility
         /// <param name="extractPath"></param>
         public static void ZipSavedArchives(string fullFileName, string fullZipName)
         {
-            try
-            {
-                Logger.log.Info($"Trying to zip from {fullFileName} to {fullZipName}...");
-                ZipFile.CreateFromDirectory(fullFileName, fullZipName, System.IO.Compression.CompressionLevel.Fastest, true);
-                Logger.log.Info("Zip successfull!");
-            }
-            catch (Exception ex)
-            {
-                Logger.log.Error($"Error during zipping: {ex}");
-                throw new ZipArchiveException("Something went wrong while trying to zip an archive. ", ex);
-            }
+            Logger.log.Info($"Trying to zip from {fullFileName} to {fullZipName}...");
+            ZipFile.CreateFromDirectory(fullFileName, fullZipName, System.IO.Compression.CompressionLevel.Fastest, true);
+            Logger.log.Info("Zip successfull!");
         }
 
         /// <summary>
@@ -40,16 +32,8 @@ namespace SensFortress.Utility
         /// <returns></returns>
         public static ZipArchive UnzipSavedZip(string fullZipName)
         {
-            try
-            {
-                Logger.log.Info($"Unzipping file from {fullZipName}.");
-                return ZipFile.OpenRead(fullZipName);
-            }
-            catch (Exception ex)
-            {
-                Logger.log.Error($"Error during unzipping: {ex}");
-                throw new ZipArchiveException("Something wrent wrong while trying to unzip an archive. ", ex);
-            }
+            Logger.log.Info($"Unzipping file from {fullZipName}.");
+            return ZipFile.OpenRead(fullZipName);
         }
 
     }

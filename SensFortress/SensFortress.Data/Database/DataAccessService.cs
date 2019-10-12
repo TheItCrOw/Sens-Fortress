@@ -1,13 +1,16 @@
 ﻿using SensFortress.Data.Exceptions;
 using SensFortress.Models.Fortress;
 using SensFortress.Security;
+using SensFortress.Security.AES;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Security;
 using System.Text;
+using System.Windows;
 
 namespace SensFortress.Data.Database
 {
@@ -29,7 +32,7 @@ namespace SensFortress.Data.Database
         private XmlDataCache _xmlDataCache = new XmlDataCache();
 
         /// <summary>
-        /// Creates a new Database with a mastereky.
+        /// Creates a new <see cref="Fortress"/> with a <see cref="MasterKey"/> and saves it encrypted.
         /// </summary>
         public void CreateNewFortress(Fortress fortress)
         {
@@ -106,17 +109,31 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
-        /// Open a fortress and load the database
+        /// Open a fortress and loads the database.
         /// </summary>
-        public ZipArchive GetFortress(string fortressPath)
+        public ZipArchive GetFortress(string fortressFullPath, string fortressName, string password)
         {
             try
             {
-                Logger.log.Info($"Start opening the fortress {fortressPath}...");
+                Logger.log.Info($"Start opening the fortress {fortressFullPath}...");
+                var aesHelper = new AesHelper();
 
-                // =========================================================== Unzip the fortress
-                var unzippedFortress = ZipHelper.UnzipSavedZip(fortressPath);
-                Logger.log.Debug("Unzipped fortress.");
+                // =========================================================== Unzip the fortress - Read salt
+                var unzippedFortress = ZipHelper.UnzipSavedZip(fortressFullPath);
+                var entryOfSalt = fortressName + "/salt" + TermHelper.GetTextFileEnding();
+                var saltEntry = unzippedFortress.GetEntry(entryOfSalt);
+
+                var saltBytes = new byte[32];
+                using (var stream = saltEntry.Open())
+                {
+                    saltBytes = ByteHelper.ReadBytesOfStream(stream);
+                }
+                Logger.log.Debug("Unzipped fortress - Read salt bytes.");
+
+                // =========================================================== Create masterkey
+                var hashedKey = aesHelper.CreateKey(password, 512, saltBytes);
+                var masterKey = new Masterkey(hashedKey);
+
 
                 return null;
             }

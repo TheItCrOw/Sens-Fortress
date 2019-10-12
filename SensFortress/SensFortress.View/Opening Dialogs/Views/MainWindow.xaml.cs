@@ -64,6 +64,7 @@ namespace SensFortress.View
 
             var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
             DataAccessService.Instance.CreateNewFortress(fortress);
+            var test = DataAccessService.Instance.GetFortress("C:\\Users\\Nutzer\\Desktop\\testFortress.sfzf", "testFortress", "diesIstEinTest123");
         }
 
     }

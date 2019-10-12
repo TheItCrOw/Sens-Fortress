@@ -37,8 +37,8 @@ namespace SensFortress.Security.AES
         /// <returns></returns>
         public unsafe byte[] ToByteArray()
         {
-
-            int maxLength = encoding.GetMaxByteCount(secureString.Length);
+            // Since we use the bytes of the secure string for the aes encryption, the byte array musnt be greater than 32.
+            int maxLength = encoding.GetMaxByteCount(32);
 
             IntPtr bytes = IntPtr.Zero;
             IntPtr str = IntPtr.Zero;
@@ -50,10 +50,10 @@ namespace SensFortress.Security.AES
 
                 char* chars = (char*)str.ToPointer();
                 byte* bptr = (byte*)bytes.ToPointer();
-                int len = encoding.GetBytes(chars, secureString.Length, bptr, maxLength);
+                int len = encoding.GetBytes(chars, 32, bptr, maxLength);
 
-                _bytes = new byte[len];
-                for (int i = 0; i < len; ++i)
+                _bytes = new byte[32];
+                for (int i = 0; i < 32; ++i)
                 {
                     _bytes[i] = *bptr;
                     bptr++;
