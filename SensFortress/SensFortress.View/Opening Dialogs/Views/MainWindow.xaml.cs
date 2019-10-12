@@ -3,6 +3,7 @@ using log4net.Config;
 using SensFortress.Data.Database;
 using SensFortress.Models.Fortress;
 using SensFortress.Security;
+using SensFortress.Security.AES;
 using SensFortress.Security.Testing;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
@@ -49,9 +50,20 @@ namespace SensFortress.View
             //var testZip = ZipHelper.UnzipSavedZip("C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
             //AesTests.TestFileEncryption();
             //AesTests.TestFileDecryption();
-            var fortress = new Fortress();
-            fortress.Mas
+            var userMasterKey = "diesIstEinTest123";
 
+            var aesHelper = new AesHelper();
+            var salt = aesHelper.GenerateSalt();
+            var hashedKey = aesHelper.CreateKey(userMasterKey, 512, salt);
+            var fullPath = "C:\\Users\\Nutzer\\Desktop\\testFortress";
+            var name = "Max";
+            var lastName = "Mustermann";
+            var userName = "mMuster";
+            var eMail = "test@web.de";
+
+
+            var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail);
+            DataAccessService.Instance.CreateNewFortress(fortress);
         }
 
     }

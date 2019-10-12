@@ -10,4 +10,8 @@
     <Page Include="App.xaml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SensFortress.Security\SensFortress.Security.csproj" />
+  </ItemGroup>
+
 </Project>

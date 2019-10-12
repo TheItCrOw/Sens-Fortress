@@ -3,6 +3,7 @@ using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -37,7 +38,7 @@ namespace SensFortress.Security
         /// <param name="data"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public byte[] Encrypt(byte[] data, string password, byte[] salt)
+        public byte[] Encrypt(byte[] data, SecureString password, byte[] salt)
         {
             try
             {
@@ -47,23 +48,28 @@ namespace SensFortress.Security
                 using (AesCryptoServiceProvider provider = new AesCryptoServiceProvider())
                 {
                     provider.GenerateIV();
-                    provider.Key = _aesHelper.CreateKey(password, provider.KeySize, salt);
-                    provider.Mode = CipherMode.CBC;
-                    provider.Padding = PaddingMode.PKCS7;
-
-                    using (MemoryStream memStream = new MemoryStream())
+                    // Create a byte array out of the secure string
+                    using (SecureStringWrapper wrapper = new SecureStringWrapper(password))
                     {
-                        memStream.Write(provider.IV, 0, 16);
-                        using (ICryptoTransform encryptor = provider.CreateEncryptor(provider.Key, provider.IV))
+                        byte[] passwordBytes = wrapper.ToByteArray();
+                        provider.Mode = CipherMode.CBC;
+                        provider.Padding = PaddingMode.PKCS7;
+
+                        using (MemoryStream memStream = new MemoryStream())
                         {
-                            using (CryptoStream cryptoStream = new CryptoStream(memStream, encryptor, CryptoStreamMode.Write))
+                            memStream.Write(provider.IV, 0, 16);
+                            using (ICryptoTransform encryptor = provider.CreateEncryptor(provider.Key, provider.IV))
                             {
-                                cryptoStream.Write(data, 0, data.Length);
-                                cryptoStream.FlushFinalBlock();
+                                using (CryptoStream cryptoStream = new CryptoStream(memStream, encryptor, CryptoStreamMode.Write))
+                                {
+                                    cryptoStream.Write(data, 0, data.Length);
+                                    cryptoStream.FlushFinalBlock();
+                                }
                             }
+                            encryptedData = memStream.ToArray();
                         }
-                        encryptedData = memStream.ToArray();
                     }
+
                 }
                 return encryptedData;
             }
