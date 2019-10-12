@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SensFortress.Utility.Exceptions
+namespace SensFortress.Data.Exceptions
 {
     /// <summary>
     /// The exception that is thrown when zipping of an archive fails.
     /// </summary>
     [Serializable]
-    public class ZipArchiveException : Exception
+    public class XmlDataCacheException : Exception
     {
-        public ZipArchiveException()
+        public XmlDataCacheException()
         { }
 
-        public ZipArchiveException(string message)
+        public XmlDataCacheException(string message)
             : base(message)
         { }
 
-        public ZipArchiveException(string message, Exception innerException)
+        public XmlDataCacheException(string message, Exception innerException)
             : base(message, innerException)
         { }
     }

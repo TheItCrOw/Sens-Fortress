@@ -19,6 +19,7 @@ namespace SensFortress.Models.Fortress
             FullPath = fullPath;
             Name = name;
             LastName = lastName;
+            UserName = userName;
             EMail = eMail;
             Id = id;
         }

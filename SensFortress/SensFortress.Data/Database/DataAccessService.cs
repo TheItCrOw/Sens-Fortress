@@ -34,13 +34,14 @@ namespace SensFortress.Data.Database
             try
             {
                 Logger.log.Info("Starting to build a new fortress...");
+                var dataBasePath = fortress.FullPath + "\\" + TermHelper.GetDatabaseTerm();
 
                 // Create the root directory
                 DirectoryHelper.CreateDirecotry(fortress.FullPath);
                 Logger.log.Info($"Created Direcotry at {fortress.FullPath}.");
 
                 // Create the sub directory for the database
-                DirectoryHelper.CreateDirecotry(fortress.FullPath + "\\" + TermHelper.GetDatabaseTerm());
+                DirectoryHelper.CreateDirecotry(dataBasePath);
                 Logger.log.Info($"Created sub directory for the {TermHelper.GetDatabaseTerm()}");
 
                 // Create the file which holds the salt to unlock the database
@@ -48,7 +49,7 @@ namespace SensFortress.Data.Database
                 Logger.log.Info("Stored salt");
 
                 // Store the user Input in the database
-                var allProperties = fortress.GetType().GetProperties();
+                _xmlDataCache.StoreOne<Fortress>(dataBasePath, fortress);
 
 
 
