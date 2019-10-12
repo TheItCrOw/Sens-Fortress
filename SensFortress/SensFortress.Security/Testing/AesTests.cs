@@ -41,7 +41,7 @@ namespace SensFortress.Security.Testing
                 var test3 = BitConverter.ToInt32(Key);
                 var test4 = BitConverter.ToInt32(IV);
 
-                var test5 = AesHelper.CreateKey("testKey", 512);
+                //var test5 = AesHelper.CreateKey("testKey", 512);
 
                 // Create an encryptor to perform the stream transform.
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
