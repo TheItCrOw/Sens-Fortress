@@ -11,7 +11,6 @@ namespace SensFortress.Security.Testing
 {
     public static class AesTests
     {
-
         public static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
         {
             // Check arguments.
@@ -42,7 +41,7 @@ namespace SensFortress.Security.Testing
                 var test3 = BitConverter.ToInt32(Key);
                 var test4 = BitConverter.ToInt32(IV);
 
-                var test5 = AESHelper.CreateKey("testKey", 512);
+                var test5 = AesHelper.CreateKey("testKey", 512);
 
                 // Create an encryptor to perform the stream transform.
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
@@ -127,22 +126,24 @@ namespace SensFortress.Security.Testing
             //}
 
             var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
-            var test = CustomAES.Encrypt(file, "password");
+            var aesAlgorithm = new AesAlgorithm();
+            //var test = aesAlgorithm.Encrypt(file, "password");
             var testSalt = "testSalt";
             var testSaltBytes = Encoding.ASCII.GetBytes(testSalt);
-            var allBytes = ByteHelper.AppendTwoByteArrays(test,testSaltBytes);
+            //var allBytes = ByteHelper.AppendTwoByteArrays(test,testSaltBytes);
 
 
-            File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb", allBytes);
+            //File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb", allBytes);
+
         }
 
         public static void TestFileDecryption()
         {
 
             var file = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb");
-            var decryptedBytes = CustomAES.Decrypt(file, "password");
-            var decryptedString = System.Text.Encoding.UTF8.GetString(decryptedBytes);
-            File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\decryptedTestFile.zip", decryptedBytes);
+            //var decryptedBytes = AesAlgorithm.Decrypt(file, "password");
+            //var decryptedString = System.Text.Encoding.UTF8.GetString(decryptedBytes);
+            //File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\decryptedTestFile.zip", decryptedBytes);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace SensFortress.Security.AES
     /// <summary>
     /// A helper class for an AES encryption
     /// </summary>
-    public static class AESHelper
+    public class AesHelper
     {
         private static readonly int SaltByteLength = 32;
         private const ushort ITERATIONS = 5000;
@@ -20,15 +20,19 @@ namespace SensFortress.Security.AES
         /// <param name="password"></param>
         /// <param name="keySize"> Typically it's 512 long. </param>
         /// <returns></returns>
-        internal static byte[] CreateKey(string password, int keySize)
+        public byte[] CreateKey(string password, int keySize, byte[] salt)
         {
             Logger.log.Info("Trying to create a key out of the user input...");
-            DeriveBytes derivedKey = new Rfc2898DeriveBytes(password, GenerateSalt(), ITERATIONS);
+            DeriveBytes derivedKey = new Rfc2898DeriveBytes(password, salt, ITERATIONS);
             Logger.log.Info("Derived Key has been created!");
             return derivedKey.GetBytes(keySize >> 3);
         }
 
-        private static byte[] GenerateSalt()
+        /// <summary>
+        /// Generates a 32-byte salt.
+        /// </summary>
+        /// <returns></returns>
+        public byte[] GenerateSalt()
         {            
             RNGCryptoServiceProvider rncCsp = new RNGCryptoServiceProvider();
             byte[] salt = new byte[SaltByteLength];

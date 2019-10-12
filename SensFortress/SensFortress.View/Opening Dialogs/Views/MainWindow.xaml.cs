@@ -1,5 +1,6 @@
 ﻿using log4net;
 using log4net.Config;
+using SensFortress.Data.Database;
 using SensFortress.Security;
 using SensFortress.Security.Testing;
 using SensFortress.Utility;
@@ -45,8 +46,11 @@ namespace SensFortress.View
         {
             //ZipHelper.ZipSavedArchives("C:\\Users\\Nutzer\\Desktop\\DateTickets", "C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
             //var testZip = ZipHelper.UnzipSavedZip("C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
-            AesTests.TestFileEncryption();
-            AesTests.TestFileDecryption();
+            //AesTests.TestFileEncryption();
+            //AesTests.TestFileDecryption();
+
+            var fortressProvider = new IFormatProvider();
+
         }
 
     }

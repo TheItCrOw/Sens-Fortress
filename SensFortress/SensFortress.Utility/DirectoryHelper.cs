@@ -8,8 +8,17 @@ namespace SensFortress.Utility
     /// <summary>
     /// Class that creates and holds every necessesary directory.
     /// </summary>
-    static class DirectoryHelper
+    public static class DirectoryHelper
     {
+        /// <summary>
+        /// Creates a new directory in the given path.
+        /// </summary>
+        /// <param name="path"></param>
+        public static void CreateDirecotry(string fullName)
+        {
+            Directory.CreateDirectory(fullName);
+        }
+
         /// <summary>
         /// Returns the path of the log4net.config of the logger.
         /// </summary>

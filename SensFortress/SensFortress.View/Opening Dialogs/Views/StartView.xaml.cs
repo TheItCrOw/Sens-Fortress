@@ -22,5 +22,6 @@ namespace SensFortress.View.Opening_Dialogs.Views
         {
             InitializeComponent();
         }
+
     }
 }

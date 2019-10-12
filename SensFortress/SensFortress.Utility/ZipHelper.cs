@@ -1,4 +1,5 @@
 ﻿using Ionic.Zlib;
+using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,17 @@ namespace SensFortress.Utility
         /// <param name="extractPath"></param>
         public static void ZipSavedArchives(string fullFileName, string fullZipName)
         {
-            Logger.log.Info($"Trying to zip from {fullFileName} to {fullZipName}...");
-            ZipFile.CreateFromDirectory(fullFileName, fullZipName, System.IO.Compression.CompressionLevel.Fastest, true);
-            Logger.log.Info("Zip successfull!");
+            try
+            {
+                Logger.log.Info($"Trying to zip from {fullFileName} to {fullZipName}...");
+                ZipFile.CreateFromDirectory(fullFileName, fullZipName, System.IO.Compression.CompressionLevel.Fastest, true);
+                Logger.log.Info("Zip successfull!");
+            }
+            catch (ZipArchiveException ex)
+            {
+                Logger.log.Error($"Error during zipping: {ex}");
+                throw new ZipArchiveException("Something wrent wrong while trying to zip an archive. ", ex);
+            }
         }
 
         /// <summary>
@@ -31,8 +40,16 @@ namespace SensFortress.Utility
         /// <returns></returns>
         public static ZipArchive UnzipSavedZip(string fullZipName)
         {
-            Logger.log.Info($"Unzipping file from {fullZipName}.");
-            return ZipFile.OpenRead(fullZipName);
+            try
+            {
+                Logger.log.Info($"Unzipping file from {fullZipName}.");
+                return ZipFile.OpenRead(fullZipName);
+            }
+            catch (ZipArchiveException ex)
+            {
+                Logger.log.Error($"Error during unzipping: {ex}");
+                throw new ZipArchiveException("Something wrent wrong while trying to unzip an archive. ", ex);
+            }
         }
 
     }
