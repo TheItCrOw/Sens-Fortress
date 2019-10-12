@@ -73,7 +73,7 @@ namespace SensFortress.Security
                 }
                 return encryptedData;
             }
-            catch (CryptographicException ex)
+            catch (Exception ex)
             {
                 Logger.log.Error($"During encryption: {ex}");
                 throw new CryptographicException("Something went wrong in the encryption-process. ", ex);
@@ -116,7 +116,7 @@ namespace SensFortress.Security
                 }
                 return decryptedData;
             }
-            catch (CryptographicException ex)
+            catch (Exception ex)
             {
                 Logger.log.Error($"During decryption: {ex}");
                 throw new CryptographicException("Something went wrong in the decryption-process. ", ex);

@@ -5,7 +5,7 @@ using System.Text;
 namespace SensFortress.Data.Exceptions
 {
     /// <summary>
-    /// The exception that is thrown when zipping of an archive fails.
+    /// The exception that is thrown when an operation in the Xml Datacache failed.
     /// </summary>
     [Serializable]
     public class XmlDataCacheException : Exception

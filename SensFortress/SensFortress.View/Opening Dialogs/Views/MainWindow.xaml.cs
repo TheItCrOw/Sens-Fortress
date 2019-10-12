@@ -35,7 +35,7 @@ namespace SensFortress.View
     {
         public MainWindow()
         {
-            Logger.log.Info("Building the fortress...");
+            Logger.log.Info("Building the gates...");
             InitializeComponent();
             Logger.log.Info("Successfully built!");
             // For some reason, VS is firing an exceptionn when trying to do this in XAML...

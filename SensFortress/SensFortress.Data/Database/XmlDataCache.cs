@@ -25,7 +25,7 @@ namespace SensFortress.Data.Database
             {
                 File.WriteAllBytes(path + "\\salt" + TermHelper.GetTextFileEnding(), salt);
             }
-            catch (XmlDataCacheException ex)
+            catch (Exception ex)
             {
                 Logger.log.Error($"During storing salt: {ex}");
                 throw new XmlDataCacheException($"Error while trying to store something in the {TermHelper.GetDatabaseTerm()} ", ex);
@@ -61,7 +61,7 @@ namespace SensFortress.Data.Database
                 }
                 Logger.log.Info($"Writing successfull!");
             }
-            catch (XmlDataCacheException ex)
+            catch (Exception ex)
             {
                 Logger.log.Error($"During storing one: {ex}");
                 throw new XmlDataCacheException($"Error while trying to store something in the {TermHelper.GetDatabaseTerm()} ", ex);

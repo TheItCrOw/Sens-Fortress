@@ -26,10 +26,10 @@ namespace SensFortress.Utility
                 ZipFile.CreateFromDirectory(fullFileName, fullZipName, System.IO.Compression.CompressionLevel.Fastest, true);
                 Logger.log.Info("Zip successfull!");
             }
-            catch (ZipArchiveException ex)
+            catch (Exception ex)
             {
                 Logger.log.Error($"Error during zipping: {ex}");
-                throw new ZipArchiveException("Something wrent wrong while trying to zip an archive. ", ex);
+                throw new ZipArchiveException("Something went wrong while trying to zip an archive. ", ex);
             }
         }
 
@@ -45,7 +45,7 @@ namespace SensFortress.Utility
                 Logger.log.Info($"Unzipping file from {fullZipName}.");
                 return ZipFile.OpenRead(fullZipName);
             }
-            catch (ZipArchiveException ex)
+            catch (Exception ex)
             {
                 Logger.log.Error($"Error during unzipping: {ex}");
                 throw new ZipArchiveException("Something wrent wrong while trying to unzip an archive. ", ex);
