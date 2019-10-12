@@ -8,6 +8,7 @@ namespace SensFortress.Security.AES
 {
     /// <summary>
     /// Wrapper for handling SecureStrings
+    /// also see here: https://codereview.stackexchange.com/questions/107860/converting-a-securestring-to-a-byte-array 
     /// </summary>
     public sealed class SecureStringWrapper : IDisposable
     {

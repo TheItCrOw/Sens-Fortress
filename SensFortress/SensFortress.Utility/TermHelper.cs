@@ -18,5 +18,32 @@ namespace SensFortress.Utility
             return "Storage Chamber";
         }
 
+        /// <summary>
+        /// Encrypted database file ending.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetDatabaseEnding()
+        {
+            return ".sfdb";
+        }
+
+        /// <summary>
+        /// Zipped file ending.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetZippedFileEnding()
+        {
+            return ".sfzf";
+        }
+
+        /// <summary>
+        /// Normal textfile ending.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetTextFileEnding()
+        {
+            return ".sftf";
+        }
+
     }
 }

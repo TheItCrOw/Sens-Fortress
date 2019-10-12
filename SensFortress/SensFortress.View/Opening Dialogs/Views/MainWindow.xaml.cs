@@ -62,7 +62,7 @@ namespace SensFortress.View
             var eMail = "test@web.de";
 
 
-            var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail);
+            var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
             DataAccessService.Instance.CreateNewFortress(fortress);
         }
 

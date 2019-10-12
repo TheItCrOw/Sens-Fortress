@@ -24,6 +24,8 @@ namespace SensFortress.Data.Database
         /// </summary>
         public static DataAccessService Instance { get { return lazy.Value; } }
 
+        private XmlDataCache _xmlDataCache = new XmlDataCache();
+
         /// <summary>
         /// Creates a new Database with a mastereky.
         /// </summary>
@@ -42,11 +44,18 @@ namespace SensFortress.Data.Database
                 Logger.log.Info($"Created sub directory for the {TermHelper.GetDatabaseTerm()}");
 
                 // Create the file which holds the salt to unlock the database
+                _xmlDataCache.StoreSalt(fortress.FullPath, fortress.Salt);
+                Logger.log.Info("Stored salt");
 
-                // test
-                var data = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb");
-                var aesAlg = new AesAlgorithm();
-                aesAlg.Encrypt(data, fortress.MasterKey.Value, fortress.Salt);
+                // Store the user Input in the database
+                var allProperties = fortress.GetType().GetProperties();
+
+
+
+                //// test
+                //var data = File.ReadAllBytes("C:\\Users\\Nutzer\\Desktop\\encryptedTestFile.sfdb");
+                //var aesAlg = new AesAlgorithm();
+                //aesAlg.Encrypt(data, fortress.MasterKey.Value, fortress.Salt);
             }
             catch (Exception)
             {

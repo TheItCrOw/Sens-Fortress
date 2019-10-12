@@ -1,4 +1,5 @@
-﻿using SensFortress.Security.AES;
+﻿using SensFortress.Models.BaseClasses;
+using SensFortress.Security.AES;
 using System;
 using System.Collections.Generic;
 using System.Security;
@@ -9,9 +10,9 @@ namespace SensFortress.Models.Fortress
     /// <summary>
     /// Model that holds information of a fortress.
     /// </summary>
-    public class Fortress
+    public class Fortress : ModelBase
     {
-        public Fortress(byte[] salt, byte[] key, string fullPath, string name, string lastName, string userName, string eMail)
+        public Fortress(byte[] salt, byte[] key, string fullPath, string name, string lastName, string userName, string eMail, Guid id)
         {
             Salt = salt;
             MasterKey = new Masterkey(key);
@@ -19,6 +20,7 @@ namespace SensFortress.Models.Fortress
             Name = name;
             LastName = lastName;
             EMail = eMail;
+            Id = id;
         }
         /// <summary>
         /// Random salt that is needed to decrypt the database.
