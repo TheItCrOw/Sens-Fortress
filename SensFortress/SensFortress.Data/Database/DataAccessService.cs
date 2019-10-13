@@ -153,9 +153,9 @@ namespace SensFortress.Data.Database
 
                     // =========================================================== Unzip database
 
-                    var unzippedEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
+                    var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
 
-                    foreach(var byteArr in unzippedEntriesOfDb)
+                    foreach(var byteArr in unzippedByteEntriesOfDb)
                     {
                         _xmlDataCache.test(byteArr);
                     }
@@ -163,13 +163,12 @@ namespace SensFortress.Data.Database
                     stream.Close();
                 }
 
-
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                Logger.log.Error($"During loading a fortress: {ex}");
+                throw new FortressException($"An error ocurred while opening the fortress. All operations to this point have been reversed.", ex);
             }
         }
 

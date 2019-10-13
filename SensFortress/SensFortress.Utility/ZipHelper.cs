@@ -37,7 +37,7 @@ namespace SensFortress.Utility
         }
 
         /// <summary>
-        /// Decompresses a zipped byte array.
+        /// Decompresses a zipped <see cref="byte"/> array.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
