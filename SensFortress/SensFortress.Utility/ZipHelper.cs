@@ -1,10 +1,10 @@
-﻿using Ionic.Zlib;
-using SensFortress.Utility.Exceptions;
+﻿using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 
 namespace SensFortress.Utility
@@ -21,7 +21,7 @@ namespace SensFortress.Utility
         public static void ZipSavedArchives(string fullFileName, string fullZipName)
         {
             Logger.log.Info($"Trying to zip from {fullFileName} to {fullZipName}...");
-            ZipFile.CreateFromDirectory(fullFileName, fullZipName, System.IO.Compression.CompressionLevel.Fastest, true);
+            ZipFile.CreateFromDirectory(fullFileName, fullZipName, System.IO.Compression.CompressionLevel.Optimal, true);
             Logger.log.Info("Zip successfull!");
         }
 
@@ -36,5 +36,36 @@ namespace SensFortress.Utility
             return ZipFile.OpenRead(fullZipName);
         }
 
+        /// <summary>
+        /// Decompresses a zipped byte array.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static List<byte[]> GetEntriesFromZipArchive(byte[] data)
+        {
+            using (var zippedStream = new MemoryStream(data))
+            {
+                using (var archive = new ZipArchive(zippedStream))
+                {
+                    var entries = new List<byte[]>();
+                    foreach(var entry in archive.Entries)
+                    {
+                        if (entry != null)
+                        {
+                            using (var unzippedEntryStream = entry.Open())
+                            {
+                                using (var ms = new MemoryStream())
+                                {
+                                    unzippedEntryStream.CopyTo(ms);
+                                    var unzippedArray = ms.ToArray();
+                                    entries.Add(unzippedArray);
+                                }
+                            }
+                        }
+                    }
+                    return entries;
+                }
+            }
+        }
     }
 }

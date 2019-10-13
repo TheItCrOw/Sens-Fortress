@@ -32,6 +32,14 @@ namespace SensFortress.Data.Database
             }
         }
 
+        public void test (byte[] arr)
+        {
+            XmlDocument doc = new XmlDocument();
+            MemoryStream ms = new MemoryStream(arr);
+            doc.Load(ms);
+            var xd = doc;
+        }
+
         internal void StoreOne<T>(string datacacheRootPath, ModelBase model) where T : ModelBase
         {
             try

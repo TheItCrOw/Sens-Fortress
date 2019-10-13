@@ -109,7 +109,7 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
-        /// Open a fortress and loads the database.
+        /// Opens a fortress and loads the database.
         /// </summary>
         public ZipArchive GetFortress(string fortressFullPath, string fortressName, string password)
         {
@@ -119,6 +119,7 @@ namespace SensFortress.Data.Database
                 var aesHelper = new AesHelper();
 
                 // =========================================================== Unzip the fortress - Read salt
+
                 var unzippedFortress = ZipHelper.UnzipSavedZip(fortressFullPath);
                 var entryOfSalt = fortressName + "/salt" + TermHelper.GetTextFileEnding();
                 var saltEntry = unzippedFortress.GetEntry(entryOfSalt);
@@ -127,12 +128,40 @@ namespace SensFortress.Data.Database
                 using (var stream = saltEntry.Open())
                 {
                     saltBytes = ByteHelper.ReadBytesOfStream(stream);
+                    stream.Close();
                 }
-                Logger.log.Debug("Unzipped fortress - Read salt bytes.");
+                Logger.log.Debug("Unzipped fortress - Salt bytes read.");
 
                 // =========================================================== Create masterkey
+
                 var hashedKey = aesHelper.CreateKey(password, 512, saltBytes);
                 var masterKey = new Masterkey(hashedKey);
+                Logger.log.Debug("Masterkey created.");
+
+                // =========================================================== Decrypt database
+
+                var entryOfDatabase = fortressName + "/" + TermHelper.GetDatabaseTerm() + TermHelper.GetDatabaseEnding();
+                var databaseEntry = unzippedFortress.GetEntry(entryOfDatabase);
+                var aesAlg = new AesAlgorithm();
+
+                using (var stream = databaseEntry.Open())
+                {
+                    var dbBytes = ByteHelper.ReadBytesOfStream(stream);
+                    var decryptedDb = aesAlg.Decrypt(dbBytes, masterKey.Value, saltBytes);
+                    Logger.log.Info($"Decrypted {TermHelper.GetDatabaseTerm()}");
+                    File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\decryptedTestFile", decryptedDb);
+
+                    // =========================================================== Unzip database
+
+                    var unzippedEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
+
+                    foreach(var byteArr in unzippedEntriesOfDb)
+                    {
+                        _xmlDataCache.test(byteArr);
+                    }
+
+                    stream.Close();
+                }
 
 
                 return null;
