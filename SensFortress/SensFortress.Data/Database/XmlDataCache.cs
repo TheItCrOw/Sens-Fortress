@@ -28,16 +28,23 @@ namespace SensFortress.Data.Database
             catch (Exception ex)
             {
                 Logger.log.Error($"During storing salt: {ex}");
-                throw new XmlDataCacheException($"Error while trying to store something in the {TermHelper.GetDatabaseTerm()} ", ex);
+                throw new XmlDataCacheException($"Error while trying to store salt in the {TermHelper.GetDatabaseTerm()} ", ex);
             }
         }
 
-        public void test (byte[] arr)
+        /// <summary>
+        /// Builds models out of byte array.
+        /// </summary>
+        /// <param name="arr"></param>
+        public void BuildModelsOutOfBytes (byte[] arr)
         {
             XmlDocument doc = new XmlDocument();
             MemoryStream ms = new MemoryStream(arr);
+
+            // doc holds the current xml File
             doc.Load(ms);
-            var xd = doc;
+
+            ms.Close();
         }
 
         internal void StoreOne<T>(string datacacheRootPath, ModelBase model) where T : ModelBase
@@ -57,7 +64,7 @@ namespace SensFortress.Data.Database
                 using (XmlWriter writer = XmlWriter.Create(fullName, xmlWriterSettings))
                 {
                     writer.WriteStartDocument();
-                    writer.WriteStartElement("Data");
+                    writer.WriteStartElement(typeof(T).Name);
 
                     foreach(var property in typeof(T).GetProperties())
                     {
@@ -72,7 +79,7 @@ namespace SensFortress.Data.Database
             catch (Exception ex)
             {
                 Logger.log.Error($"During storing one: {ex}");
-                throw new XmlDataCacheException($"Error while trying to store something in the {TermHelper.GetDatabaseTerm()} ", ex);
+                throw new XmlDataCacheException($"Error while trying to store {typeof(T).Name} in the {TermHelper.GetDatabaseTerm()} ", ex);
             }
         }
 

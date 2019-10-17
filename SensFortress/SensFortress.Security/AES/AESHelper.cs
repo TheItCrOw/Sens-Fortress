@@ -12,7 +12,7 @@ namespace SensFortress.Security.AES
     public class AesHelper
     {
         private static readonly int SaltByteLength = 32;
-        private const ushort ITERATIONS = 5000;
+        private const ushort ITERATIONS = 15000;
 
         /// <summary>
         /// Creates a hashed key out of the user input

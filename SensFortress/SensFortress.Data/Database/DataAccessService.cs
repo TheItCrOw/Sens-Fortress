@@ -149,7 +149,7 @@ namespace SensFortress.Data.Database
                     var dbBytes = ByteHelper.ReadBytesOfStream(stream);
                     var decryptedDb = aesAlg.Decrypt(dbBytes, masterKey.Value, saltBytes);
                     Logger.log.Info($"Decrypted {TermHelper.GetDatabaseTerm()}");
-                    File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\decryptedTestFile", decryptedDb);
+                    //File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\decryptedTestFile", decryptedDb);
 
                     // =========================================================== Unzip database
 
@@ -157,7 +157,7 @@ namespace SensFortress.Data.Database
 
                     foreach(var byteArr in unzippedByteEntriesOfDb)
                     {
-                        _xmlDataCache.test(byteArr);
+                        _xmlDataCache.BuildModelsOutOfBytes(byteArr);
                     }
 
                     stream.Close();
