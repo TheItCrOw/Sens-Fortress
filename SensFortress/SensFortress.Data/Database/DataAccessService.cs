@@ -104,14 +104,14 @@ namespace SensFortress.Data.Database
                     Logger.log.Debug($"Fortress has been reversed due to an error: {fortress.FullPath}");
                 }
 
-                throw new FortressException($"An error ocurred while building the fortress. All operations to this point have been reversed.", ex);
+                throw new FortressException($"Couldn't build fortress. All changes made to this point have been reversed. {Environment.NewLine}{ex}");
             }
         }
 
         /// <summary>
-        /// Opens a fortress and loads the database.
+        /// Opens a <see cref="Fortress"/> and loads the database.
         /// </summary>
-        public ZipArchive GetFortress(string fortressFullPath, string fortressName, string password)
+        public void BuildFortress(string fortressFullPath, string fortressName, string password)
         {
             try
             {
@@ -163,12 +163,11 @@ namespace SensFortress.Data.Database
                     stream.Close();
                 }
 
-                return null;
             }
             catch (Exception ex)
             {
                 Logger.log.Error($"During loading a fortress: {ex}");
-                throw new FortressException($"An error ocurred while opening the fortress. All operations to this point have been reversed.", ex);
+                throw new FortressException($"Couldn't rebuild fortress. All data has been flushed out of the memory. {Environment.NewLine}{ex}");
             }
         }
 
