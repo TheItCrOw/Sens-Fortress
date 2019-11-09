@@ -14,7 +14,7 @@ namespace SensFortress.Utility
         /// Creates a new directory in the given path.
         /// </summary>
         /// <param name="path"></param>
-        public static void CreateDirecotry(string fullName)
+        public static void CreateDirectory(string fullName)
         {
             Directory.CreateDirectory(fullName);
         }

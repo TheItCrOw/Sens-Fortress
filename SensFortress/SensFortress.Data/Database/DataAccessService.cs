@@ -1,4 +1,5 @@
 ﻿using SensFortress.Data.Exceptions;
+using SensFortress.Models.BaseClasses;
 using SensFortress.Models.Fortress;
 using SensFortress.Security;
 using SensFortress.Security.AES;
@@ -31,6 +32,13 @@ namespace SensFortress.Data.Database
 
         private XmlDataCache _xmlDataCache = new XmlDataCache();
 
+        public void InitializeCurrentDatacache(string path) => _xmlDataCache.InitializeXmlDatacache(path);
+
+        public void Test(ModelBase model)
+        {
+            _xmlDataCache.StoreOne<Fortress>(model);
+        }
+
         /// <summary>
         /// Creates a new <see cref="Fortress"/> with a <see cref="MasterKey"/> and saves it encrypted.
         /// </summary>
@@ -39,16 +47,16 @@ namespace SensFortress.Data.Database
             try
             {
                 Logger.log.Info("Starting to build a new fortress...");
-                var dataBasePath = fortress.FullPath + "\\" + TermHelper.GetDatabaseTerm();
+                var databasePath = Path.Combine(fortress.FullPath, TermHelper.GetDatabaseTerm());
 
                 // =========================================================== Create the root directory
 
-                DirectoryHelper.CreateDirecotry(fortress.FullPath);
+                DirectoryHelper.CreateDirectory(fortress.FullPath);
                 Logger.log.Debug($"Created outer walls {fortress.FullPath}.");
 
                 // =========================================================== Create the sub directory for the database
 
-                DirectoryHelper.CreateDirecotry(dataBasePath);
+                DirectoryHelper.CreateDirectory(databasePath);
                 Logger.log.Debug($"Created the {TermHelper.GetDatabaseTerm()}");
 
                 // =========================================================== Create the file which holds the salt to unlock the database
@@ -58,26 +66,26 @@ namespace SensFortress.Data.Database
 
                 // =========================================================== Store the user Input in the database
 
-                _xmlDataCache.StoreOne<Fortress>(dataBasePath, fortress);
+                _xmlDataCache.StoreOne<Fortress>(fortress);
                 Logger.log.Debug("Stored fortress information.");
 
                 // =========================================================== Zip only the database 
 
-                ZipHelper.ZipSavedArchives(dataBasePath, dataBasePath + TermHelper.GetZippedFileEnding());
-                Directory.Delete(dataBasePath, true);
+                ZipHelper.ZipSavedArchives(databasePath, databasePath + TermHelper.GetZippedFileEnding());
+                Directory.Delete(databasePath, true);
                 Logger.log.Debug($"{TermHelper.GetDatabaseTerm()} has been zipped.");
 
                 // =========================================================== Encrypt the database
 
                 var aesAlg = new AesAlgorithm();
                 // Read all bytes from the database directory
-                var data = File.ReadAllBytes(dataBasePath + TermHelper.GetZippedFileEnding());
+                var data = File.ReadAllBytes(databasePath + TermHelper.GetZippedFileEnding());
                 // Encrypt it
                 var encryptedData = aesAlg.Encrypt(data, fortress.MasterKey.Value, fortress.Salt);
                 // Write the encrypted file
-                File.WriteAllBytes(dataBasePath + TermHelper.GetDatabaseEnding(), encryptedData);
+                File.WriteAllBytes(databasePath + TermHelper.GetDatabaseEnding(), encryptedData);
                 // Delete the zip
-                File.Delete(dataBasePath + TermHelper.GetZippedFileEnding());
+                File.Delete(databasePath + TermHelper.GetZippedFileEnding());
                 Logger.log.Debug($"Encrypted {TermHelper.GetDatabaseTerm()}");
 
                 // =========================================================== Zip the whole fortress

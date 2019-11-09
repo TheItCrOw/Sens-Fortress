@@ -1,13 +1,18 @@
-﻿using System;
+﻿using SensFortress.Models.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace SensFortress.Models.BaseClasses
 {
-    public class ModelBase
+    [DataContract]
+    public class ModelBase : Interfaces.ISerializable, IDeletable
     {
-
+        [DataMember]
         public Guid Id { get; set; }
+
+        public virtual void Create() { }
 
     }
 }

@@ -2,6 +2,7 @@
 using SensFortress.Security.AES;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Security;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace SensFortress.Models.Fortress
     /// <summary>
     /// Model that holds information of a fortress.
     /// </summary>
+    [DataContract]
     public class Fortress : ModelBase
     {
         public Fortress(byte[] salt, byte[] key, string fullPath, string name, string lastName, string userName, string eMail, Guid id)
@@ -22,6 +24,11 @@ namespace SensFortress.Models.Fortress
             UserName = userName;
             EMail = eMail;
             Id = id;
+        }
+
+        public override void Create()
+        {
+
         }
         /// <summary>
         /// Random salt that is needed to decrypt the database.
@@ -38,10 +45,14 @@ namespace SensFortress.Models.Fortress
         /// </summary>
         public string FullPath { get; }
 
-        public string Name { get; }
-        public string LastName { get; }
-        public string UserName { get; }
-        public string EMail { get; }
+        [DataMember]
+        public string Name { get; set; }
+        [DataMember]
+        public string LastName { get; set; }
+        [DataMember]
+        public string UserName { get; set; }
+        [DataMember]
+        public string EMail { get; set; }
 
     }
 }

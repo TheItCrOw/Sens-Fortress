@@ -26,14 +26,12 @@ namespace SensFortress.Security.AES
         /// <returns></returns>
         private protected SecureString GetSecureString(string text)
         {
-            using (var secureString = new SecureString())
+            SecureString strSecure = new SecureString();
+            foreach (char c in text)
             {
-                foreach (char c in text)
-                {
-                    secureString.AppendChar(c);
-                }
-                return secureString;
+                strSecure.AppendChar(c);
             }
+            return strSecure;
         }
 
     }
