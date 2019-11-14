@@ -1,12 +1,15 @@
 ﻿using SensFortress.Data.Exceptions;
 using SensFortress.Models.BaseClasses;
+using SensFortress.Models.Interfaces;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace SensFortress.Data.Database
 {
@@ -15,12 +18,26 @@ namespace SensFortress.Data.Database
     /// </summary>
     internal class XmlDataCache
     {
+        private string _databasePath;
+        private bool _isInitialized;
 
+        /// <summary>
+        /// Set the location of the current datacache. If it's not initialzed, the datacache will break.
+        /// </summary>
+        /// <param name="path"></param>
+        public void InitializeXmlDatacache(string path)
+        {
+            _databasePath = path;
+            _isInitialized = true;
+        }
         /// <summary>
         /// Do NOT use this unless a salt is stored in a single file.
         /// </summary>
         internal void StoreSalt(string path, byte[] salt)
         {
+            if (!_isInitialized)
+                throw new XmlDataCacheException("The Datacache has not been initialized.");
+
             try
             {
                 File.WriteAllBytes(path + "\\salt" + TermHelper.GetTextFileEnding(), salt);
@@ -36,7 +53,7 @@ namespace SensFortress.Data.Database
         /// Builds models out of byte array.
         /// </summary>
         /// <param name="arr"></param>
-        public void BuildModelsOutOfBytes (byte[] arr)
+        public void BuildModelsOutOfBytes(byte[] arr)
         {
             XmlDocument doc = new XmlDocument();
             MemoryStream ms = new MemoryStream(arr);
@@ -46,41 +63,28 @@ namespace SensFortress.Data.Database
 
             ms.Close();
         }
-
-        internal void StoreOne<T>(string datacacheRootPath, ModelBase model) where T : ModelBase
+        
+        internal void StoreOne<T>(ModelBase model) where T : Models.Interfaces.ISerializable
         {
-            try
+            if (!_isInitialized)
+                throw new XmlDataCacheException("The Datacache has not been initialized.");
+
+            var ds = new DataContractSerializer(typeof(T));
+            var obj = CastModelBase<T>(model);
+            var settings = new XmlWriterSettings { Indent = true };
+            using (var sww = new StringWriter())
             {
-                Logger.log.Info($"Starting to write instance of {typeof(T).Name}: {model.Id} to {datacacheRootPath}...");
-                var path = datacacheRootPath + "\\" + typeof(T).Name;
-                DirectoryHelper.CreateDirecotry(path);
-                var fullName = path + "\\" + model.Id + ".xml";
-
-                //So that the xmlWriter makes breaks between lines
-                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
-                xmlWriterSettings.NewLineOnAttributes = true;
-                xmlWriterSettings.Indent = true;
-
-                using (XmlWriter writer = XmlWriter.Create(fullName, xmlWriterSettings))
-                {
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement(typeof(T).Name);
-
-                    foreach(var property in typeof(T).GetProperties())
-                    {
-                        writer.WriteElementString(property.Name, property.GetValue(model, null).ToString());
-                    }
-
-                    writer.WriteEndElement();
-                    writer.WriteEndDocument();
-                }
-                Logger.log.Info($"Writing successfull!");
+                using (var w = XmlWriter.Create(Path.Combine(_databasePath, $"{model.Id}.xml"), settings))
+                    ds.WriteObject(w, obj);
             }
-            catch (Exception ex)
-            {
-                Logger.log.Error($"During storing one: {ex}");
-                throw new XmlDataCacheException($"Error while trying to store {typeof(T).Name} in the {TermHelper.GetDatabaseTerm()} ", ex);
-            }
+        }
+
+        private T CastModelBase<T>(ModelBase model)
+        {
+            if (model is T)
+                return (T)Convert.ChangeType(model, typeof(T));
+            else
+                throw new InvalidCastException($"Cannot cast type {model.GetType()} to {typeof(T)}");
         }
 
     }
