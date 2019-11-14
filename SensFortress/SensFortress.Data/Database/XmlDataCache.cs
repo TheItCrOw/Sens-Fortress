@@ -55,15 +55,17 @@ namespace SensFortress.Data.Database
         /// <param name="arr"></param>
         public void BuildModelsOutOfBytes(byte[] arr)
         {
+            if (arr == null)
+                throw new XmlDataCacheException("Byte array was null.");
+
             XmlDocument doc = new XmlDocument();
-            MemoryStream ms = new MemoryStream(arr);
-
-            // doc holds the current xml File
-            doc.Load(ms);
-
-            ms.Close();
+            using (var ms = new MemoryStream(arr))
+            {
+                // doc holds the current xml File
+                doc.Load(ms);
+            }
         }
-        
+
         internal void StoreOne<T>(ModelBase model) where T : Models.Interfaces.ISerializable
         {
             if (!_isInitialized)
