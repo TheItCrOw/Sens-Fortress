@@ -40,7 +40,7 @@ namespace SensFortress.Data.Database
 
             try
             {
-                File.WriteAllBytes(Path.Combine(path, "salt", TermHelper.GetTextFileEnding()), salt);
+                File.WriteAllBytes(Path.Combine(path, $"salt{TermHelper.GetTextFileEnding()}"), salt);
             }
             catch (Exception ex)
             {
@@ -72,10 +72,18 @@ namespace SensFortress.Data.Database
             var ds = new DataContractSerializer(typeof(T));
             var obj = CastModelBase<T>(model);
             var settings = new XmlWriterSettings { Indent = true };
+            var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), typeof(T).Name);
+
+            // Always check if a directory exists. If not, create it.
+            if (!Directory.Exists(currentSaveLocation))
+                DirectoryHelper.CreateDirectory(currentSaveLocation);
+
             using (var sww = new StringWriter())
             {
-                using (var w = XmlWriter.Create(Path.Combine(_databasePath, $"{model.Id}.xml"), settings))
+                using (var w = XmlWriter.Create(Path.Combine(currentSaveLocation, $"{model.Id}.xml"), settings))
+                {
                     ds.WriteObject(w, obj);
+                }
             }
         }
 
