@@ -40,7 +40,7 @@ namespace SensFortress.Data.Database
 
             try
             {
-                File.WriteAllBytes(path + "\\salt" + TermHelper.GetTextFileEnding(), salt);
+                File.WriteAllBytes(Path.Combine(path, "salt", TermHelper.GetTextFileEnding()), salt);
             }
             catch (Exception ex)
             {

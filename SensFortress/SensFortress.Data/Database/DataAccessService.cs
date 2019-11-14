@@ -32,9 +32,13 @@ namespace SensFortress.Data.Database
 
         private XmlDataCache _xmlDataCache = new XmlDataCache();
 
+        /// <summary>
+        /// Sets the path for the current database that is being used.
+        /// </summary>
+        /// <param name="path"></param>
         public void InitializeCurrentDatacache(string path) => _xmlDataCache.InitializeXmlDatacache(path);
 
-        public void Test(ModelBase model)
+        public void TestStoreOne(ModelBase model)
         {
             _xmlDataCache.StoreOne<Fortress>(model);
         }

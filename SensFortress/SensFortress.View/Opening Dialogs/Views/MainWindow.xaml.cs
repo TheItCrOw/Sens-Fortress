@@ -61,11 +61,10 @@ namespace SensFortress.View
             var userName = "mMuster";
             var eMail = "test@web.de";
 
-
             var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
-            DataAccessService.Instance.InitializeCurrentDatacache("C:\\Users\\Nutzer\\Desktop\\");
-            DataAccessService.Instance.Test(fortress);
-            //DataAccessService.Instance.CreateNewFortress(fortress);
+            DataAccessService.Instance.InitializeCurrentDatacache(DirectoryHelper.GetDesktopPath());
+            //DataAccessService.Instance.TestStoreOne(fortress);
+            DataAccessService.Instance.CreateNewFortress(fortress);
             //DataAccessService.Instance.BuildFortress("C:\\Users\\Nutzer\\Desktop\\testFortress.sfzf", "testFortress", "diesIstEinTest123");
         }
 
