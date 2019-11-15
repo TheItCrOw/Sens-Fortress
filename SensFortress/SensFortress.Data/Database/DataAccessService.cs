@@ -75,7 +75,7 @@ namespace SensFortress.Data.Database
 
                 // =========================================================== Zip only the database 
 
-                ZipHelper.ZipSavedArchives(databasePath, databasePath + TermHelper.GetZippedFileEnding());
+                ZipHelper.ZipSavedArchives(databasePath, $"{databasePath}{TermHelper.GetZippedFileEnding()}");
                 Directory.Delete(databasePath, true);
                 Logger.log.Debug($"{TermHelper.GetDatabaseTerm()} has been zipped.");
 
@@ -83,18 +83,18 @@ namespace SensFortress.Data.Database
 
                 var aesAlg = new AesAlgorithm();
                 // Read all bytes from the database directory
-                var data = File.ReadAllBytes(databasePath + TermHelper.GetZippedFileEnding());
+                var data = File.ReadAllBytes($"{databasePath}{TermHelper.GetZippedFileEnding()}");
                 // Encrypt it
                 var encryptedData = aesAlg.Encrypt(data, fortress.MasterKey.Value, fortress.Salt);
                 // Write the encrypted file
-                File.WriteAllBytes(databasePath + TermHelper.GetDatabaseEnding(), encryptedData);
+                File.WriteAllBytes($"{databasePath}{TermHelper.GetDatabaseEnding()}", encryptedData);
                 // Delete the zip
-                File.Delete(databasePath + TermHelper.GetZippedFileEnding());
+                File.Delete($"{databasePath}{TermHelper.GetZippedFileEnding()}");
                 Logger.log.Debug($"Encrypted {TermHelper.GetDatabaseTerm()}");
 
                 // =========================================================== Zip the whole fortress
 
-                ZipHelper.ZipSavedArchives(fortress.FullPath, fortress.FullPath + TermHelper.GetZippedFileEnding());
+                ZipHelper.ZipSavedArchives(fortress.FullPath, $"{fortress.FullPath}{TermHelper.GetZippedFileEnding()}");
                 Directory.Delete(fortress.FullPath, true);
                 Logger.log.Debug("Fortress has been zipped.");
 
@@ -110,7 +110,7 @@ namespace SensFortress.Data.Database
                     Directory.Delete(fortress.FullPath, true);
                     Logger.log.Debug($"Fortress has been reversed due to an error: {fortress.FullPath}");
                 }
-                if(File.Exists(fortress.FullPath + TermHelper.GetZippedFileEnding()))
+                if(File.Exists(Path.Combine(fortress.FullPath, TermHelper.GetZippedFileEnding())))
                 {
                     File.Delete(fortress.FullPath + TermHelper.GetZippedFileEnding());
                     Logger.log.Debug($"Fortress has been reversed due to an error: {fortress.FullPath}");
