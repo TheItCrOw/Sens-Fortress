@@ -6,8 +6,7 @@ namespace SensFortress.Models.Interfaces
 {
     public interface ISerializable
     {
-
-        public void Create();
+        public Guid Id { get; set; }
 
     }
 }
