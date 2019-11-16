@@ -64,8 +64,8 @@ namespace SensFortress.View
             var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
             DataAccessService.Instance.InitializeCurrentDatacache(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress"));
             //DataAccessService.Instance.TestStoreOne(fortress);
-            DataAccessService.Instance.CreateNewFortress(fortress);
-            //DataAccessService.Instance.BuildFortress(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123");
+            //DataAccessService.Instance.CreateNewFortress(fortress);
+            DataAccessService.Instance.BuildFortress(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123");
         }
 
     }

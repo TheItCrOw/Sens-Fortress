@@ -64,6 +64,8 @@ namespace SensFortress.Data.Database
                 // doc holds the current xml File
                 doc.Load(ms);
             }
+
+            ModelFactory.AddToFactoryQueue<XmlDocument>(doc);
         }
 
         internal void StoreOne<T>(ModelBase model) where T : Models.Interfaces.ISerializable
@@ -89,6 +91,12 @@ namespace SensFortress.Data.Database
             }
         }
 
+        /// <summary>
+        /// Casts the ModelBase into T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="model"></param>
+        /// <returns></returns>
         private T CastModelBase<T>(ModelBase model)
         {
             if (model is T)

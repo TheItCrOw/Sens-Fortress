@@ -13,25 +13,29 @@ namespace SensFortress.Data.Database
     public static class ModelFactory
     {
         private static object _lock = new object();
-        private static CustomAsyncQueue<ISerializable> CreationQueue = new CustomAsyncQueue<ISerializable>();
+
+        /// <summary>
+        /// CreationQueue of the <see cref="ModelFactory"/>. Entities in it will be build one after another.
+        /// </summary>
+        private static FactoryQueue<Type, object> CreationQueue = new FactoryQueue<Type, object>();
 
         /// <summary>
         /// Authorize the data and put it at the end of the <see cref="ModelFactory"/> queue.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="model"></param>
-        public static async void AddToQueue<T>(ISerializable model)
+        public async static void AddToFactoryQueue<T>(object model)
         {
-            var authorizedModel = await CreationQueue.Enqueue(model);
+            var authorizedModelTuple = await CreationQueue.Enqueue(Tuple.Create(typeof(T), model));
         }
 
         /// <summary>
         /// Dequeue the last authorized data in the <see cref="ModelFactory"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public static async void Dequeue<T>()
+        public static async Tuple<Type, object> DequeueFromFactory<T>()
         {
-            var authorizedModel = await CreationQueue.Dequeue();
+            return await CreationQueue.Dequeue();
         }
 
     }
