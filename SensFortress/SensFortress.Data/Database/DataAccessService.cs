@@ -38,10 +38,7 @@ namespace SensFortress.Data.Database
         /// <param name="path"></param>
         public void InitializeCurrentDatacache(string path) => _xmlDataCache.InitializeXmlDatacache(path);
 
-        public void TestStoreOne(ModelBase model)
-        {
-            _xmlDataCache.StoreOne<Fortress>(model);
-        }
+        public void Save(ModelBase model) => _xmlDataCache.StoreOne<Fortress>(model);
 
         /// <summary>
         /// Creates a new <see cref="Fortress"/> with a <see cref="MasterKey"/> and saves it encrypted.

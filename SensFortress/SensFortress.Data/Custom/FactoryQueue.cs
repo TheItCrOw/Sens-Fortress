@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace SensFortress.Data.Custom
 {
     /// <summary>
-    /// Async Wrapper for a queue.
+    /// Async Queue for the factory.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class FactoryQueue<T1, T2> : IEnumerable

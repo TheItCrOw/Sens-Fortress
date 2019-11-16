@@ -50,7 +50,7 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
-        /// Builds models out of byte array.
+        /// Builds models out of one byte array.
         /// </summary>
         /// <param name="arr"></param>
         public void BuildModelsOutOfBytes(byte[] arr)
@@ -65,7 +65,25 @@ namespace SensFortress.Data.Database
                 doc.Load(ms);
             }
 
-            ModelFactory.AddToFactoryQueue<XmlDocument>(doc);
+            ModelFactory.Instance.AddToFactoryQueue<XmlDocument>(doc);
+        }
+
+        /// <summary>
+        /// Builds models out of a list of byte arrays.
+        /// </summary>
+        /// <param name="arrList"></param>
+        public void BuildModelsOutOfBytes(List<byte[]> arrList)
+        {
+            var docs = new List<XmlDocument>();
+            foreach(var byteArray in arrList)
+            {
+                using (var ms = new MemoryStream(byteArray))
+                {
+                    var doc = new XmlDocument();
+                    doc.Load(ms);
+                    docs.Add()
+                }
+            }
         }
 
         internal void StoreOne<T>(ModelBase model) where T : Models.Interfaces.ISerializable

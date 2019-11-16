@@ -10,32 +10,44 @@ namespace SensFortress.Data.Database
     /// <summary>
     /// Builds models out of data async.
     /// </summary>
-    public static class ModelFactory
+    public sealed class ModelFactory
     {
-        private static object _lock = new object();
-
+        #region Implement Lazy behaviour
         /// <summary>
-        /// CreationQueue of the <see cref="ModelFactory"/>. Entities in it will be build one after another.
+        /// Implement the lazy pattern.
         /// </summary>
-        private static FactoryQueue<Type, object> CreationQueue = new FactoryQueue<Type, object>();
+        private static readonly Lazy<ModelFactory>
+            lazy =
+            new Lazy<ModelFactory>
+            (() => new ModelFactory());
 
         /// <summary>
-        /// Authorize the data and put it at the end of the <see cref="ModelFactory"/> queue.
+        /// Instance of the <see cref="ModelFactory"/> class.
+        /// </summary>
+        public static ModelFactory Instance { get { return lazy.Value; } }
+        #endregion
+        /// <summary>
+        /// <see cref="FactoryQueue"/> of the <see cref="ModelFactory"/>. Entities in it will be build one after another.
+        /// </summary>
+        private FactoryQueue<Type, object> FactoryQueue = new FactoryQueue<Type, object>();
+
+        /// <summary>
+        /// Authorize the data and put it at the end of the <see cref="FactoryQueue"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="model"></param>
-        public async static void AddToFactoryQueue<T>(object model)
+        public async void AddToFactoryQueue<T>(object model)
         {
-            var authorizedModelTuple = await CreationQueue.Enqueue(Tuple.Create(typeof(T), model));
+            var authorizedModelTuple = await FactoryQueue.Enqueue(Tuple.Create(typeof(T), model));
         }
 
         /// <summary>
-        /// Dequeue the last authorized data in the <see cref="ModelFactory"/>.
+        /// Dequeue the last authorized data in the <see cref="FactoryQueue"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public static async Tuple<Type, object> DequeueFromFactory<T>()
+        public async void DequeueFromFactory<T>()
         {
-            return await CreationQueue.Dequeue();
+            await FactoryQueue.Dequeue();
         }
 
     }
