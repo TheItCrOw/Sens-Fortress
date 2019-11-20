@@ -37,6 +37,7 @@ namespace SensFortress.View
         {
             Logger.log.Info("Building the gates...");
             InitializeComponent();
+            Factory.Instance.StartFactoryQueue();
             Logger.log.Info("Successfully built!");
             // For some reason, VS is firing an exceptionn when trying to do this in XAML...
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;

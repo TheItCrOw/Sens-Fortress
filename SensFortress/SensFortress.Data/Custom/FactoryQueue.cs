@@ -23,33 +23,28 @@ namespace SensFortress.Data.Custom
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Tuple<T1, T2>> Enqueue(Tuple<T1, T2> model)
+        public async void Enqueue(Tuple<T1, T2> task)
         {
-            Tuple<T1, T2> authorizedModel = null;
             await Task.Run(() =>
             {
-                authorizedModel = AuthorizeEnqeue(model);
-                _queue.Enqueue(authorizedModel);
+                var authorizedTask = AuthorizeEnqeue(task);
+                _queue.Enqueue(authorizedTask);
             });
 
-            return authorizedModel;
         }
 
         /// <summary>
         /// Dequeue an authorized tuple async.
         /// </summary>
         /// <returns></returns>
-        public async Task<Tuple<T1, T2>> Dequeue()
+        public async void Dequeue()
         {
-            Tuple<T1, T2> authorizedModel = null;
             await Task.Run(() =>
             {
-                _queue.TryDequeue(out var model);
-                AuthorizeDequeue(model);
-                authorizedModel = model;
+                _queue.TryPeek(out var task);
+                AuthorizeDequeue(task);
+                _queue.TryDequeue(out var authorizedTask);
             });
-
-            return authorizedModel;
         }
 
         /// <summary>
@@ -57,10 +52,10 @@ namespace SensFortress.Data.Custom
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        private Tuple<T1, T2> AuthorizeEnqeue(Tuple<T1, T2> model)
+        private Tuple<T1, T2> AuthorizeEnqeue(Tuple<T1, T2> task)
         {
             // Implement the rest later
-            return model;                
+            return task;                
         }
 
         /// <summary>
@@ -68,15 +63,15 @@ namespace SensFortress.Data.Custom
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        private Tuple<T1, T2> AuthorizeDequeue(Tuple<T1, T2> model)
+        private Tuple<T1, T2> AuthorizeDequeue(Tuple<T1, T2> task)
         {
-            if (model.Item1 == null || model.Item2 == null || model == null)
+            if (task.Item1 == null || task.Item2 == null || task == null)
                 throw new NullReferenceException($"FactoryQueue found empty data:{Environment.NewLine}" +
-                    $"{model}" +
-                    $"{model.Item1}" +
-                    $"{model.Item2}.");
+                    $"{task}" +
+                    $"{task.Item1}" +
+                    $"{task.Item2}.");
 
-            return model;
+            return task;
         }
 
         public int Count => _queue.Count;

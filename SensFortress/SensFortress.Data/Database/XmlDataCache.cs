@@ -65,7 +65,7 @@ namespace SensFortress.Data.Database
                 doc.Load(ms);
             }
 
-            ModelFactory.Instance.AddToFactoryQueue<XmlDocument>(doc);
+            //ModelFactory.Instance.AddToFactoryQueue<XmlDocument>(doc);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace SensFortress.Data.Database
                 {
                     var doc = new XmlDocument();
                     doc.Load(ms);
-                    docs.Add()
+                    docs.Add(doc);
                 }
             }
         }
