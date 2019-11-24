@@ -26,10 +26,6 @@ namespace SensFortress.Models.Fortress
             Id = id;
         }
 
-        public override void Create()
-        {
-
-        }
         /// <summary>
         /// Random salt that is needed to decrypt the database.
         /// </summary>

@@ -35,9 +35,14 @@ namespace SensFortress.View
     {
         public MainWindow()
         {
+            Start();
+        }
+
+        void Start()
+        {
             Logger.log.Info("Building the gates...");
             InitializeComponent();
-            Factory.Instance.StartFactoryQueue();
+            Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress"));
             Logger.log.Info("Successfully built!");
             // For some reason, VS is firing an exceptionn when trying to do this in XAML...
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -63,10 +68,12 @@ namespace SensFortress.View
             var eMail = "test@web.de";
 
             var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
-            DataAccessService.Instance.InitializeCurrentDatacache(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress"));
             //DataAccessService.Instance.TestStoreOne(fortress);
             //DataAccessService.Instance.CreateNewFortress(fortress);
-            DataAccessService.Instance.BuildFortress(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123");
+            //DataAccessService.Instance.BuildFortress(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123");
+            Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress});
+            var param = new object[3] { System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123" };
+            Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Build, param);
         }
 
     }

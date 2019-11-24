@@ -12,7 +12,5 @@ namespace SensFortress.Models.BaseClasses
         [DataMember]
         public Guid Id { get; set; }
 
-        public virtual void Create() { }
-
     }
 }

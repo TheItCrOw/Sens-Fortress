@@ -19,7 +19,7 @@ namespace SensFortress.Data.Custom
         private protected ConcurrentQueue<Tuple<T1, T2>> _queue = new ConcurrentQueue<Tuple<T1, T2>>();
 
         /// <summary>
-        /// Authorize and enqueue a tuple async.
+        /// Authorize and enqueue a task async.
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -30,21 +30,22 @@ namespace SensFortress.Data.Custom
                 var authorizedTask = AuthorizeEnqeue(task);
                 _queue.Enqueue(authorizedTask);
             });
-
         }
 
         /// <summary>
-        /// Dequeue an authorized tuple async.
+        /// Dequeue an authorized task async.
         /// </summary>
         /// <returns></returns>
-        public async void Dequeue()
+        public async Task<Tuple<T1, T2>> Dequeue()
         {
+            Tuple<T1, T2> authorizedTask = null;
             await Task.Run(() =>
             {
                 _queue.TryPeek(out var task);
                 AuthorizeDequeue(task);
-                _queue.TryDequeue(out var authorizedTask);
+                _queue.TryDequeue(out authorizedTask);
             });
+            return authorizedTask;
         }
 
         /// <summary>
