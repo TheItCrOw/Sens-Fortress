@@ -65,7 +65,7 @@ namespace SensFortress.Data.Database
 
             Thread continousThread = new Thread(new ThreadStart(ContinousThread));
             continousThread.IsBackground = true;
-            continousThread.Name = "FactoryThread.";
+            continousThread.Name = "FactoryThread";
             continousThread.Start();
         }
 
