@@ -65,7 +65,7 @@ namespace SensFortress.Data.Database
 
             Thread continousThread = new Thread(new ThreadStart(ContinousThread));
             continousThread.IsBackground = true;
-            continousThread.Name = "Factory queue executing thread.";
+            continousThread.Name = "FactoryThread.";
             continousThread.Start();
         }
 
@@ -112,7 +112,6 @@ namespace SensFortress.Data.Database
                     _xmlDatacache.BuildFortress((string)task.Item2[0], (string)task.Item2[1], (string)task.Item2[2]);
                     break;
                 case FactoryTaskType.Create:
-
                     // Have to later consider other models than fortresses
                     _xmlDatacache.CreateNewFortress((Fortress)task.Item2[0]);
                     return true;

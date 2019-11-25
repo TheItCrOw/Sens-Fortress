@@ -68,12 +68,32 @@ namespace SensFortress.View
             var eMail = "test@web.de";
 
             var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
+
             //DataAccessService.Instance.TestStoreOne(fortress);
             //DataAccessService.Instance.CreateNewFortress(fortress);
             //DataAccessService.Instance.BuildFortress(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123");
-            Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress});
+
+
+            //Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress});
             var param = new object[3] { System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123" };
             Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Build, param);
+
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    var userMasterKey2 = "diesIstEinTest123";
+
+            //    var aesHelper2 = new AesHelper();
+            //    var salt2 = aesHelper.GenerateSalt();
+            //    var hashedKey2 = aesHelper.CreateKey(userMasterKey, 512, salt);
+            //    var fullPath2 = (System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", $"testFortress{i}"));
+            //    var name2 = "Max";
+            //    var lastName2 = "Mustermann";
+            //    var userName2 = "mMuster";
+            //    var eMail2 = "test@web.de";
+
+            //    var fortress2 = new Fortress(salt2, hashedKey2, fullPath2, name2, lastName2, userName2, eMail2, Guid.NewGuid());
+            //    Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress2 });
+            //}
         }
 
     }
