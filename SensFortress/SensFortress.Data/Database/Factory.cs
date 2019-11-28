@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SensFortress.Data.Database
 {
     /// <summary>
-    /// Builds models out of data async.
+    /// Accept, handles and executes any data operation.
     /// </summary>
     public sealed class Factory
     {
@@ -53,6 +53,9 @@ namespace SensFortress.Data.Database
         /// </summary>
         private FactoryQueue<FactoryTaskType, object[]> _factoryQueue;
 
+        /// <summary>
+        /// Executes the tasks that it's given by the <see cref="FactoryQueue{T1, T2}"/>.
+        /// </summary>
         private XmlDataCache _xmlDatacache;
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace SensFortress.Data.Database
 
             Thread continousThread = new Thread(new ThreadStart(ContinousThread));
             continousThread.IsBackground = true;
-            continousThread.Name = "FactoryThread";
+            continousThread.Name = "FACTORY_THREAD";
             continousThread.Start();
         }
 
@@ -103,17 +106,17 @@ namespace SensFortress.Data.Database
             }
         }
 
-        private bool HandleTask(Tuple<FactoryTaskType, object[]> task)
+        private bool HandleTask(Tuple<FactoryTaskType, object[]> taskParams)
         {
-            switch (task.Item1)
+            switch (taskParams.Item1)
             {
                 case FactoryTaskType.Build:
                     // Have to later consider other models than fortresses
-                    _xmlDatacache.BuildFortress((string)task.Item2[0], (string)task.Item2[1], (string)task.Item2[2]);
+                    _xmlDatacache.BuildFortress((string)taskParams.Item2[0], (string)taskParams.Item2[1], (string)taskParams.Item2[2]);
                     break;
                 case FactoryTaskType.Create:
                     // Have to later consider other models than fortresses
-                    _xmlDatacache.CreateNewFortress((Fortress)task.Item2[0]);
+                    _xmlDatacache.CreateNewFortress((Fortress)taskParams.Item2[0]);
                     return true;
                 case FactoryTaskType.Read:
                     break;

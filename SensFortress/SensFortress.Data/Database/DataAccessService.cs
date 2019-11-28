@@ -18,6 +18,7 @@ namespace SensFortress.Data.Database
     /// <summary>
     /// Interface for communicating with the datacache.
     /// </summary>
+    [Obsolete]
     public sealed class DataAccessService
     {
         private static readonly Lazy<DataAccessService>

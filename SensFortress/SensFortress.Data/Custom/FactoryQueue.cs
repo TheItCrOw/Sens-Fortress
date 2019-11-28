@@ -17,7 +17,8 @@ namespace SensFortress.Data.Custom
     public class FactoryQueue<T1, T2> : IEnumerable
     {
         private protected ConcurrentQueue<Tuple<T1, T2>> _queue = new ConcurrentQueue<Tuple<T1, T2>>();
-
+        public int Count => _queue.Count;
+        IEnumerator IEnumerable.GetEnumerator() => _queue.GetEnumerator();
         /// <summary>
         /// Authorize and enqueue a task async.
         /// </summary>
@@ -55,7 +56,12 @@ namespace SensFortress.Data.Custom
         /// <returns></returns>
         private Tuple<T1, T2> AuthorizeEnqeue(Tuple<T1, T2> task)
         {
-            // Implement the rest later
+            if (task.Item1 == null || task.Item2 == null || task == null)
+                throw new NullReferenceException($"FactoryQueue found empty data:{Environment.NewLine}" +
+                    $"{task}" +
+                    $"{task.Item1}" +
+                    $"{task.Item2}.");
+
             return task;                
         }
 
@@ -75,7 +81,5 @@ namespace SensFortress.Data.Custom
             return task;
         }
 
-        public int Count => _queue.Count;
-        IEnumerator IEnumerable.GetEnumerator() => _queue.GetEnumerator();
     }
 }
