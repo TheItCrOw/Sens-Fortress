@@ -5,10 +5,12 @@ using SensFortress.Models.Interfaces;
 using SensFortress.Security;
 using SensFortress.Security.AES;
 using SensFortress.Utility;
+using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
@@ -39,7 +41,11 @@ namespace SensFortress.Data.Database
         internal void StoreSalt(string path, byte[] salt)
         {
             if (!_isInitialized)
-                throw new XmlDataCacheException("The Datacache has not been initialized.");
+            {
+                var ex = new XmlDataCacheException("XmlDataCache has not been initialized.");
+                ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
+                throw ex;
+            }
 
             try
             {
@@ -47,8 +53,9 @@ namespace SensFortress.Data.Database
             }
             catch (Exception ex)
             {
-                Logger.log.Error($"During storing salt: {ex}");
-                throw new XmlDataCacheException($"Error while trying to store salt in the {TermHelper.GetDatabaseTerm()} ", ex);
+                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
+                ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
+                throw ex;
             }
         }
 
@@ -59,7 +66,11 @@ namespace SensFortress.Data.Database
         internal void BuildModelsOutOfBytes(byte[] arr)
         {
             if (arr == null)
-                throw new XmlDataCacheException("Byte array was null.");
+            {
+                var ex = new XmlDataCacheException("Byte array was null.");
+                ex.SetUserMessage("An error occured while trying to build data. Please standby as the problem is being fixed.");
+                throw ex;
+            }
 
             XmlDocument doc = new XmlDocument();
             using (var ms = new MemoryStream(arr))
