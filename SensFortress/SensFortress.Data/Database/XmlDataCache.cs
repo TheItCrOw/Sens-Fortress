@@ -87,7 +87,7 @@ namespace SensFortress.Data.Database
         internal void BuildModelsOutOfBytes(List<byte[]> arrList)
         {
             var docs = new List<XmlDocument>();
-            foreach(var byteArray in arrList)
+            foreach (var byteArray in arrList)
             {
                 using (var ms = new MemoryStream(byteArray))
                 {
@@ -101,23 +101,36 @@ namespace SensFortress.Data.Database
         internal void StoreOne<T>(ModelBase model) where T : Models.Interfaces.ISerializable
         {
             if (!_isInitialized)
-                throw new XmlDataCacheException("The Datacache has not been initialized.");
-
-            var ds = new DataContractSerializer(typeof(T));
-            var obj = CastModelBase<T>(model);
-            var settings = new XmlWriterSettings { Indent = true };
-            var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), typeof(T).Name);
-
-            // Always check if a directory exists. If not, create it.
-            if (!Directory.Exists(currentSaveLocation))
-                DirectoryHelper.CreateDirectory(currentSaveLocation);
-
-            using (var sww = new StringWriter())
             {
-                using (var w = XmlWriter.Create(Path.Combine(currentSaveLocation, $"{model.Id}.xml"), settings))
+                var ex = new XmlDataCacheException("XmlDataCache has not been initialized.");
+                ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
+                throw ex;
+            }
+
+            try
+            {
+                var ds = new DataContractSerializer(typeof(T));
+                var obj = CastModelBase<T>(model);
+                var settings = new XmlWriterSettings { Indent = true };
+                var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), typeof(T).Name);
+
+                // Always check if a directory exists. If not, create it.
+                if (!Directory.Exists(currentSaveLocation))
+                    DirectoryHelper.CreateDirectory(currentSaveLocation);
+
+                using (var sww = new StringWriter())
                 {
-                    ds.WriteObject(w, obj);
+                    using (var w = XmlWriter.Create(Path.Combine(currentSaveLocation, $"{model.Id}.xml"), settings))
+                    {
+                        ds.WriteObject(w, obj);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
+                ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
+                throw ex;
             }
         }
 
