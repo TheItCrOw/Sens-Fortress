@@ -41,7 +41,7 @@ namespace SensFortress.Utility
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static List<byte[]> GetEntriesFromZipArchive(byte[] data)
+        public static List<byte[]> GetEntriesFromZipArchive(byte[] data, bool protectedMemory = false)
         {
             using (var zippedStream = new MemoryStream(data))
             {

@@ -56,10 +56,10 @@ namespace SensFortress.View
             //var testZip = ZipHelper.UnzipSavedZip("C:\\Users\\Nutzer\\Desktop\\TestZip.sfzf");
             //AesTests.TestFileEncryption();
             //AesTests.TestFileDecryption();
-            var userMasterKey = "diesIstEinTest123";
 
             var aesHelper = new AesHelper();
             var salt = aesHelper.GenerateSalt();
+            var userMasterKey = "diesIstEinTest123";
             var hashedKey = aesHelper.CreateKey(userMasterKey, 512, salt);
             var fullPath = (System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress"));
             var name = "Max";

@@ -9,7 +9,9 @@ using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -25,6 +27,17 @@ namespace SensFortress.Data.Database
     {
         private string _databasePath;
         private bool _isInitialized;
+        private IEnumerable<Type> _modelTypes;
+
+        /// <summary>
+        /// Represents the save Datacache stored in the RAM encryptedly.
+        /// </summary>
+        private List<byte[]> _secureDatacache;
+
+        /// <summary>
+        /// Represents the unencrypted Datacache in the RAM
+        /// </summary>
+        private Dictionary<Type, byte[]> _unsecureDatacache;
 
         /// <summary>
         /// Set the path of the current <see cref="TermHelper.GetDatabaseTerm()"/>.
@@ -34,6 +47,9 @@ namespace SensFortress.Data.Database
         {
             _databasePath = path;
             _isInitialized = true;
+            // Get a list of all modeltypes for creating them again
+            _modelTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes());
+            _secureDatacache = new List<byte[]>();
         }
         /// <summary>
         /// Do NOT use this unless a salt is stored in a single file.
@@ -43,7 +59,7 @@ namespace SensFortress.Data.Database
             if (!_isInitialized)
             {
                 var ex = new XmlDataCacheException("XmlDataCache has not been initialized.");
-                ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
 
@@ -67,16 +83,30 @@ namespace SensFortress.Data.Database
         {
             if (arr == null)
             {
-                var ex = new XmlDataCacheException("Byte array was null.");
-                ex.SetUserMessage("An error occured while trying to build data. Please standby as the problem is being fixed.");
+                var ex = new XmlDataCacheException("Tried to build a model, but the byteArray was null.");
+                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
 
-            XmlDocument doc = new XmlDocument();
-            using (var ms = new MemoryStream(arr))
+            try
             {
-                // doc holds the current xml File
-                doc.Load(ms);
+                XmlDocument doc = new XmlDocument();
+                using (var ms = new MemoryStream(arr))
+                {
+                    // doc holds the current xml File
+                    doc.Load(ms);
+                    var type = _modelTypes.First(t => t.Name == doc.DocumentElement.Name);
+                    var reader = XmlDictionaryReader.CreateTextReader(arr, new XmlDictionaryReaderQuotas());
+                    var dcs = new DataContractSerializer(type);
+                    var model = dcs.ReadObject(reader);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
+                throw ex;
             }
         }
 
@@ -98,12 +128,28 @@ namespace SensFortress.Data.Database
             }
         }
 
+        /// <summary>
+        /// Takes a byte array and encrypts it to the <see cref="_secureDatacache"/>
+        /// </summary>
+        internal void AddToSecureMemoryDC(byte[] modelBytes)
+        {
+            var encrpytedBytes = CryptMemoryProtection.EncryptInMemoryData(modelBytes);
+            modelBytes = null;
+            _secureDatacache.Add(encrpytedBytes);
+        }
+
+        /// <summary>
+        /// Stores a serializible model into the datacache
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="model"></param>
         internal void StoreOne<T>(ModelBase model) where T : Models.Interfaces.ISerializable
         {
             if (!_isInitialized)
             {
                 var ex = new XmlDataCacheException("XmlDataCache has not been initialized.");
-                ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
+                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
 
@@ -129,7 +175,7 @@ namespace SensFortress.Data.Database
             catch (Exception ex)
             {
                 ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
-                ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
         }
@@ -207,21 +253,19 @@ namespace SensFortress.Data.Database
             }
             catch (Exception ex)
             {
-                Logger.log.Error($"During building fortress: {ex}");
-
                 // Delete all changes that have been made to this point. We do not want half-built fortresses.
                 if (Directory.Exists(fortress.FullPath))
                 {
                     Directory.Delete(fortress.FullPath, true);
-                    Logger.log.Debug($"Fortress has been reversed due to an error: {fortress.FullPath}");
                 }
                 if (File.Exists(Path.Combine(fortress.FullPath, TermHelper.GetZippedFileEnding())))
                 {
                     File.Delete(fortress.FullPath + TermHelper.GetZippedFileEnding());
-                    Logger.log.Debug($"Fortress has been reversed due to an error: {fortress.FullPath}");
                 }
 
-                throw new FortressException($"Couldn't build fortress. All changes made to this point have been reversed. {Environment.NewLine}{ex}");
+                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
+                throw ex;
             }
         }
 
@@ -271,20 +315,18 @@ namespace SensFortress.Data.Database
                     // =========================================================== Unzip database
 
                     var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
-
                     foreach (var byteArr in unzippedByteEntriesOfDb)
                     {
                         BuildModelsOutOfBytes(byteArr);
                     }
-
-                    stream.Close();
                 }
 
             }
             catch (Exception ex)
             {
-                Logger.log.Error($"During loading a fortress: {ex}");
-                throw new FortressException($"Couldn't rebuild fortress. All data has been flushed out of the memory. {Environment.NewLine}{ex}");
+                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
+                throw ex;
             }
         }
 

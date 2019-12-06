@@ -9,7 +9,7 @@ using SensFortress.Utility.Exceptions;
 namespace SensFortress.Security
 {
     /// <summary>
-    /// Class that encrypts/decrypts byte in the memory for safety of sensible data.
+    /// Class that encrypts/decrypts bytes in the memory for safety of sensible data.
     /// </summary>
     public static class CryptMemoryProtection
     {
@@ -20,7 +20,6 @@ namespace SensFortress.Security
         /// Encrypt a byte array in memory.
         /// </summary>
         /// <param name="buffer"></param>
-        /// <returns></returns>
         public static byte[] EncryptInMemoryData(byte[] buffer)
         {
             try
@@ -41,7 +40,6 @@ namespace SensFortress.Security
         /// Decrypt a byte array in memory.
         /// </summary>
         /// <param name="data"></param>
-        /// <returns></returns>
         public static byte[] DecryptInMemoryData(byte[] data)
         {
             try
