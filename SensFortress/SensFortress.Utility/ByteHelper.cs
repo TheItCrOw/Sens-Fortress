@@ -39,7 +39,5 @@ namespace SensFortress.Utility
             }
         }
 
-        public static 
-
     }
 }

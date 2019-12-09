@@ -55,7 +55,8 @@
                                         Content="Identify yourself" BorderBrush="Black" BorderThickness="1" FontSize="18" Foreground="Black" FontFamily="Microsoft YaHei Light"/>
                                 <!--Enter the fortress-->
                                 <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="0 10 0 0"
-                                        Content="Enter the fortress" BorderBrush="Black" BorderThickness="1" FontSize="18" Foreground="GhostWhite" FontFamily="Microsoft YaHei Light"/>
+                                        Content="Enter the fortress" BorderBrush="Black" BorderThickness="1" FontSize="18" Foreground="GhostWhite" FontFamily="Microsoft YaHei Light"
+                                        Command="{x:Static materialDesign:Transitioner.MoveLastCommand}" Cursor="Hand"/>
                             </StackPanel>
                         </Grid>
                     </materialDesign:Flipper.FrontContent>
@@ -83,13 +84,14 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
-                                    <TextBox materialDesign:HintAssist.Hint="Username" materialDesign:HintAssist.IsFloating="True"
-                                         Margin="0 12 0 0" Text="" FontSize="20"/>
-                                    <TextBox Grid.Row="1" materialDesign:HintAssist.Hint="Password" materialDesign:HintAssist.IsFloating="True" Margin="0 12 0 0" Text="" FontSize="20"/>
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
+                                <DockPanel>
+                                    <materialDesign:PackIcon Kind="Key" Height="35" Width="25" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                    <PasswordBox x:Name="masterPasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="20" Margin="10 0 0 0"/>
+                                </DockPanel>
+                                    <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
                                         <TextBlock VerticalAlignment="Center" Text="Remember me."/>
                                         <ToggleButton Margin="8 0 0 0"/>
-                                    </StackPanel>
+                                    </StackPanel>-->
                                 </Grid>
                             </materialDesign:Card>
 

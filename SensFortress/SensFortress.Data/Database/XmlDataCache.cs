@@ -47,7 +47,7 @@ namespace SensFortress.Data.Database
         {
             _databasePath = path;
             _isInitialized = true;
-            // Get a list of all modeltypes for creating them again
+            // Get a list of all modeltypes in the assembly for creating them again
             _modelTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes());
             _secureDatacache = new List<byte[]>();
         }
@@ -97,6 +97,7 @@ namespace SensFortress.Data.Database
                     // doc holds the current xml File
                     doc.Load(ms);
                     var type = _modelTypes.First(t => t.Name == doc.DocumentElement.Name);
+                    // Deserialize model
                     var reader = XmlDictionaryReader.CreateTextReader(arr, new XmlDictionaryReaderQuotas());
                     var dcs = new DataContractSerializer(type);
                     var model = dcs.ReadObject(reader);
@@ -111,25 +112,7 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
-        /// Builds models out of a list of byte arrays.
-        /// </summary>
-        /// <param name="arrList"></param>
-        internal void BuildModelsOutOfBytes(List<byte[]> arrList)
-        {
-            var docs = new List<XmlDocument>();
-            foreach (var byteArray in arrList)
-            {
-                using (var ms = new MemoryStream(byteArray))
-                {
-                    var doc = new XmlDocument();
-                    doc.Load(ms);
-                    docs.Add(doc);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Takes a byte array and encrypts it to the <see cref="_secureDatacache"/>
+        /// Takes a byte array and stores it savely in the <see cref="_secureDatacache"/>
         /// </summary>
         internal void AddToSecureMemoryDC(byte[] modelBytes)
         {
@@ -268,7 +251,6 @@ namespace SensFortress.Data.Database
                 throw ex;
             }
         }
-
         /// <summary>
         /// Opens a <see cref="Fortress"/> and loads the database.
         /// </summary>
@@ -310,14 +292,14 @@ namespace SensFortress.Data.Database
                     var dbBytes = ByteHelper.ReadBytesOfStream(stream);
                     var decryptedDb = aesAlg.Decrypt(dbBytes, masterKey.Value, saltBytes);
                     Logger.log.Info($"Decrypted {TermHelper.GetDatabaseTerm()}");
-                    //File.WriteAllBytes("C:\\Users\\Nutzer\\Desktop\\decryptedTestFile", decryptedDb);
 
                     // =========================================================== Unzip database
 
-                    var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
-                    foreach (var byteArr in unzippedByteEntriesOfDb)
+                    var unzippedByteEntriesOfDb = new Queue<byte[]>(ZipHelper.GetEntriesFromZipArchive(decryptedDb)); // These are the entries in byte arrays
+                    decryptedDb = null;
+                    foreach (var byteArr in unzippedByteEntriesOfDb.ToList()) // ToList() otherwise the iterations throws exception
                     {
-                        BuildModelsOutOfBytes(byteArr);
+                        AddToSecureMemoryDC(unzippedByteEntriesOfDb.Dequeue()); // Store the data into the secureMemoryDatacache
                     }
                 }
 

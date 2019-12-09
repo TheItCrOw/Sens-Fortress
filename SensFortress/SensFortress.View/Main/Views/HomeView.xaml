@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="SensFortress.View.Main.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SensFortress.View.Main.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="900" d:DesignWidth="1100"           
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal"
+            TextOptions.TextRenderingMode="Auto"
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}">
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Opening-Gate.jpg"/>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--Header Title-->
+        <materialDesign:Card>
+            <TextBlock FontSize="30" FontWeight="Regular" Text="Welcome Home." Margin="15"/>
+        </materialDesign:Card>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Log here-->
+            <materialDesign:Card Grid.Column="1" VerticalAlignment="Stretch">
+                <StackPanel>
+                    <TextBlock FontSize="25" Margin="10" HorizontalAlignment="Center" Text="Task-log:"/>
+                </StackPanel>
+            </materialDesign:Card>
+            
+        </Grid>
+    </Grid>
+</UserControl>
