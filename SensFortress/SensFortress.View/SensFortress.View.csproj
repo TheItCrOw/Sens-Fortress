@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="Images\Fortress-Bridge.jpg" />
     <None Remove="Images\Fortress-Nature.jpg" />
+    <None Remove="Images\Home-Bonfire.jpg" />
     <None Remove="Images\Opening-Gate.jpg" />
     <None Remove="Images\Worldmap.jpg" />
   </ItemGroup>
@@ -28,6 +29,7 @@
   <ItemGroup>
     <Resource Include="Images\Fortress-Bridge.jpg" />
     <Resource Include="Images\Fortress-Nature.jpg" />
+    <Resource Include="Images\Home-Bonfire.jpg" />
     <Resource Include="Images\Opening-Gate.jpg" />
     <Resource Include="Images\Worldmap.jpg" />
   </ItemGroup>

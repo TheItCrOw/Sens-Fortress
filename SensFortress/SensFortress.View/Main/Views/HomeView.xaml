@@ -16,29 +16,72 @@
             FontFamily="{DynamicResource MaterialDesignFont}">
 
     <Grid>
+        <!--Background Image-->
         <Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Images/Opening-Gate.jpg"/>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Home-Bonfire.jpg" RenderOptions.BitmapScalingMode="Fant" Stretch="None"/>
         </Grid.Background>
-
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <!--Header Title-->
-        <materialDesign:Card>
-            <TextBlock FontSize="30" FontWeight="Regular" Text="Welcome Home." Margin="15"/>
+        <materialDesign:Card Height="50">
+            <DockPanel>
+                <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Width="50" VerticalAlignment="Stretch" ToolTip="Resource name: MaterialDesignRaisedLightButton">
+                    _LIGHT
+                </Button>
+            </DockPanel>
         </materialDesign:Card>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400" MinWidth="200"/>
+                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="400"/>
             </Grid.ColumnDefinitions>
 
-            <!--Log here-->
-            <materialDesign:Card Grid.Column="1" VerticalAlignment="Stretch">
+            <!--left side menu here-->
+            <materialDesign:Card Grid.Column="0" VerticalAlignment="Stretch">
                 <StackPanel>
-                    <TextBlock FontSize="25" Margin="10" HorizontalAlignment="Center" Text="Task-log:"/>
+                    <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Text="Structure"/>
+                    <TreeView ItemsSource="{Binding MovieCategories}">
+                        <TreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type FormattedText}" ItemsSource="{Binding Movies}">
+                                <TextBlock Text="{Binding Name}" Margin="3 2" />
+                            </HierarchicalDataTemplate>
+                            <DataTemplate DataType="{x:Type FormatConvertedBitmap}">
+                                <TextBlock Text="{Binding Name}" Margin="3 2" ToolTip="{Binding Director}" />
+                            </DataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
+                </StackPanel>
+            </materialDesign:Card>
+            
+            <!--Gridsplitter 1-->
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="DarkGray"/>
+
+            <!--middle menu-->
+            <ListView ItemsSource="{Binding Items1}" Grid.Column="2">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Code}" Header="Name"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Created"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Password" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
+            <!--Gridsplitter 2-->
+            <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="DarkGray"/>
+
+            <!--Log here-->
+            <materialDesign:Card Grid.Column="4" VerticalAlignment="Stretch">
+                <StackPanel>
+                    <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Text="Task-log:"/>
                 </StackPanel>
             </materialDesign:Card>
             
