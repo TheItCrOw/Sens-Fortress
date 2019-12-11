@@ -54,7 +54,7 @@
                                 <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}"
                                         Content="Identify yourself" BorderBrush="Black" BorderThickness="1" FontSize="18" Foreground="Black" FontFamily="Microsoft YaHei Light"/>
                                 <!--Enter the fortress-->
-                                <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="0 10 0 0"
+                                <Button x:Name="Login_Button" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="0 10 0 0" Click="Login_Button_Click"
                                         Content="Enter the fortress" BorderBrush="Black" BorderThickness="1" FontSize="18" Foreground="GhostWhite" FontFamily="Microsoft YaHei Light"
                                         Command="{x:Static materialDesign:Transitioner.MoveLastCommand}" Cursor="Hand"/>
                             </StackPanel>

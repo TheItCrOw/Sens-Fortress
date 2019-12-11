@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Main.Views"
+             xmlns:models="clr-namespace:SensFortress.Models.ViewModels;assembly=SensFortress.Models"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1100"           
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -20,12 +21,12 @@
         <!--<Grid.Background>
             <ImageBrush ImageSource="pack://application:,,,/Images/Home-Bonfire.jpg" RenderOptions.BitmapScalingMode="Fant" Stretch="None"/>
         </Grid.Background>-->
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <!--Header Title-->
         <materialDesign:Card Height="50">
             <DockPanel>
@@ -45,22 +46,20 @@
             </Grid.ColumnDefinitions>
 
             <!--left side menu here-->
-            <materialDesign:Card Grid.Column="0" VerticalAlignment="Stretch">
-                <StackPanel>
-                    <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Text="Structure"/>
-                    <TreeView ItemsSource="{Binding MovieCategories}">
-                        <TreeView.Resources>
-                            <HierarchicalDataTemplate DataType="{x:Type FormattedText}" ItemsSource="{Binding Movies}">
-                                <TextBlock Text="{Binding Name}" Margin="3 2" />
-                            </HierarchicalDataTemplate>
-                            <DataTemplate DataType="{x:Type FormatConvertedBitmap}">
-                                <TextBlock Text="{Binding Name}" Margin="3 2" ToolTip="{Binding Director}" />
-                            </DataTemplate>
-                        </TreeView.Resources>
-                    </TreeView>
-                </StackPanel>
-            </materialDesign:Card>
-            
+            <StackPanel>
+                <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Text="Structure"/>
+                <TreeView ItemsSource="{Binding TestCollection}">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type models:TestViewModel}" ItemsSource="{Binding Children}">
+                            <TextBlock Text="{Binding Name}" Margin="3 2" Style="{StaticResource SubCategoryTextblockStyle}"/>
+                        </HierarchicalDataTemplate>
+                        <DataTemplate DataType="{x:Type models:TestSubViewModel}">
+                            <TextBlock Text="{Binding Name}" Margin="3 2" ToolTip="{Binding Name}" />
+                        </DataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </StackPanel>
+
             <!--Gridsplitter 1-->
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="DarkGray"/>
 
@@ -74,7 +73,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            
+
             <!--Gridsplitter 2-->
             <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="DarkGray"/>
 
@@ -84,7 +83,7 @@
                     <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Text="Task-log:"/>
                 </StackPanel>
             </materialDesign:Card>
-            
+
         </Grid>
     </Grid>
 </UserControl>

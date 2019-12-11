@@ -8,6 +8,7 @@ using SensFortress.Security.Testing;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
 using SensFortress.Utility.Testing;
+using SensFortress.View.Helper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,12 +43,22 @@ namespace SensFortress.View
         {
             Logger.log.Info("Building the gates...");
             InitializeComponent();
-            Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress"));
-            Logger.log.Info("Successfully built!");
-            // For some reason, VS is firing an exceptionn when trying to do this in XAML...
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            // Start the factory queue
+            if(Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress")))
+            {
+                Logger.log.Info("Successfully built!");
+                // For some reason, VS is firing an exceptionn when trying to do this in XAML...
+                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                // Give the NavigationHelper access to the views.
+                Navigation.MainFrame = MainFrame;
 
-            Testing();
+                Testing();
+            }
+            else
+            {
+                this.Close();
+            }
+
         }
 
         private void Testing()

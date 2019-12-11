@@ -2,6 +2,7 @@
 using SensFortress.Models.Fortress;
 using SensFortress.Models.Interfaces;
 using SensFortress.Utility;
+using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -61,15 +62,26 @@ namespace SensFortress.Data.Database
         /// <summary>
         /// Starts the <see cref="FactoryQueue{T1, T2}"/>. If called when queue has already been built, it resets the queue.
         /// </summary>
-        public void StartFactoryQueue(string fortressPath)
+        public bool StartFactoryQueue(string fortressPath)
         {
-            _factoryQueue = new FactoryQueue<FactoryTaskType, object[]>();
-            _xmlDatacache = new XmlDataCache(fortressPath);
+            try
+            {
+                _factoryQueue = new FactoryQueue<FactoryTaskType, object[]>();
+                _xmlDatacache = new XmlDataCache(fortressPath);
 
-            Thread continousThread = new Thread(new ThreadStart(ContinousThread));
-            continousThread.IsBackground = true;
-            continousThread.Name = "FACTORY_THREAD";
-            continousThread.Start();
+                Thread continousThread = new Thread(new ThreadStart(ContinousThread));
+                continousThread.IsBackground = true;
+                continousThread.Name = "FACTORY_THREAD";
+                continousThread.Start();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Couldn't start the factory queue. Closing the application.. {Environment.NewLine}{ex}");
+                return false;
+            }
+ 
         }
 
         /// <summary>

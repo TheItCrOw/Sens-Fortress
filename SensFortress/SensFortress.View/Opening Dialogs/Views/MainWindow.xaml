@@ -16,42 +16,49 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <!--This is a transition that switches between: StartView and LoginView-->
-        <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
+    
+    <!--The frame content can be changed according to the desired view-->
+    <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden">
+        <Frame.Content>
             <Grid>
-                <!--Start View-->
-                <local:StartView/>
-            </Grid>
-            
-            <!--Transition LoginView-->
-            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                    <materialDesign:CircleWipe />
-                </materialDesign:TransitionerSlide.BackwardWipe>
-                <local:LoginView/>
-            </materialDesign:TransitionerSlide>
-            
-            <!--Transition RegisterView-->
-            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                    <materialDesign:CircleWipe />
-                </materialDesign:TransitionerSlide.BackwardWipe>
-                <local:RegisterView/>
-            </materialDesign:TransitionerSlide>
+                <!--This is a transition that switches between: StartView and LoginView-->
+                <materialDesign:Transitioner SelectedIndex="0" AutoApplyTransitionOrigins="True">
+                    <Grid>
+                        <!--Start View-->
+                        <local:StartView/>
+                    </Grid>
 
-            <!--Transition Enter the fortress-->
-            <materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide.OpeningEffects>
-                    <materialDesign:TransitionEffect
+                    <!--Transition LoginView-->
+                    <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                        <materialDesign:TransitionerSlide.BackwardWipe>
+                            <materialDesign:CircleWipe />
+                        </materialDesign:TransitionerSlide.BackwardWipe>
+                        <local:LoginView/>
+                    </materialDesign:TransitionerSlide>
+
+                    <!--Transition RegisterView-->
+                    <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect ExpandIn}">
+                        <materialDesign:TransitionerSlide.BackwardWipe>
+                            <materialDesign:CircleWipe />
+                        </materialDesign:TransitionerSlide.BackwardWipe>
+                        <local:RegisterView/>
+                    </materialDesign:TransitionerSlide>
+
+                    <!--Transition Enter the fortress-->
+                    <materialDesign:TransitionerSlide>
+                        <materialDesign:TransitionerSlide.OpeningEffects>
+                            <materialDesign:TransitionEffect
                         Kind="FadeIn"
                         Duration="0:0:4" />
-                </materialDesign:TransitionerSlide.OpeningEffects>
-                <mainViews:HomeView/>
-            </materialDesign:TransitionerSlide>
+                        </materialDesign:TransitionerSlide.OpeningEffects>
+                        <mainViews:HomeView/>
+                    </materialDesign:TransitionerSlide>
 
 
-        </materialDesign:Transitioner>
+                </materialDesign:Transitioner>
 
-    </Grid>
+            </Grid>
+        </Frame.Content>
+    </Frame>
+    
 </Window>

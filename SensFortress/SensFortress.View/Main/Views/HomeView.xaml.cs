@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 
 namespace SensFortress.View.Main.Views
 {
-    /// <summary>
+    /// <summary>b
     /// Interaktionslogik für HomeView.xaml
     /// </summary>
     public partial class HomeView : UserControl
@@ -22,7 +22,6 @@ namespace SensFortress.View.Main.Views
         public HomeView()
         {
             InitializeComponent();
-            this.DataContext = new HomeViewModel();
         }
     }
 }
