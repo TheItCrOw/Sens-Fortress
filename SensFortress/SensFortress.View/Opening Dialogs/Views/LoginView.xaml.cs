@@ -37,14 +37,16 @@ namespace SensFortress.View.Opening_Dialogs.Views
             {
                 Navigation.NavigateTo(NavigationViews.HomeView);
             }
+            else
+            {
+                //Inform UI
+            }
         }
 
         private bool IsValidMasterkey()
         {
             if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password))
                 return false;
-
-
 
             return true;
         }
