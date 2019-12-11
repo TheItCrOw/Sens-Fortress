@@ -17,9 +17,9 @@
 
     <Grid>
         <!--Background Image-->
-        <Grid.Background>
+        <!--<Grid.Background>
             <ImageBrush ImageSource="pack://application:,,,/Images/Home-Bonfire.jpg" RenderOptions.BitmapScalingMode="Fant" Stretch="None"/>
-        </Grid.Background>
+        </Grid.Background>-->
         
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
