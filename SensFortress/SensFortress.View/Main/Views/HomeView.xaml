@@ -47,16 +47,26 @@
 
             <!--left side menu here-->
             <StackPanel>
-                <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Text="Structure"/>
+                <TextBlock Style="{StaticResource InformationTextblockStyle}" Margin="10" HorizontalAlignment="Center" Text="Structure"/>
                 <TreeView ItemsSource="{Binding TestCollection}">
-                    <TreeView.Resources>
+                    <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type models:TestViewModel}" ItemsSource="{Binding Children}">
-                            <TextBlock Text="{Binding Name}" Margin="3 2" Style="{StaticResource SubCategoryTextblockStyle}"/>
+                            <TextBlock Text="{Binding Name}" Margin="3 2">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CategoryTextblockStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static models:TreeDepth.Branch}">
+                                                <Setter Property="FontSize" Value="13"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=TreeType}"  Value="{x:Static models:TreeDepth.Leaf}">
+                                                <Setter Property="FontSize" Value="13"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </HierarchicalDataTemplate>
-                        <DataTemplate DataType="{x:Type models:TestSubViewModel}">
-                            <TextBlock Text="{Binding Name}" Margin="3 2" ToolTip="{Binding Name}" />
-                        </DataTemplate>
-                    </TreeView.Resources>
+                    </TreeView.ItemTemplate>
                 </TreeView>
             </StackPanel>
 
@@ -80,7 +90,7 @@
             <!--Log here-->
             <materialDesign:Card Grid.Column="4" VerticalAlignment="Stretch">
                 <StackPanel>
-                    <TextBlock FontSize="20" Margin="10" HorizontalAlignment="Center" Text="Task-log:"/>
+                    <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Task-log:"/>
                 </StackPanel>
             </materialDesign:Card>
 

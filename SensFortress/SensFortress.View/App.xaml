@@ -42,7 +42,17 @@
                 <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
                 <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
-            
+
+            <!--A Textblock for Category text-->
+            <Style TargetType="{x:Type TextBlock}" x:Key="CategoryTextblockStyle">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+
             <!--A Textblock for sub categories-->
             <Style TargetType="{x:Type TextBlock}" x:Key="SubCategoryTextblockStyle">
                 <Setter Property="FontSize" Value="13" />
@@ -65,6 +75,7 @@
                 <Setter Property="ToolTip" Value="Go back"/>
                 <Setter Property="Background" Value="GhostWhite"/>
             </Style>
+            
             
             
         </ResourceDictionary>

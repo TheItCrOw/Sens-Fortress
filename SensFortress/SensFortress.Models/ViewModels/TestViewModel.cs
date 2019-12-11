@@ -9,7 +9,16 @@ namespace SensFortress.Models.ViewModels
     {
         public string Name { get; set; }
 
-        public ObservableCollection<TestSubViewModel> Children { get; set; } = new ObservableCollection<TestSubViewModel>();
+        public TreeDepth TreeType { get; set; }
+
+        public ObservableCollection<TestViewModel> Children { get; set; } = new ObservableCollection<TestViewModel>();
+    }
+
+    public enum TreeDepth
+    {
+        Root,
+        Branch,
+        Leaf
     }
 
 }
