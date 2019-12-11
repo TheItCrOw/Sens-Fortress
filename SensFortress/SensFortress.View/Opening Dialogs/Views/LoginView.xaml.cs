@@ -1,4 +1,5 @@
-﻿using SensFortress.View.Helper;
+﻿using SensFortress.Utility;
+using SensFortress.View.Helper;
 using SensFortress.View.Opening_Dialogs.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
             }
             else
             {
-                //Inform UI
+                ExceptionHelper.InformUser("You may not enter - mellon.");
             }
         }
 

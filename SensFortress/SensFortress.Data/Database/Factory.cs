@@ -3,6 +3,7 @@ using SensFortress.Models.Fortress;
 using SensFortress.Models.Interfaces;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
+using SensFortress.View.Main.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -107,15 +108,29 @@ namespace SensFortress.Data.Database
                 Trace.WriteLine($"[{DateTime.Now}]: Current unfinished tasks: {_factoryQueue.Count}");
                 if(_factoryQueue.Count > 0)
                 {
-                    var currentTask = DequeueTask();
-                    Trace.WriteLine($"[{DateTime.Now}]: Handling a {currentTask.Item1} operation.");
-                    if(HandleTask(currentTask))
+                    try
                     {
-                        //Continue only when the task is complete.
+                        var currentTask = DequeueTask();
+                        Trace.WriteLine($"[{DateTime.Now}]: Handling a {currentTask.Item1} operation.");
+                        if (HandleTask(currentTask))
+                        {
+                            //Continue only when the task is complete.
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Logger.log.Error($"Error while handling a task caused by: {ex.Source}{Environment.NewLine}{ex}");
+                        InformUserAboutError(ex);
+                    }
+
                 }
                 Thread.Sleep(100);
             }
+        }
+
+        private void InformUserAboutError(Exception ex)
+        {
+
         }
 
         private bool HandleTask(Tuple<FactoryTaskType, object[]> taskParams)

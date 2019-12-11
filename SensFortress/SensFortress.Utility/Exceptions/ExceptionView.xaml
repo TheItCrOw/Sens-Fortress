@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SensFortress.View.Main.Views"
         WindowStyle="None"        
-             mc:Ignorable="d" s
+             mc:Ignorable="d" 
              d:DesignHeight="330" d:DesignWidth="400"           
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -24,12 +24,11 @@
         </Grid.RowDefinitions>
 
         <!--Header Title-->
-        <materialDesign:Card VerticalAlignment="Top">
-            <DockPanel LastChildFill="False" HorizontalAlignment="Center">
-                <materialDesign:PackIcon Kind="ErrorOutline" Height="35" Width="35" Margin="0 5 10 5"/>
-                <TextBlock x:Name="ErrorTitle_Textblock" Style="{StaticResource InformationTextblockStyle}" Text="Error"/>
+        <Border VerticalAlignment="Top" BorderBrush="Black" BorderThickness="1" Background="DarkRed" Height="45">
+            <DockPanel LastChildFill="False" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="ErrorTitle_Textblock" Style="{StaticResource InformationTextblockStyle}" Foreground="White" Text="Error"/>
             </DockPanel>
-        </materialDesign:Card>
+        </Border>
 
         <!--Content-->
         <TextBlock x:Name="Error_Textblock" Style="{StaticResource SmallTextblockStyle}" Grid.Row="1" TextAlignment="Center" Margin="8"/>

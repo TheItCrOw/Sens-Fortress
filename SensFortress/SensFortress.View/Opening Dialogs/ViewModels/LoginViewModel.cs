@@ -3,6 +3,7 @@ using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
+using SensFortress.View.Main.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,7 +26,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             try
             {
                 var fortresses = Directory.GetFiles(DirectoryHelper.GetDefaultFortressDirectory());
-
+                fortresses = null;
                 foreach (var fortress in fortresses)
                 {
                     var created = File.GetCreationTime(fortress);
@@ -38,10 +39,9 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             {
                 Logger.log.Error($"Error while loading the fortress list: {ex}");
                 ex.SetUserMessage("An error occured while trying to load all known fortresses. If you moved the fortress, try to select it again.");
-                InformUserAboutError(ex);
+                ExceptionHelper.InformUserAboutError(ex);
             }
         }
-
 
     }
 }
