@@ -1,4 +1,5 @@
 ﻿using SensFortress.View.Helper;
+using SensFortress.View.Opening_Dialogs.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
         public LoginView()
         {
             InitializeComponent();
+            this.DataContext = new LoginViewModel();
         }
 
         /// <summary>
@@ -31,7 +33,20 @@ namespace SensFortress.View.Opening_Dialogs.Views
         /// <param name="e"></param>
         private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            Navigation.NavigateTo(NavigationViews.HomeView);
+            if(IsValidMasterkey())
+            {
+                Navigation.NavigateTo(NavigationViews.HomeView);
+            }
+        }
+
+        private bool IsValidMasterkey()
+        {
+            if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password))
+                return false;
+
+
+
+            return true;
         }
     }
 }

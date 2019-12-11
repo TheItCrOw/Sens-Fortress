@@ -10,6 +10,7 @@ namespace SensFortress.Utility
     /// </summary>
     public static class DirectoryHelper
     {
+        private static string _appdataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
         /// <summary>
         /// Creates a new directory in the given path.
         /// </summary>
@@ -37,7 +38,13 @@ namespace SensFortress.Utility
         /// Returns the path where the log file should be saved.
         /// </summary>
         /// <returns></returns>
-        public static string GetLogFileDirectory() => "C:\\Users\\Nutzer\\AppData\\Roaming\\Sen's Fortress\\Sen's Fortress.log";
+        public static string GetLogFileDirectory() => $"{_appdataPath}\\Sen's Fortress\\log\\Sen's Fortress.log";
+
+        /// <summary>
+        /// Gets the default location of all fortresses saved.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetDefaultFortressDirectory() => $"{_appdataPath}\\Sen's Fortress\\Fortresses\\";
 
     }
 }

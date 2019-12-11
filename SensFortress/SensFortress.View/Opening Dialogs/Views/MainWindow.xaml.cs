@@ -47,8 +47,10 @@ namespace SensFortress.View
             if(Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress")))
             {
                 Logger.log.Info("Successfully built!");
+
                 // For some reason, VS is firing an exceptionn when trying to do this in XAML...
                 this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
                 // Give the NavigationHelper access to the views.
                 Navigation.MainFrame = MainFrame;
 
@@ -72,7 +74,7 @@ namespace SensFortress.View
             var salt = aesHelper.GenerateSalt();
             var userMasterKey = "diesIstEinTest123";
             var hashedKey = aesHelper.CreateKey(userMasterKey, 512, salt);
-            var fullPath = (System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress"));
+            var fullPath = $"{DirectoryHelper.GetDefaultFortressDirectory()}\\testFortress25";
             var name = "Max";
             var lastName = "Mustermann";
             var userName = "mMuster";

@@ -56,10 +56,10 @@
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource CategoryTextblockStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static models:TreeDepth.Branch}">
-                                                <Setter Property="FontSize" Value="13"/>
+                                                <Setter Property="FontSize" Value="17"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=TreeType}"  Value="{x:Static models:TreeDepth.Leaf}">
-                                                <Setter Property="FontSize" Value="13"/>
+                                                <Setter Property="FontSize" Value="17"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

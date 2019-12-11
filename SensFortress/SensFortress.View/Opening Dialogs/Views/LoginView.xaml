@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Opening_Dialogs.Views"
+             xmlns:models="clr-namespace:SensFortress.Models.ViewModels;assembly=SensFortress.Models"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1100"           
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -19,7 +20,7 @@
         <Grid.Background>
             <ImageBrush ImageSource="pack://application:,,,/Images/Opening-Gate.jpg"/>
         </Grid.Background>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -30,75 +31,84 @@
         <materialDesign:Card>
             <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Speak friend and enter."/>
         </materialDesign:Card>
-        
+
         <!--Register Button-->
         <Button Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="Register yourself" Margin="0 20 40 0" Height="75" Width="75" HorizontalAlignment="Right"
                 Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Cursor="Hand" Background="GhostWhite">
             <materialDesign:PackIcon Kind="AccountAdd" Height="55" Width="55" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Button>
 
-        <!--Identify yourself...-->
-        <StackPanel VerticalAlignment="Stretch" Grid.Row="1">
-            <!--Identify yourself Card-->
-                <materialDesign:Flipper HorizontalAlignment="Center">
-                    <materialDesign:Flipper.FrontContent>
-                        <Grid Height="500" Width="400">
+        <!--Identify yourself Card-->
+        <materialDesign:Flipper HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Width="500">
+            <materialDesign:Flipper.FrontContent>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--Image-->
+                    <materialDesign:PackIcon Kind="SecurityAccount" Height="300" Width="300" Foreground="GhostWhite" HorizontalAlignment="Center" />
+                    <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                        <!--Identification Button-->
+                        <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" MaxWidth="400" Height="40"
+                                        Content="Identify yourself" BorderBrush="Black" BorderThickness="1" FontSize="20" Foreground="Black" FontFamily="Microsoft YaHei Light"/>
+                        <!--Enter the fortress-->
+                        <Button x:Name="Login_Button" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="0 10 0 0" Click="Login_Button_Click" MaxWidth="400" Height="40"
+                                        Content="Enter the fortress" BorderBrush="Black" BorderThickness="1" FontSize="20" Foreground="GhostWhite" FontFamily="Microsoft YaHei Light"
+                                        Cursor="Hand"/>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:Flipper.FrontContent>
+            <materialDesign:Flipper.BackContent>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <!--Back Button and Who knocks?-->
+                    <materialDesign:ColorZone Mode="Dark" Padding="10">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                <materialDesign:PackIcon Kind="ArrowLeftBold" HorizontalAlignment="Stretch"/>
+                            </Button>
+                            <TextBlock Margin="8 0 0 0" Style="{StaticResource InformationTextblockStyle}" VerticalAlignment="Center" Text="Who is knocking?"/>
+                        </StackPanel>
+                    </materialDesign:ColorZone>
+                    <!--Enter Data Grid-->
+                    <materialDesign:Card Grid.Row="1">
+                        <Grid Margin="15">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <!--Image-->
-                            <materialDesign:PackIcon Kind="SecurityAccount" Height="300" Width="300" Foreground="GhostWhite" HorizontalAlignment="Center" />
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                <!--Identification Button-->
-                                <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                                        Content="Identify yourself" BorderBrush="Black" BorderThickness="1" FontSize="18" Foreground="Black" FontFamily="Microsoft YaHei Light"/>
-                                <!--Enter the fortress-->
-                                <Button x:Name="Login_Button" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="0 10 0 0" Click="Login_Button_Click"
-                                        Content="Enter the fortress" BorderBrush="Black" BorderThickness="1" FontSize="18" Foreground="GhostWhite" FontFamily="Microsoft YaHei Light"
-                                        Command="{x:Static materialDesign:Transitioner.MoveLastCommand}" Cursor="Hand"/>
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:Flipper.FrontContent>
-                    <materialDesign:Flipper.BackContent>
-                        <Grid Height="500" Width="400">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <!--Back Button and Who knocks?-->
-                            <materialDesign:ColorZone Mode="Dark" Padding="10">
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
-                                        <materialDesign:PackIcon Kind="ArrowLeftBold" HorizontalAlignment="Stretch"/>
-                                    </Button>
-                                    <TextBlock Margin="8 0 0 0" Style="{StaticResource InformationTextblockStyle}" VerticalAlignment="Center" Text="Who is knocking?"/>
-                                </StackPanel>
-                            </materialDesign:ColorZone>
-                            <!--Enter Data Grid-->
-                            <materialDesign:Card Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                                <Grid Margin="15">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
+
                                 <DockPanel>
                                     <materialDesign:PackIcon Kind="Key" Height="35" Width="25" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-                                    <PasswordBox x:Name="masterPasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="20" Margin="10 0 0 0"/>
+                                    <PasswordBox x:Name="MasterKey_PasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="20" Margin="10 0 0 0"/>
                                 </DockPanel>
-                                    <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
+
+                            <StackPanel Grid.Row="1" Margin="0 10 0 0">
+                                <TextBlock Style="{StaticResource InformationTextblockStyle}" HorizontalAlignment="Center" Text="Select a fortress"/>
+                                <ScrollViewer Margin="0 10 0 0" VerticalAlignment="Stretch" Grid.Row="1" Height="250">
+                                    <TreeView ItemsSource="{Binding Fortresses}">
+                                        <TreeView.ItemTemplate>
+                                            <HierarchicalDataTemplate DataType="{x:Type models:FortressViewModel}">
+                                                <TextBlock Text="{Binding Name}" Margin="3 2" Style="{StaticResource CategoryTextblockStyle}"/>
+                                            </HierarchicalDataTemplate>
+                                        </TreeView.ItemTemplate>
+                                    </TreeView>
+
+                                </ScrollViewer>
+                            </StackPanel>
+                            <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
                                         <TextBlock VerticalAlignment="Center" Text="Remember me."/>
                                         <ToggleButton Margin="8 0 0 0"/>
                                     </StackPanel>-->
-                                </Grid>
-                            </materialDesign:Card>
-
                         </Grid>
-                    </materialDesign:Flipper.BackContent>
-                </materialDesign:Flipper>
-            </StackPanel>
+                    </materialDesign:Card>
+                </Grid>
+            </materialDesign:Flipper.BackContent>
+        </materialDesign:Flipper>
 
         <!--Go Back Button-->
         <Button Style="{StaticResource GoBackButtonStyle}" Grid.Row="2" HorizontalAlignment="Left" Margin="20 -20 0 0"
