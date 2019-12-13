@@ -44,7 +44,7 @@ namespace SensFortress.View
             Logger.log.Info("Building the gates...");
             InitializeComponent();
             // Start the factory queue
-            if(Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress")))
+            if (Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress")))
             {
                 Logger.log.Info("Successfully built!");
 
@@ -74,7 +74,7 @@ namespace SensFortress.View
             var salt = aesHelper.GenerateSalt();
             var userMasterKey = "diesIstEinTest123";
             var hashedKey = aesHelper.CreateKey(userMasterKey, 512, salt);
-            var fullPath = $"{DirectoryHelper.GetDefaultFortressDirectory()}\\testFortress25";
+            var fullPath = $"{IOPathHelper.GetDefaultFortressDirectory()}\\testFortress25";
             var name = "Max";
             var lastName = "Mustermann";
             var userName = "mMuster";
@@ -88,7 +88,7 @@ namespace SensFortress.View
 
 
             //Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress});
-            var param = new object[3] { System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123" };
+            var param = new object[3] { System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123" };
             Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Build, param);
 
             //for (int i = 0; i < 100; i++)

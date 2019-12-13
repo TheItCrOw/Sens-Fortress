@@ -144,8 +144,7 @@ namespace SensFortress.Data.Database
                 var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), typeof(T).Name);
 
                 // Always check if a directory exists. If not, create it.
-                if (!Directory.Exists(currentSaveLocation))
-                    DirectoryHelper.CreateDirectory(currentSaveLocation);
+                IOPathHelper.CreateDirectory(currentSaveLocation);
 
                 using (var sww = new StringWriter())
                 {
@@ -189,12 +188,12 @@ namespace SensFortress.Data.Database
 
                 // =========================================================== Create the root directory
 
-                DirectoryHelper.CreateDirectory(fortress.FullPath);
+                IOPathHelper.CreateDirectory(fortress.FullPath);
                 Logger.log.Debug($"Created outer walls {fortress.FullPath}.");
 
                 // =========================================================== Create the sub directory for the database
 
-                DirectoryHelper.CreateDirectory(databasePath);
+                IOPathHelper.CreateDirectory(databasePath);
                 Logger.log.Debug($"Created the {TermHelper.GetDatabaseTerm()}");
 
                 // =========================================================== Create the file which holds the salt to unlock the database

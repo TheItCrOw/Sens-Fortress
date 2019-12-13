@@ -13,37 +13,25 @@ namespace SensFortress.Utility
         /// Gets the term for the database.
         /// </summary>
         /// <returns></returns>
-        public static string GetDatabaseTerm()
-        {
-            return "Storage Chamber";
-        }
+        public static string GetDatabaseTerm() => "Storage Chamber";
 
         /// <summary>
         /// Encrypted database file ending.
         /// </summary>
         /// <returns></returns>
-        public static string GetDatabaseEnding()
-        {
-            return ".sfdb";
-        }
+        public static string GetDatabaseEnding() => ".sfdb";
 
         /// <summary>
         /// Zipped file ending.
         /// </summary>
         /// <returns></returns>
-        public static string GetZippedFileEnding()
-        {
-            return ".sfzf";
-        }
+        public static string GetZippedFileEnding() => ".sfzf";
 
         /// <summary>
         /// Normal textfile ending.
         /// </summary>
         /// <returns></returns>
-        public static string GetTextFileEnding()
-        {
-            return ".sftf";
-        }
+        public static string GetTextFileEnding() => ".sftf";
 
     }
 }

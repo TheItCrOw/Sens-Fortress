@@ -120,17 +120,12 @@ namespace SensFortress.Data.Database
                     catch (Exception ex)
                     {
                         Logger.log.Error($"Error while handling a task caused by: {ex.Source}{Environment.NewLine}{ex}");
-                        InformUserAboutError(ex);
+                        ExceptionHelper.InformUserAboutError(ex);
                     }
 
                 }
                 Thread.Sleep(100);
             }
-        }
-
-        private void InformUserAboutError(Exception ex)
-        {
-
         }
 
         private bool HandleTask(Tuple<FactoryTaskType, object[]> taskParams)

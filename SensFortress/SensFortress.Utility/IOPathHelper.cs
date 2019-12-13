@@ -8,14 +8,18 @@ namespace SensFortress.Utility
     /// <summary>
     /// Class that creates and holds every necessesary directory.
     /// </summary>
-    public static class DirectoryHelper
+    public static class IOPathHelper
     {
         private static string _appdataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
         /// <summary>
         /// Creates a new directory in the given path.
         /// </summary>
         /// <param name="path"></param>
-        public static void CreateDirectory(string fullName) => Directory.CreateDirectory(fullName);
+        public static void CreateDirectory(string fullName)
+        {
+            if (!Directory.Exists(fullName))
+                Directory.CreateDirectory(fullName);
+        }
 
         /// <summary>
         /// Returns the path of the log4net.config of the logger.
@@ -44,7 +48,13 @@ namespace SensFortress.Utility
         /// Gets the default location of all fortresses saved.
         /// </summary>
         /// <returns></returns>
-        public static string GetDefaultFortressDirectory() => $"{_appdataPath}\\Sen's Fortress\\Fortresses\\";
+        public static string GetDefaultFortressDirectory() => $"{_appdataPath}\\Sen's Fortress\\Fortresses";
+
+        /// <summary>
+        /// Gets the location of the xml file that holds newly selected fortresses.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLinkedFortressListFile() => $"{_appdataPath}\\Sen's Fortress\\Configs\\Linked Fortresses.xml";
 
     }
 }

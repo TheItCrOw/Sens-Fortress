@@ -1,4 +1,6 @@
-﻿using SensFortress.Models.ViewModels;
+﻿using Microsoft.Win32;
+using Prism.Commands;
+using SensFortress.Models.ViewModels;
 using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
@@ -8,27 +10,133 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace SensFortress.View.Opening_Dialogs.ViewModels
 {
     public class LoginViewModel : ViewModelManagementBase
     {
+        /// <summary>
+        /// Shows all loaded <see cref="FortressViewModel"/> in UI.
+        /// </summary>
         public ObservableCollection<FortressViewModel> Fortresses { get; set; } = new ObservableCollection<FortressViewModel>();
+
+        /// <summary>
+        /// Command to add an externally selected fortress to the fortressListConfigFile that holds linked paths.
+        /// </summary>
+        public DelegateCommand LinkExternalFortressCommand => new DelegateCommand(LinkExternalFortress);
 
         public LoginViewModel()
         {
             LoadFortresses();
         }
 
+        /// <summary>
+        /// Adds an external fortress to the FotressListConfig file.
+        /// </summary>
+        private void LinkExternalFortress()
+        {
+            try
+            {
+                // Open a file dialog
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = $"Fortress (*{TermHelper.GetZippedFileEnding()}) | *{TermHelper.GetZippedFileEnding()}";
+                openFileDialog.ShowDialog();
+
+                if (openFileDialog.FileNames.Count() == 0)
+                    return;
+
+                if (File.Exists(IOPathHelper.GetLinkedFortressListFile()))
+                {
+                    var linkedFortressesFile = File.ReadAllLines(IOPathHelper.GetLinkedFortressListFile()).ToList();
+
+                    foreach (var path in openFileDialog.FileNames)
+                    {
+                        if (linkedFortressesFile.Contains(path))
+                        {
+                            ExceptionHelper.InformUser("You already added this fortress.");
+                            return;
+                        }
+
+                        linkedFortressesFile.Add(path);
+                    }
+
+                    File.WriteAllLines(IOPathHelper.GetLinkedFortressListFile(), linkedFortressesFile);
+                }
+                // If the linkedFortressesFile doesn't exist - write it.
+                else
+                {
+                    File.WriteAllLines(IOPathHelper.GetLinkedFortressListFile(), openFileDialog.FileNames);
+                }
+
+                LoadFortresses();
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Error while linking a fortress: {ex}");
+                ex.SetUserMessage($"Couldn't add fortress - An error occured while trying to link it. Make sure the selected file ends with {TermHelper.GetZippedFileEnding()} or try to restart the program.");
+                ExceptionHelper.InformUserAboutError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Loads all fortresses: Default and linked.
+        /// </summary>
         private void LoadFortresses()
         {
             try
             {
-                var fortresses = Directory.GetFiles(DirectoryHelper.GetDefaultFortressDirectory());
-                fortresses = null;
-                foreach (var fortress in fortresses)
+                // If the fortress folder doesn't exist, a fortress hasn't been created into the default location
+                if (!Directory.Exists(IOPathHelper.GetDefaultFortressDirectory()) && !File.Exists(IOPathHelper.GetLinkedFortressListFile()))
+                    return;
+
+                var allFortresses = new List<string>();
+
+                // First get all fortresses in the default location
+                var defaultFortresses = Directory.GetFiles(IOPathHelper.GetDefaultFortressDirectory()).Where(f => f.EndsWith(TermHelper.GetZippedFileEnding())).ToList();
+                allFortresses.AddRange(defaultFortresses);
+
+                // Now look for externally added fortress in the fortress config
+                if (File.Exists(IOPathHelper.GetLinkedFortressListFile()))
                 {
+                    var linkedFortresses = File.ReadAllLines(IOPathHelper.GetLinkedFortressListFile()).ToList();
+                    var emptyPaths = new List<string>();
+
+                    foreach (var path in linkedFortresses)
+                    {
+                        // If the file exists, we add it to the UI.
+                        if(File.Exists(path))
+                        {
+                            allFortresses.Add(path);
+                        }
+                        // If the given path does not exist anymore, because the fortress got moved, delete it.
+                        else
+                        {
+                            emptyPaths.Add(path);
+                        }
+                    }
+
+                    // When empty paths have been found, delete them and tell the User.
+                    if(emptyPaths.Count > 0)
+                    {
+                        foreach(var path in emptyPaths)
+                        {
+                            linkedFortresses.Remove(path);
+                        }
+                        File.WriteAllLines(IOPathHelper.GetLinkedFortressListFile(), linkedFortresses);
+                        ExceptionHelper.InformUser($"Old or corrupted paths have been found - they were de-linked from the fortress list.");
+                    }
+                }
+
+                Fortresses.Clear();
+
+                foreach (var fortress in allFortresses)
+                {
+                    // If the files does not have the default database ending, skip it.
+                    if (!fortress.EndsWith(TermHelper.GetZippedFileEnding()))
+                        break;
+
                     var created = File.GetCreationTime(fortress);
                     var modified = File.GetLastWriteTime(fortress);
                     var fortressVm = new FortressViewModel(fortress, created, modified);
@@ -38,7 +146,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             catch (Exception ex)
             {
                 Logger.log.Error($"Error while loading the fortress list: {ex}");
-                ex.SetUserMessage("An error occured while trying to load all known fortresses. If you moved the fortress, try to select it again.");
+                ex.SetUserMessage("An error occured while trying to load all known fortresses. If the fortress has been moved, try to select it again or restart the program.");
                 ExceptionHelper.InformUserAboutError(ex);
             }
         }

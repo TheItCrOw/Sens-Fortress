@@ -80,16 +80,19 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="50"/>
                             </Grid.RowDefinitions>
 
-                                <DockPanel>
-                                    <materialDesign:PackIcon Kind="Key" Height="35" Width="25" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-                                    <PasswordBox x:Name="MasterKey_PasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="20" Margin="10 0 0 0"/>
-                                </DockPanel>
+                            <!--Enter masterkey-->
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="Key" Height="35" Width="25" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                <PasswordBox x:Name="MasterKey_PasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="20" Margin="10 0 0 0"/>
+                            </DockPanel>
 
-                            <Border Grid.Row="1" BorderBrush="White" BorderThickness="0 0 0 1" Margin="0 10 0 0">
+                            <!--fortress list-->
+                            <Border Grid.Row="1" BorderBrush="White" BorderThickness="0 0 0 1" Margin="0 0 0 0">
                                 <StackPanel>
-                                    <TextBlock Style="{StaticResource CategoryTextblockStyle}" HorizontalAlignment="Center" Text="Select a fortress"/>
+                                    <TextBlock Style="{StaticResource CategoryTextblockStyle}" HorizontalAlignment="Center" Text="Select a fortress" Margin="0 10 0 1"/>
                                     <ScrollViewer Margin="0 10 0 0" VerticalAlignment="Stretch" Grid.Row="1" Height="250">
                                         <TreeView ItemsSource="{Binding Fortresses}">
                                             <TreeView.ItemTemplate>
@@ -101,13 +104,20 @@
                                     </ScrollViewer>
                                 </StackPanel>
                             </Border>
-
                             <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
                                         <TextBlock VerticalAlignment="Center" Text="Remember me."/>
                                         <ToggleButton Margin="8 0 0 0"/>
                                     </StackPanel>-->
+                            <!--select a fortress button-->
+                            <Border Grid.Row="2">
+                                <Button Style="{StaticResource MaterialDesignRaisedLightButton}" VerticalAlignment="Stretch" ToolTip="Select a fortress" Command="{Binding LinkExternalFortressCommand}">
+                                    <materialDesign:PackIcon Kind="Add" Height="30" Width="30" VerticalAlignment="Center"/>
+                                </Button>
+                            </Border>
                         </Grid>
                     </materialDesign:Card>
+
+
                 </Grid>
             </materialDesign:Flipper.BackContent>
         </materialDesign:Flipper>

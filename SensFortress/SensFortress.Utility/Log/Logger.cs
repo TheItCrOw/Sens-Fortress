@@ -36,12 +36,12 @@ namespace SensFortress.Utility.Log
         private static XmlDocument GetLogConfigAndSetCustomSettings()
         {
             // Open the logConfig
-            using (FileStream fs = new FileStream(DirectoryHelper.Getlog4netConfigDirectory(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+            using (FileStream fs = new FileStream(IOPathHelper.Getlog4netConfigDirectory(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
             {
                 XmlDocument log4netconfig = new XmlDocument();
                 log4netconfig.Load(fs);
                 var logPathNode = log4netconfig.SelectSingleNode("log4net/appender/file");
-                logPathNode.InnerXml = DirectoryHelper.GetLogFileDirectory();
+                logPathNode.InnerXml = IOPathHelper.GetLogFileDirectory();
                 fs.SetLength(0);
                 log4netconfig.Save(fs);
                 return log4netconfig;
