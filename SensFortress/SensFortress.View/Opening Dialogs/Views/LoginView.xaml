@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Opening_Dialogs.Views"
-             xmlns:models="clr-namespace:SensFortress.Models.ViewModels;assembly=SensFortress.Models"
+             xmlns:vms="clr-namespace:SensFortress.View.Opening_Dialogs.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1100"           
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -90,14 +90,33 @@
                             </DockPanel>
 
                             <!--fortress list-->
-                            <Border Grid.Row="1" BorderBrush="White" BorderThickness="0 0 0 1" Margin="0 0 0 0">
+                            <Border Grid.Row="1" BorderBrush="White" BorderThickness="0 0 0 1">
                                 <StackPanel>
                                     <TextBlock Style="{StaticResource CategoryTextblockStyle}" HorizontalAlignment="Center" Text="Select a fortress" Margin="0 10 0 1"/>
                                     <ScrollViewer Margin="0 10 0 0" VerticalAlignment="Stretch" Grid.Row="1" Height="250">
                                         <TreeView ItemsSource="{Binding Fortresses}">
                                             <TreeView.ItemTemplate>
-                                                <HierarchicalDataTemplate DataType="{x:Type models:FortressViewModel}">
-                                                    <TextBlock Text="{Binding Information}" Margin="3 2" Style="{StaticResource SubCategoryTextblockStyle}"/>
+                                                <HierarchicalDataTemplate DataType="{x:Type vms:FortressViewModel}">
+                                                    <Grid Width="400">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding Information}" Margin="3 2" Style="{StaticResource SubCategoryTextblockStyle}" HorizontalAlignment="Left"/>
+                                                        <!--If the fortress has been externally added / linked-->
+                                                        <Button Height="25" Width="25" Grid.Column="1" ToolTip="De-link fortress." Command="{Binding DelinkCommand}">
+                                                            <Button.Style>
+                                                                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionMiniDarkButton}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsDefaultLocated}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Button.Style>
+                                                            <materialDesign:PackIcon Kind="Delete"/>
+                                                        </Button>
+                                                    </Grid>
                                                 </HierarchicalDataTemplate>
                                             </TreeView.ItemTemplate>
                                         </TreeView>

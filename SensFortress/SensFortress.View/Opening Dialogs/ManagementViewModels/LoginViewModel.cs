@@ -33,6 +33,36 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
         }
 
         /// <summary>
+        /// Delinks an externally added fortress from the list.
+        /// </summary>
+        /// <param name="deletableVm"></param>
+        public void DelinkExternalFortress(FortressViewModel deletableVm)
+        {
+            try
+            {
+                if (!File.Exists(IOPathHelper.GetLinkedFortressListFile()))
+                    return;
+
+                var linkedFortessFile = File.ReadAllLines(IOPathHelper.GetLinkedFortressListFile()).ToList();
+
+                if (linkedFortessFile.Contains(deletableVm.FullName))
+                {
+                    linkedFortessFile.Remove(deletableVm.FullName);
+                }
+
+                File.WriteAllLines(IOPathHelper.GetLinkedFortressListFile(), linkedFortessFile);
+                Fortresses.Remove(deletableVm);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Error while de-linking a fortress: {ex}");
+                ex.SetUserMessage($"Couldn't de-link fortress - An error occured while trying to de-link it. The problem could be solved by restarting the program.");
+                ExceptionHelper.InformUserAboutError(ex);
+            }
+        }
+
+        /// <summary>
         /// Adds an external fortress to the FotressListConfig file.
         /// </summary>
         private void LinkExternalFortress()
@@ -58,10 +88,8 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
                             ExceptionHelper.InformUser("You already added this fortress.");
                             return;
                         }
-
                         linkedFortressesFile.Add(path);
                     }
-
                     File.WriteAllLines(IOPathHelper.GetLinkedFortressListFile(), linkedFortressesFile);
                 }
                 // If the linkedFortressesFile doesn't exist - write it.
@@ -70,6 +98,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
                     File.WriteAllLines(IOPathHelper.GetLinkedFortressListFile(), openFileDialog.FileNames);
                 }
 
+                Logger.log.Info($"Linked external fortress: {openFileDialog.FileName}.");
                 LoadFortresses();
             }
             catch (Exception ex)
@@ -106,7 +135,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
                     foreach (var path in linkedFortresses)
                     {
                         // If the file exists, we add it to the UI.
-                        if(File.Exists(path))
+                        if (File.Exists(path))
                         {
                             allFortresses.Add(path);
                         }
@@ -118,9 +147,9 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
                     }
 
                     // When empty paths have been found, delete them and tell the User.
-                    if(emptyPaths.Count > 0)
+                    if (emptyPaths.Count > 0)
                     {
-                        foreach(var path in emptyPaths)
+                        foreach (var path in emptyPaths)
                         {
                             linkedFortresses.Remove(path);
                         }
@@ -139,7 +168,10 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
 
                     var created = File.GetCreationTime(fortress);
                     var modified = File.GetLastWriteTime(fortress);
-                    var fortressVm = new FortressViewModel(fortress, created, modified);
+                    var fortressVm = new FortressViewModel(fortress, created, modified, this);
+                    if (!fortress.Contains(IOPathHelper.GetDefaultFortressDirectory()))
+                        fortressVm.IsDefaultLocated = false;
+
                     Fortresses.Add(fortressVm);
                 }
             }

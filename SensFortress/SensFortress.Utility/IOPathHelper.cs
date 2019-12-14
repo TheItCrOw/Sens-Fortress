@@ -54,7 +54,7 @@ namespace SensFortress.Utility
         /// Gets the location of the xml file that holds newly selected fortresses.
         /// </summary>
         /// <returns></returns>
-        public static string GetLinkedFortressListFile() => $"{_appdataPath}\\Sen's Fortress\\Configs\\Linked Fortresses.xml";
+        public static string GetLinkedFortressListFile() => $"{_appdataPath}\\Sen's Fortress\\Configs\\Linked Fortresses.config";
 
     }
 }
