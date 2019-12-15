@@ -25,6 +25,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
@@ -130,7 +131,7 @@
                                         <ToggleButton Margin="8 0 0 0"/>
                                     </StackPanel>-->
                             <!--select a fortress button-->
-                            <Border Grid.Row="2">
+                            <Border Grid.Row="3">
                                 <Button Style="{StaticResource MaterialDesignRaisedLightButton}" VerticalAlignment="Stretch" ToolTip="Select a fortress" Command="{Binding LinkExternalFortressCommand}">
                                     <materialDesign:PackIcon Kind="Add" Height="30" Width="30" VerticalAlignment="Center"/>
                                 </Button>
@@ -143,8 +144,11 @@
             </materialDesign:Flipper.BackContent>
         </materialDesign:Flipper>
 
+        <!--Progress Bar-->
+        <ProgressBar x:Name="Login_ProgressBar" Grid.Row="2" IsIndeterminate="False" Height="10" Margin="45 -40 45 0"/>
+        
         <!--Go Back Button-->
-        <Button Style="{StaticResource GoBackButtonStyle}" Grid.Row="2" HorizontalAlignment="Left" Margin="20 -20 0 0"
+        <Button Style="{StaticResource GoBackButtonStyle}" Grid.Row="3" HorizontalAlignment="Left" Margin="20 -20 0 0"
                 Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Cursor="Hand">
             <materialDesign:PackIcon Kind="ArrowBack" Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Button>

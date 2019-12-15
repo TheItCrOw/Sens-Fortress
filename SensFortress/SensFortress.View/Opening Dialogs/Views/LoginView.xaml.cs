@@ -4,7 +4,10 @@ using SensFortress.View.Helper;
 using SensFortress.View.Opening_Dialogs.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -33,42 +36,52 @@ namespace SensFortress.View.Opening_Dialogs.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Login_Button_Click(object sender, RoutedEventArgs e)
+        private async void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            if(IsValidMasterkey())
-            {
-                UIHelper.InformUser("Welcome back.");
-                Navigation.NavigateTo(NavigationViews.HomeView);
-            }
-            else
-            {
-                UIHelper.InformUser("You may not enter - mellon.");
-            }
+            if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password))
+                return;
+
+            if (Fortress_TreeView.SelectedItem_ == null)
+                return;
+
+            Login_ProgressBar.IsIndeterminate = true;
+
+            var pw = MasterKey_PasswordBox.Password;
+            var fortressVm = (FortressViewModel)Fortress_TreeView.SelectedItem_;
+
+            await Task.Run(() => IsValidMasterKey(fortressVm, pw));
+
+            pw = string.Empty;
+            Login_ProgressBar.IsIndeterminate = false;
         }
 
         /// <summary>
-        /// Try to login under given password
+        /// Checks if the login is authorized.
         /// </summary>
-        /// <returns></returns>
-        private bool IsValidMasterkey()
+        /// <param name="fortressVm"></param>
+        /// <param name="pw"></param>
+        private void IsValidMasterKey(FortressViewModel fortressVm, string pw)
         {
-            if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password))
-                return false;
+            var result = false;
 
-            if(Fortress_TreeView.SelectedItem_ == null)
-                return false;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            var currentFortress = (FortressViewModel)Fortress_TreeView.SelectedItem_;
+            while (stopwatch.Elapsed < TimeSpan.FromSeconds(2))
+                ;
 
-            if (Factory.Instance.BuildFortress(currentFortress.FullName, currentFortress.Name, MasterKey_PasswordBox.Password))
+            result = Factory.Instance.BuildFortress(fortressVm.FullName, fortressVm.Name, pw);
+
+            if (result)
             {
-                MasterKey_PasswordBox.Password = string.Empty;
-                return true;
+                pw = string.Empty;
+                Application.Current.Dispatcher.Invoke(() => Navigation.NavigateTo(NavigationViews.HomeView));
             }
             else
             {
-                return false;
+                Application.Current.Dispatcher.Invoke(() => UIHelper.InformUser("You shall not pass!"));
             }
         }
     }
 }
+
