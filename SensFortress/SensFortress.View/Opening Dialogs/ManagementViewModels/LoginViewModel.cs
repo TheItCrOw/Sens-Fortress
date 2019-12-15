@@ -12,11 +12,16 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 
 namespace SensFortress.View.Opening_Dialogs.ViewModels
 {
     public class LoginViewModel : ViewModelManagementBase
     {
+        #region fields
+        private FortressViewModel _selectedFortess;
+        #endregion
+
         /// <summary>
         /// Shows all loaded <see cref="FortressViewModel"/> in UI.
         /// </summary>
@@ -26,6 +31,18 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
         /// Command to add an externally selected fortress to the fortressListConfigFile that holds linked paths.
         /// </summary>
         public DelegateCommand LinkExternalFortressCommand => new DelegateCommand(LinkExternalFortress);
+
+        /// <summary>
+        /// Holds the currently selected FortressViewModel
+        /// </summary>
+        public FortressViewModel SelectedFortress
+        {
+            get { return _selectedFortess; }
+            set
+            {
+                SetProperty(ref _selectedFortess, value);
+            }
+        }
 
         public LoginViewModel()
         {
@@ -58,7 +75,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             {
                 Logger.log.Error($"Error while de-linking a fortress: {ex}");
                 ex.SetUserMessage($"Couldn't de-link fortress - An error occured while trying to de-link it. The problem could be solved by restarting the program.");
-                ExceptionHelper.InformUserAboutError(ex);
+                UIHelper.InformUserAboutError(ex);
             }
         }
 
@@ -85,7 +102,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
                     {
                         if (linkedFortressesFile.Contains(path))
                         {
-                            ExceptionHelper.InformUser("You already added this fortress.");
+                            UIHelper.InformUser("You already added this fortress.");
                             return;
                         }
                         linkedFortressesFile.Add(path);
@@ -105,7 +122,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             {
                 Logger.log.Error($"Error while linking a fortress: {ex}");
                 ex.SetUserMessage($"Couldn't add fortress - An error occured while trying to link it. Make sure the selected file ends with {TermHelper.GetZippedFileEnding()} or try to restart the program.");
-                ExceptionHelper.InformUserAboutError(ex);
+                UIHelper.InformUserAboutError(ex);
             }
         }
 
@@ -154,7 +171,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
                             linkedFortresses.Remove(path);
                         }
                         File.WriteAllLines(IOPathHelper.GetLinkedFortressListFile(), linkedFortresses);
-                        ExceptionHelper.InformUser($"Old or corrupted paths have been found - they were de-linked from the fortress list.");
+                        UIHelper.InformUser($"Old or corrupted paths have been found - they were de-linked from the fortress list.");
                     }
                 }
 
@@ -179,7 +196,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             {
                 Logger.log.Error($"Error while loading the fortress list: {ex}");
                 ex.SetUserMessage("An error occured while trying to load all known fortresses. If the fortress has been moved, try to select it again or restart the program.");
-                ExceptionHelper.InformUserAboutError(ex);
+                UIHelper.InformUserAboutError(ex);
             }
         }
 

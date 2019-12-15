@@ -13,7 +13,9 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
         {
             FullName = fullPath;
             var splitedString = fullPath.Split("\\");
-            Name = splitedString[splitedString.Length - 1];
+            var namePlusFileEnding = splitedString[splitedString.Length - 1];
+            var splitedName = namePlusFileEnding.Split(".");
+            Name = splitedName[0];
             Created = created;
             Modified = modified;
             Information = $"{Modified.ToShortDateString()}: {Name}";
@@ -39,9 +41,9 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
                 return;
 
             //Inform the current managementBase about the delink.
-            if(CurrentBase != null && CurrentBase is LoginViewModel loginVm)
+            if(CurrentBase != null && CurrentBase is LoginViewModel loginBaseVm)
             {
-                loginVm.DelinkExternalFortress(this);
+                loginBaseVm.DelinkExternalFortress(this);
             }
         }
     }

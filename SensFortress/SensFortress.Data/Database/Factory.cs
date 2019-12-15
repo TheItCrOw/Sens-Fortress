@@ -74,7 +74,6 @@ namespace SensFortress.Data.Database
                 continousThread.IsBackground = true;
                 continousThread.Name = "FACTORY_THREAD";
                 continousThread.Start();
-
                 return true;
             }
             catch (Exception ex)
@@ -83,6 +82,34 @@ namespace SensFortress.Data.Database
                 return false;
             }
  
+        }
+
+        /// <summary>
+        /// Builds en existing fortress.
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <param name="fortressName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public bool BuildFortress(string fullPath, string fortressName, string password)
+        {
+            try
+            {
+                _xmlDatacache = new XmlDataCache(fullPath);
+                _xmlDatacache.BuildFortress(fullPath, fortressName, password);
+                password = string.Empty;
+
+                if(StartFactoryQueue(fullPath))
+                    return true;
+
+                _xmlDatacache = null;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Couldn't build fortress: {ex}");
+                return false;
+            }
         }
 
         /// <summary>
@@ -120,7 +147,7 @@ namespace SensFortress.Data.Database
                     catch (Exception ex)
                     {
                         Logger.log.Error($"Error while handling a task caused by: {ex.Source}{Environment.NewLine}{ex}");
-                        ExceptionHelper.InformUserAboutError(ex);
+                        UIHelper.InformUserAboutError(ex);
                     }
 
                 }
@@ -134,7 +161,7 @@ namespace SensFortress.Data.Database
             {
                 case FactoryTaskType.Build:
                     // Have to later consider other models than fortresses
-                    _xmlDatacache.BuildFortress((string)taskParams.Item2[0], (string)taskParams.Item2[1], (string)taskParams.Item2[2]);
+                    //_xmlDatacache.BuildFortress((string)taskParams.Item2[0], (string)taskParams.Item2[1], (string)taskParams.Item2[2]);
                     return true;
                 case FactoryTaskType.Create:
                     // Have to later consider other models than fortresses

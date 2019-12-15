@@ -43,23 +43,30 @@ namespace SensFortress.View
         {
             Logger.log.Info("Building the gates...");
             InitializeComponent();
+
+            // For some reason, VS is firing an exceptionn when trying to do this in XAML...
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            // Give the NavigationHelper access to the views.
+            Navigation.MainFrame = MainFrame;
+
+            Logger.log.Info("Gates have been built!");
+
+
             // Start the factory queue
-            if (Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress")))
-            {
-                Logger.log.Info("Successfully built!");
+            //if (Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress")))
+            //{
+            //    Logger.log.Info("Successfully built!");
 
-                // For some reason, VS is firing an exceptionn when trying to do this in XAML...
-                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //    
 
-                // Give the NavigationHelper access to the views.
-                Navigation.MainFrame = MainFrame;
 
-                Testing();
-            }
-            else
-            {
-                this.Close();
-            }
+            //    Testing();
+            //}
+            //else
+            //{
+            //    this.Close();
+            //}
 
         }
 

@@ -1,4 +1,5 @@
-﻿using SensFortress.Utility;
+﻿using SensFortress.Data.Database;
+using SensFortress.Utility;
 using SensFortress.View.Helper;
 using SensFortress.View.Opening_Dialogs.ViewModels;
 using System;
@@ -36,20 +37,38 @@ namespace SensFortress.View.Opening_Dialogs.Views
         {
             if(IsValidMasterkey())
             {
+                UIHelper.InformUser("Welcome back.");
                 Navigation.NavigateTo(NavigationViews.HomeView);
             }
             else
             {
-                ExceptionHelper.InformUser("You may not enter - mellon.");
+                UIHelper.InformUser("You may not enter - mellon.");
             }
         }
 
+        /// <summary>
+        /// Try to login under given password
+        /// </summary>
+        /// <returns></returns>
         private bool IsValidMasterkey()
         {
             if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password))
                 return false;
 
-            return true;
+            if(Fortress_TreeView.SelectedItem_ == null)
+                return false;
+
+            var currentFortress = (FortressViewModel)Fortress_TreeView.SelectedItem_;
+
+            if (Factory.Instance.BuildFortress(currentFortress.FullName, currentFortress.Name, MasterKey_PasswordBox.Password))
+            {
+                MasterKey_PasswordBox.Password = string.Empty;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
