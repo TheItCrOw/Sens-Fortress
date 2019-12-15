@@ -147,7 +147,7 @@ namespace SensFortress.Data.Database
                     catch (Exception ex)
                     {
                         Logger.log.Error($"Error while handling a task caused by: {ex.Source}{Environment.NewLine}{ex}");
-                        UIHelper.InformUserAboutError(ex);
+                        Communication.InformUserAboutError(ex);
                     }
 
                 }

@@ -9,7 +9,7 @@ namespace SensFortress.Utility
     /// <summary>
     /// Links the messages between backend and frontend.
     /// </summary>
-    public static class UIHelper
+    public static class Communication
     {
         /// <summary>
         /// Informs the user via error popup about a given exception.

@@ -3,20 +3,10 @@ using SensFortress.Utility;
 using SensFortress.View.Helper;
 using SensFortress.View.Opening_Dialogs.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SensFortress.View.Opening_Dialogs.Views
 {
@@ -38,11 +28,11 @@ namespace SensFortress.View.Opening_Dialogs.Views
         /// <param name="e"></param>
         private async void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password))
+            if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password) || Fortress_TreeView.SelectedItem_ == null)
+            {
+                Communication.InformUser("You shall not pass!");
                 return;
-
-            if (Fortress_TreeView.SelectedItem_ == null)
-                return;
+            }
 
             Login_ProgressBar.IsIndeterminate = true;
 
@@ -64,11 +54,13 @@ namespace SensFortress.View.Opening_Dialogs.Views
         {
             var result = false;
 
+            // => This can be deleted later, it's only for testing.
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             while (stopwatch.Elapsed < TimeSpan.FromSeconds(2))
                 ;
+            // <= Testing
 
             result = Factory.Instance.BuildFortress(fortressVm.FullName, fortressVm.Name, pw);
 
@@ -79,7 +71,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
             }
             else
             {
-                Application.Current.Dispatcher.Invoke(() => UIHelper.InformUser("You shall not pass!"));
+                Application.Current.Dispatcher.Invoke(() => Communication.InformUser("You shall not pass!"));
             }
         }
     }
