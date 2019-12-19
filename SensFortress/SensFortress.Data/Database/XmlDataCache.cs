@@ -121,6 +121,11 @@ namespace SensFortress.Data.Database
             _secureDatacache.Add(encrpytedBytes);
         }
 
+        internal void AddToUnsecureMemoryDC(byte[] modelBytes)
+        {
+           //_unsecureDatacache.Add(modelBytes);
+        }
+
         /// <summary>
         /// Stores a serializible model into the datacache
         /// </summary>
@@ -191,7 +196,7 @@ namespace SensFortress.Data.Database
                 IOPathHelper.CreateDirectory(fortress.FullPath);
                 Logger.log.Debug($"Created outer walls {fortress.FullPath}.");
 
-                // =========================================================== Create the sub directory for the database
+                // =========================================================== Create the sub directories for the database
 
                 IOPathHelper.CreateDirectory(databasePath);
                 Logger.log.Debug($"Created the {TermHelper.GetDatabaseTerm()}");
@@ -201,9 +206,15 @@ namespace SensFortress.Data.Database
                 StoreSalt(fortress.FullPath, fortress.Salt);
                 Logger.log.Debug("Stored salt");
 
-                // =========================================================== Store the user Input in the database
+                // =========================================================== Store the user Input and initial data in the database
 
+                var rootBranch = new Branch{ Name="Example: Projects", ParentBranchId=Guid.Empty};
+                var subBranch = new Branch { Name="Example: Passwords", ParentBranchId=rootBranch.Id};
+                var leaf = new Leaf ("thisIsAnExamplePassword"){ Name="Password1", Description="Here you can describe this entry.", BranchId=subBranch.Id};
                 StoreOne<Fortress>(fortress);
+                StoreOne<Branch>(rootBranch);
+                StoreOne<Branch>(subBranch);
+                StoreOne<Leaf>(leaf);
                 Logger.log.Debug("Stored fortress information.");
 
                 // =========================================================== Zip only the database 
@@ -294,12 +305,16 @@ namespace SensFortress.Data.Database
                     Logger.log.Info($"Decrypted {TermHelper.GetDatabaseTerm()}");
 
                     // =========================================================== Unzip database
-
-                    var unzippedByteEntriesOfDb = new Queue<byte[]>(ZipHelper.GetEntriesFromZipArchive(decryptedDb)); // These are the entries in byte arrays
+                    // We distinguish between sensible data and normal data. We put the sensible data into the secureDatacache.
+                    var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
                     decryptedDb = null;
-                    foreach (var byteArr in unzippedByteEntriesOfDb.ToList()) // ToList() otherwise the iterations throws exception
+                    foreach (var sensibleBytes in unzippedByteEntriesOfDb.Item2.ToList()) // ToList() otherwise the iterations throws exception
                     {
-                        AddToSecureMemoryDC(unzippedByteEntriesOfDb.Dequeue()); // Store the data into the secureMemoryDatacache
+                        AddToSecureMemoryDC(unzippedByteEntriesOfDb.Item2.Pop()); // Store the data into the secureMemoryDatacache
+                    }
+                    foreach (var bytes in unzippedByteEntriesOfDb.Item1.ToList()) 
+                    {
+                        AddToUnsecureMemoryDC(unzippedByteEntriesOfDb.Item1.Pop()); 
                     }
                 }
 

@@ -51,7 +51,7 @@ namespace SensFortress.View
             Navigation.MainFrame = MainFrame;
 
             Logger.log.Info("Gates have been built!");
-
+            Testing();
 
             // Start the factory queue
             //if (Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress")))
@@ -81,7 +81,7 @@ namespace SensFortress.View
             var salt = aesHelper.GenerateSalt();
             var userMasterKey = "diesIstEinTest123";
             var hashedKey = aesHelper.CreateKey(userMasterKey, 512, salt);
-            var fullPath = $"{IOPathHelper.GetDefaultFortressDirectory()}\\testFortress25";
+            var fullPath = $"{IOPathHelper.GetDefaultFortressDirectory()}\\newFortress1";
             var name = "Max";
             var lastName = "Mustermann";
             var userName = "mMuster";
@@ -93,10 +93,12 @@ namespace SensFortress.View
             //DataAccessService.Instance.CreateNewFortress(fortress);
             //DataAccessService.Instance.BuildFortress(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123");
 
-
-            //Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress});
-            var param = new object[3] { System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123" };
-            Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Build, param);
+            //if(Factory.Instance.StartFactoryQueue(fortress.FullPath))
+            //{
+                //Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress });
+                //var param = new object[3] { System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123" };
+                //Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Build, param);
+            //}
 
             //for (int i = 0; i < 100; i++)
             //{

@@ -41,15 +41,22 @@ namespace SensFortress.Utility
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static List<byte[]> GetEntriesFromZipArchive(byte[] data, bool protectedMemory = false)
+        public static Tuple<Stack<byte[]>, Stack<byte[]>> GetEntriesFromZipArchive(byte[] data, bool protectedMemory = false)
         {
             using (var zippedStream = new MemoryStream(data))
             {
                 using (var archive = new ZipArchive(zippedStream))
                 {
-                    var entries = new List<byte[]>();
+                    var openData = new Stack<byte[]>();
+                    var secureData = new Stack<byte[]>();
+                    var entries = Tuple.Create(openData, secureData);
                     foreach(var entry in archive.Entries)
                     {
+                        bool sensible = false;
+
+                        if(entry.FullName.StartsWith($"{TermHelper.GetDatabaseTerm()}/Leaf"))
+                            sensible = true;
+
                         if (entry != null)
                         {
                             using (var unzippedEntryStream = entry.Open())
@@ -58,7 +65,10 @@ namespace SensFortress.Utility
                                 {
                                     unzippedEntryStream.CopyTo(ms);
                                     var unzippedArray = ms.ToArray();
-                                    entries.Add(unzippedArray);
+                                    if (sensible)
+                                        entries.Item2.Push(unzippedArray);
+                                    else
+                                        entries.Item1.Push(unzippedArray);
                                 }
                             }
                         }
