@@ -37,7 +37,7 @@ namespace SensFortress.Data.Database
         /// <summary>
         /// Represents the unencrypted Datacache in the RAM
         /// </summary>
-        private List<byte[]> _unsecureDatacache;
+        private Dictionary<Type, List<ModelBase>> _unsecureDatacache;
 
         /// <summary>
         /// Set the path of the current <see cref="TermHelper.GetDatabaseTerm()"/>.
@@ -50,7 +50,7 @@ namespace SensFortress.Data.Database
             // Get a list of all modeltypes in the assembly for creating them again
             _modelTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes());
             _secureDatacache = new List<byte[]>();
-            _unsecureDatacache = new List<byte[]>();
+            _unsecureDatacache = new Dictionary<Type, List<ModelBase>>();
         }
         /// <summary>
         /// Do NOT use this unless a salt is stored in a single file.
@@ -79,7 +79,7 @@ namespace SensFortress.Data.Database
         /// Builds models out of one byte array.
         /// </summary>
         /// <param name="arr"></param>
-        internal void BuildModelsOutOfBytes(byte[] arr)
+        internal T BuildModelsOutOfBytes<T>(byte[] arr) where T : ModelBase
         {
             if (arr == null)
             {
@@ -100,6 +100,7 @@ namespace SensFortress.Data.Database
                     var reader = XmlDictionaryReader.CreateTextReader(arr, new XmlDictionaryReaderQuotas());
                     var dcs = new DataContractSerializer(type);
                     var model = dcs.ReadObject(reader);
+                    return (T)model;
                 }
             }
             catch (Exception ex)
@@ -120,10 +121,24 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
-        /// Adds a given byte array ant puts it into the unsecureDatacache
+        /// Creates the unsecureDC from a List of models.
         /// </summary>
         /// <param name="modelBytes"></param>
-        internal void AddToUnsecureMemoryDC(byte[] modelBytes) => _unsecureDatacache.Add(modelBytes);        
+        internal void AddToUnsecureMemoryDC(ModelBase model)
+        {
+            if(_unsecureDatacache.TryGetValue(model.GetType(), out var listOfModels))
+            {
+                listOfModels.Add(model);
+            }
+            else
+            {
+                if(model is ModelBase)
+                {
+                    var newList = new List<ModelBase>() { model };
+                    _unsecureDatacache.Add(model.GetType(), newList);
+                }
+            }
+        }
 
         /// <summary>
         /// Stores a serializible model into the datacache
@@ -205,10 +220,10 @@ namespace SensFortress.Data.Database
 
                 // =========================================================== Store the user Input and initial data in the database
 
-                var rootBranch = new Branch{ Name="Example: Projects", ParentBranchId=Guid.Empty};
-                var subBranch = new Branch { Name="Example: Passwords", ParentBranchId=rootBranch.Id};
+                var rootBranch = new Branch { Name = "Example: Projects", ParentBranchId = Guid.Empty };
+                var subBranch = new Branch { Name = "Example: Passwords", ParentBranchId = rootBranch.Id };
                 var examplePw = ByteHelper.StringToByteArray("thisIsAnExamplePassword");
-                var leaf = new Leaf {Name ="Password1", Description="Here you can describe this entry.", BranchId=subBranch.Id};
+                var leaf = new Leaf { Name = "Password1", Description = "Here you can describe this entry.", BranchId = subBranch.Id };
                 var leafPw = new LeafPassword { LeafId = leaf.Id, Value = examplePw };
                 examplePw = null;
                 StoreOne<Fortress>(fortress);
@@ -309,14 +324,16 @@ namespace SensFortress.Data.Database
                     // We distinguish between sensible data and normal data. We put the sensible data into the secureDatacache.
                     var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
                     decryptedDb = null;
+                    var unsecureModelList = new List<ModelBase>();
                     foreach (var sensibleBytes in unzippedByteEntriesOfDb.Item2.ToList()) // ToList() otherwise the iterations throws exception
                     {
-                        AddToSecureMemoryDC(unzippedByteEntriesOfDb.Item2.Pop()); // Store the data into the secureMemoryDatacache
+                        AddToSecureMemoryDC(unzippedByteEntriesOfDb.Item2.Pop()); // Add sensible data to secure DC
                     }
-                    foreach (var bytes in unzippedByteEntriesOfDb.Item1.ToList()) 
+                    foreach (var bytes in unzippedByteEntriesOfDb.Item1.ToList()) // Add not sensible data to the "unsecure" DC.
                     {
-                        AddToUnsecureMemoryDC(unzippedByteEntriesOfDb.Item1.Pop()); 
+                        AddToUnsecureMemoryDC(BuildModelsOutOfBytes<ModelBase>(unzippedByteEntriesOfDb.Item1.Pop()));
                     }
+                    unzippedByteEntriesOfDb = null;
                 }
 
             }

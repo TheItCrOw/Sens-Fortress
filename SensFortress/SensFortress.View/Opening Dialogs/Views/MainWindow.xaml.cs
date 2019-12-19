@@ -93,12 +93,12 @@ namespace SensFortress.View
             //DataAccessService.Instance.CreateNewFortress(fortress);
             //DataAccessService.Instance.BuildFortress(System.IO.Path.Combine(DirectoryHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123");
 
-            if(Factory.Instance.StartFactoryQueue(fortress.FullPath))
-            {
-                Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress });
-                //var param = new object[3] { System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123" };
-                //Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Build, param);
-            }
+            //if(Factory.Instance.StartFactoryQueue(fortress.FullPath))
+            //{
+            //    Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Create, new object[1] { fortress });
+            //    //var param = new object[3] { System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner\\testFortress.sfzf"), "testFortress", "diesIstEinTest123" };
+            //    //Factory.Instance.EnqueueTask(Factory.FactoryTaskType.Build, param);
+            //}
 
             //for (int i = 0; i < 100; i++)
             //{
