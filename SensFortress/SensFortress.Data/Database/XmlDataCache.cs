@@ -37,7 +37,7 @@ namespace SensFortress.Data.Database
         /// <summary>
         /// Represents the unencrypted Datacache in the RAM
         /// </summary>
-        private Dictionary<Type, byte[]> _unsecureDatacache;
+        private List<byte[]> _unsecureDatacache;
 
         /// <summary>
         /// Set the path of the current <see cref="TermHelper.GetDatabaseTerm()"/>.
@@ -50,6 +50,7 @@ namespace SensFortress.Data.Database
             // Get a list of all modeltypes in the assembly for creating them again
             _modelTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes());
             _secureDatacache = new List<byte[]>();
+            _unsecureDatacache = new List<byte[]>();
         }
         /// <summary>
         /// Do NOT use this unless a salt is stored in a single file.
@@ -69,7 +70,6 @@ namespace SensFortress.Data.Database
             }
             catch (Exception ex)
             {
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
                 throw ex;
             }
@@ -84,7 +84,6 @@ namespace SensFortress.Data.Database
             if (arr == null)
             {
                 var ex = new XmlDataCacheException("Tried to build a model, but the byteArray was null.");
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
@@ -105,7 +104,6 @@ namespace SensFortress.Data.Database
             }
             catch (Exception ex)
             {
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
@@ -121,10 +119,11 @@ namespace SensFortress.Data.Database
             _secureDatacache.Add(encrpytedBytes);
         }
 
-        internal void AddToUnsecureMemoryDC(byte[] modelBytes)
-        {
-           //_unsecureDatacache.Add(modelBytes);
-        }
+        /// <summary>
+        /// Adds a given byte array ant puts it into the unsecureDatacache
+        /// </summary>
+        /// <param name="modelBytes"></param>
+        internal void AddToUnsecureMemoryDC(byte[] modelBytes) => _unsecureDatacache.Add(modelBytes);        
 
         /// <summary>
         /// Stores a serializible model into the datacache
@@ -136,7 +135,6 @@ namespace SensFortress.Data.Database
             if (!_isInitialized)
             {
                 var ex = new XmlDataCacheException("XmlDataCache has not been initialized.");
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
@@ -161,7 +159,6 @@ namespace SensFortress.Data.Database
             }
             catch (Exception ex)
             {
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
@@ -210,11 +207,16 @@ namespace SensFortress.Data.Database
 
                 var rootBranch = new Branch{ Name="Example: Projects", ParentBranchId=Guid.Empty};
                 var subBranch = new Branch { Name="Example: Passwords", ParentBranchId=rootBranch.Id};
-                var leaf = new Leaf ("thisIsAnExamplePassword"){ Name="Password1", Description="Here you can describe this entry.", BranchId=subBranch.Id};
+                var examplePw = ByteHelper.StringToByteArray("thisIsAnExamplePassword");
+                var leaf = new Leaf {Name ="Password1", Description="Here you can describe this entry.", BranchId=subBranch.Id};
+                var leafPw = new LeafPassword { LeafId = leaf.Id, Value = examplePw };
+                examplePw = null;
                 StoreOne<Fortress>(fortress);
                 StoreOne<Branch>(rootBranch);
                 StoreOne<Branch>(subBranch);
                 StoreOne<Leaf>(leaf);
+                StoreOne<LeafPassword>(leafPw);
+                leafPw = null;
                 Logger.log.Debug("Stored fortress information.");
 
                 // =========================================================== Zip only the database 
@@ -256,7 +258,6 @@ namespace SensFortress.Data.Database
                     File.Delete(fortress.FullPath + TermHelper.GetZippedFileEnding());
                 }
 
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
@@ -321,7 +322,6 @@ namespace SensFortress.Data.Database
             }
             catch (Exception ex)
             {
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }

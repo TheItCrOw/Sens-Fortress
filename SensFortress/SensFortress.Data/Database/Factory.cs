@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SensFortress.Data.Database
 {
@@ -23,7 +24,7 @@ namespace SensFortress.Data.Database
         public enum FactoryTaskType
         {
             [Description("Task when building known models.")]
-            Build,
+            Get,
             [Description("Task when creating new models.")]
             Create,
             [Description("Task when reading data.")]
@@ -146,8 +147,11 @@ namespace SensFortress.Data.Database
                     }
                     catch (Exception ex)
                     {
-                        Logger.log.Error($"Error while handling a task caused by: {ex.Source}{Environment.NewLine}{ex}");
-                        Communication.InformUserAboutError(ex);
+                        Logger.log.Error($"Error while handling a task caused by:{Environment.NewLine}{ex}");
+                        // We need to call UI components from the STA Thread.
+                        Application.Current.Dispatcher.Invoke((Action)delegate {
+                            Communication.InformUserAboutError(ex);
+                        });
                     }
 
                 }
@@ -159,9 +163,10 @@ namespace SensFortress.Data.Database
         {
             switch (taskParams.Item1)
             {
-                case FactoryTaskType.Build:
+                case FactoryTaskType.Get:
                     // Have to later consider other models than fortresses
                     //_xmlDatacache.BuildFortress((string)taskParams.Item2[0], (string)taskParams.Item2[1], (string)taskParams.Item2[2]);
+
                     return true;
                 case FactoryTaskType.Create:
                     // Have to later consider other models than fortresses

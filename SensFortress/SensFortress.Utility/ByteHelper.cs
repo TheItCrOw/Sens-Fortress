@@ -21,6 +21,28 @@ namespace SensFortress.Utility
         }
 
         /// <summary>
+        /// Takes a string and returns it as a byte array.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static byte[] StringToByteArray(string str)
+        {
+            System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
+            return enc.GetBytes(str);
+        }
+
+        /// <summary>
+        /// Takes a byte array and returns a string.
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        public static string ByteArrayToString(byte[] arr)
+        {
+            System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
+            return enc.GetString(arr);
+        }
+
+        /// <summary>
         /// Reads a stream and returns an array of bytes.
         /// </summary>
         /// <param name="stream"></param>

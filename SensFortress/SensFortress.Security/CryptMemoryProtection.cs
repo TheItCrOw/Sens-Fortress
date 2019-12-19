@@ -16,6 +16,11 @@ namespace SensFortress.Security
 
         private static byte[] _aditionalEntropy = { 9, 8, 7, 6, 5 };
 
+        public static byte[] DecryptInMemoryData(object password)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Encrypt a byte array in memory.
         /// </summary>
@@ -30,7 +35,6 @@ namespace SensFortress.Security
             }
             catch(Exception ex)
             {
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage("A security error occured while trying to encrypt sensible data in memory. Please wait while the memory is being flushed to prevent any leaks.");
                 throw ex;
             }
@@ -49,7 +53,6 @@ namespace SensFortress.Security
             }
             catch (CryptographicException ex)
             {
-                ex.Source = $"{ex.Source} called by {MethodBase.GetCurrentMethod()}";
                 ex.SetUserMessage("A security error occured while trying to decrypt sensible data in memory. Please wait while the memory is being flushed to prevent any leaks.");
                 throw ex;
             }

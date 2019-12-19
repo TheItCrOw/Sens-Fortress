@@ -17,5 +17,7 @@ namespace SensFortress.View.Bases
         /// </summary>
         public ViewModelManagementBase CurrentBase { get; protected set; }
 
+        public Guid Id { get; set; }
+
     }
 }

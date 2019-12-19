@@ -11,23 +11,28 @@ namespace SensFortress.View.Main.ViewModel
     public class HomeViewModel : ViewModelManagementBase
     {
 
-        //=> testing
         public HomeViewModel()
         {
-            var testVM = new TestViewModel{ Name = "Projects", TreeType=TreeDepth.Root };
-            testVM.Children.Add(new TestViewModel { Name="SubProject", TreeType=TreeDepth.Branch});
+            Testing();
+        }
+
+        //=> testing
+        private void Testing()
+        {
+            var testVM = new TestViewModel { Name = "Projects", TreeType = TreeDepth.Root };
+            testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
             testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
             testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
             testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
             testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
             testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
 
-            var testVM2 = new TestViewModel { Name = "Projects", TreeType=TreeDepth.Root };
-            var child = new TestViewModel { Name = "SubSubProjects", TreeType=TreeDepth.Leaf };
-            testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType=TreeDepth.Branch,Children = new ObservableCollection<TestViewModel> { child} });
+            var testVM2 = new TestViewModel { Name = "Projects", TreeType = TreeDepth.Root };
+            var child = new TestViewModel { Name = "SubSubProjects", TreeType = TreeDepth.Leaf };
             testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
             testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
-            testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType=TreeDepth.Branch });
+            testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
+            testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
 
 
             TestCollection.Add(testVM);

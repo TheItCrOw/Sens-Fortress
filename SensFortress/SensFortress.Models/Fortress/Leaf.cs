@@ -1,4 +1,5 @@
 ﻿using SensFortress.Models.BaseClasses;
+using SensFortress.Security;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -12,10 +13,9 @@ namespace SensFortress.Models.Fortress
     [DataContract]
     public class Leaf : ModelBase
     {
-        public Leaf(string password)
+        public Leaf()
         {
             Id = Guid.NewGuid();
-            Password = password;
         }
 
         [DataMember]
@@ -23,9 +23,6 @@ namespace SensFortress.Models.Fortress
 
         [DataMember]
         public Guid BranchId { get; set; }
-
-        [DataMember]
-        public string Password { get; private set; }
 
         [DataMember]
         public string Description { get; set; }

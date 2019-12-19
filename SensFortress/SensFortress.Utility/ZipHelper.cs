@@ -54,7 +54,7 @@ namespace SensFortress.Utility
                     {
                         bool sensible = false;
 
-                        if(entry.FullName.StartsWith($"{TermHelper.GetDatabaseTerm()}/Leaf"))
+                        if(entry.FullName.StartsWith($"{TermHelper.GetDatabaseTerm()}/LeafPassword"))
                             sensible = true;
 
                         if (entry != null)
