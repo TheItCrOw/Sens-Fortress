@@ -59,6 +59,24 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
+        /// Builds a new fortress.
+        /// </summary>
+        /// <param name="fortess"></param>
+        public void CreateNewFortress(Fortress fortess)
+        {
+            try
+            {
+                _xmlDatacache = new XmlDataCache(fortess.FullPath);
+                _xmlDatacache.CreateNewFortress(fortess);
+            }
+            catch (Exception ex)
+            {
+                _xmlDatacache = null;
+                Logger.log.Error($"Couldn't build fortress: {ex}");
+            }
+        }
+
+        /// <summary>
         /// Get all models of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>

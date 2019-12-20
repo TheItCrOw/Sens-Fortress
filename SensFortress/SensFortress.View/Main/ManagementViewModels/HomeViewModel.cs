@@ -16,7 +16,7 @@ namespace SensFortress.View.Main.ViewModel
 {
     public class HomeViewModel : ViewModelManagementBase
     {
-        public ObservableCollection<BranchViewModel> RootNodes { get; set; } = new ObservableCollection<BranchViewModel>();
+        public ObservableCollection<TreeItemViewModel> RootNodes { get; set; } = new ObservableCollection<TreeItemViewModel>();
 
         public HomeViewModel()
         {
@@ -32,40 +32,101 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
 
+        /// <summary>
+        /// Loads the treeview with all Branches and leafes.
+        /// </summary>
         private void LoadTreeView()
         {
-            var allBranchesVmDictionary = DataAccessService.Instance.GetAll<Branch>().Select(b => new BranchViewModel(b)).ToDictionary(b => b.Id, b => b);
-            var allLeafesVm = DataAccessService.Instance.GetAll<Leaf>().Select(l => new LeafViewModel(l));
+            var rootNodes = new List<BranchViewModel>();
+            var allBranchesVm = DataAccessService.Instance
+                .GetAll<Branch>()
+                .Select(b => new BranchViewModel(b));
+
+            var allLeafesVmLookup = DataAccessService.Instance
+                .GetAll<Leaf>()
+                .Select(l => new LeafViewModel(l))
+                .ToLookup(l => l.BranchId, l => l);
+
+            var allBranchesVmLookup = allBranchesVm.ToLookup(b => b.ParentBranchId, b => b);
+
+            RootNodes.Clear();
+
+            foreach (var branch in allBranchesVm)
+            {
+                var currentItem = new TreeItemViewModel(branch, TreeDepth.Branch);
+
+                // If it's a root branch, just add it
+                if (branch.ParentBranchId == Guid.Empty)
+                {
+                    currentItem.ChildrenType = TreeDepth.Root;
+                    foreach (var leaf in GetLeafes(allLeafesVmLookup, branch.Id))
+                        currentItem.Children.Add(leaf);
+
+                    RootNodes.Add(currentItem);
+                }
+                // Find the sub branches and add it as a children
+                if (allBranchesVmLookup.Contains(branch.Id))
+                {
+                    var subbranches = allBranchesVmLookup.FirstOrDefault(b => b.Key == branch.Id);
+                    foreach (var subbranch in subbranches)
+                    {
+                        var currentSubItem = new TreeItemViewModel(subbranch, TreeDepth.Branch);
+                        // Add leafes to the subBranch
+                        foreach (var leaf in GetLeafes(allLeafesVmLookup, subbranch.Id))
+                            currentSubItem.Children.Add(leaf);
+                        // Add the subBranch to the curretn branch.
+                        currentItem.Children.Add(currentSubItem);
+                    }
+                }
+            }
         }
 
+        /// <summary>
+        /// Returns a list of possible leafes of given branchId.
+        /// </summary>
+        /// <param name="branchId"></param>
+        /// <returns></returns>
+        private List<TreeItemViewModel> GetLeafes(ILookup<Guid, LeafViewModel> allLeafesVmLookup, Guid branchId)
+        {
+            var returnList = new List<TreeItemViewModel>();
+
+            // Add maybe leafes first.
+            if (allLeafesVmLookup.Contains(branchId))
+            {
+                var leafes = allLeafesVmLookup.FirstOrDefault(b => b.Key == branchId);
+                returnList.AddRange(leafes.Select(l => new TreeItemViewModel(l, TreeDepth.Leaf)));
+            }
+            return returnList;
+        }
 
         #region Testing
         //=> testing
-        private void Testing()
-        {
-            var testVM = new TestViewModel { Name = "Projects", TreeType = TreeDepth.Root };
-            testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-            testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-            testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-            testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-            testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-            testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
+        //private void Testing()
+        //{
+        //    var testVM = new TestViewModel { Name = "Projects", TreeType = TreeDepth.Root };
+        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
+        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
+        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
+        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
+        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
+        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
 
-            var testVM2 = new TestViewModel { Name = "Projects", TreeType = TreeDepth.Root };
-            var child = new TestViewModel { Name = "SubSubProjects", TreeType = TreeDepth.Leaf };
-            testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
-            testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
-            testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
-            testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
+        //    var testVM2 = new TestViewModel { Name = "Projects", TreeType = TreeDepth.Root };
+        //    var child = new TestViewModel { Name = "SubSubProjects", TreeType = TreeDepth.Leaf };
+        //    testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
+        //    testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
+        //    testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
+        //    testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
 
 
-            TestCollection.Add(testVM);
-            TestCollection.Add(testVM2);
-        }
+        //    TestCollection.Add(testVM);
+        //    TestCollection.Add(testVM2);
+        //}
 
-        public ObservableCollection<TestViewModel> TestCollection { get; set; } = new ObservableCollection<TestViewModel>();
+        //public ObservableCollection<TestViewModel> TestCollection { get; set; } = new ObservableCollection<TestViewModel>();
 
         //<= testing
         #endregion
     }
 }
+

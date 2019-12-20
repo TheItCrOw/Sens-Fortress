@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using SensFortress.Models.BaseClasses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -15,12 +15,8 @@ namespace SensFortress.View.Main.ViewModel
             ParentBranchId = model.ParentBranchId;
             Name = model.Name;
         }
-
         public Guid ParentBranchId { get; set; }
         public string Name { get; set; }
-        public ObservableCollection<BranchViewModel> SubBranches { get; set; } = new ObservableCollection<BranchViewModel>();
-        public ObservableCollection<LeafViewModel> Leafes { get; set; } = new ObservableCollection<LeafViewModel>();
-
 
     }
 }

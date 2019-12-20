@@ -238,6 +238,7 @@ namespace SensFortress.Data.Database
                 // =========================================================== Store the user Input and initial data in the database
 
                 var rootBranch = new Branch { Name = "Example: Projects", ParentBranchId = Guid.Empty };
+                var rootBranch2 = new Branch { Name = "Example: Projects2", ParentBranchId = Guid.Empty };
                 var subBranch = new Branch { Name = "Example: Passwords", ParentBranchId = rootBranch.Id };
                 var examplePw = ByteHelper.StringToByteArray("thisIsAnExamplePassword");
                 var leaf = new Leaf { Name = "Password1", Description = "Here you can describe this entry.", BranchId = subBranch.Id };
@@ -245,6 +246,7 @@ namespace SensFortress.Data.Database
                 examplePw = null;
                 StoreOne<Fortress>(fortress);
                 StoreOne<Branch>(rootBranch);
+                StoreOne<Branch>(rootBranch2);
                 StoreOne<Branch>(subBranch);
                 StoreOne<Leaf>(leaf);
                 StoreOne<LeafPassword>(leafPw);

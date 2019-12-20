@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Main.Views"
-             xmlns:models="clr-namespace:SensFortress.Models.ViewModels;assembly=SensFortress.Models"
              xmlns:vms="clr-namespace:SensFortress.View.Main.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1100"           
@@ -51,15 +50,15 @@
                 <TextBlock Style="{StaticResource InformationTextblockStyle}" Margin="10" HorizontalAlignment="Center" Text="Structure"/>
                 <TreeView ItemsSource="{Binding RootNodes}">
                     <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type vms:BranchViewModel}" ItemsSource="{Binding SubBranches}">
+                        <HierarchicalDataTemplate DataType="{x:Type vms:TreeItemViewModel}" ItemsSource="{Binding Children}">
                             <TextBlock Text="{Binding Name}" Margin="3 2">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource CategoryTextblockStyle}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static models:TreeDepth.Branch}">
+                                            <DataTrigger Binding="{Binding Path=ChildrenType}" Value="{x:Static vms:TreeDepth.Branch}">
                                                 <Setter Property="FontSize" Value="17"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding Path=TreeType}"  Value="{x:Static models:TreeDepth.Leaf}">
+                                            <DataTrigger Binding="{Binding Path=ChildrenType}"  Value="{x:Static vms:TreeDepth.Leaf}">
                                                 <Setter Property="FontSize" Value="17"/>
                                             </DataTrigger>
                                         </Style.Triggers>
