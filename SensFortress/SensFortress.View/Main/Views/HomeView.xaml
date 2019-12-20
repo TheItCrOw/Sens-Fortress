@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Main.Views"
              xmlns:models="clr-namespace:SensFortress.Models.ViewModels;assembly=SensFortress.Models"
+             xmlns:vms="clr-namespace:SensFortress.View.Main.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1100"           
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -48,9 +49,9 @@
             <!--left side menu here-->
             <StackPanel>
                 <TextBlock Style="{StaticResource InformationTextblockStyle}" Margin="10" HorizontalAlignment="Center" Text="Structure"/>
-                <TreeView ItemsSource="{Binding TestCollection}">
+                <TreeView ItemsSource="{Binding RootNodes}">
                     <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type models:TestViewModel}" ItemsSource="{Binding Children}">
+                        <HierarchicalDataTemplate DataType="{x:Type vms:BranchViewModel}" ItemsSource="{Binding SubBranches}">
                             <TextBlock Text="{Binding Name}" Margin="3 2">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource CategoryTextblockStyle}">

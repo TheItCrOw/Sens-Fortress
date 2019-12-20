@@ -57,12 +57,7 @@ namespace SensFortress.Data.Database
         /// </summary>
         internal void StoreSalt(string path, byte[] salt)
         {
-            if (!_isInitialized)
-            {
-                var ex = new XmlDataCacheException("XmlDataCache has not been initialized.");
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                throw ex;
-            }
+            CheckDatacache();
 
             try
             {
@@ -70,7 +65,7 @@ namespace SensFortress.Data.Database
             }
             catch (Exception ex)
             {
-                ex.SetUserMessage("An error occured while trying to store data safely. Please wait as the memory is being flushed to prevent any leaks.");
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
         }
@@ -81,13 +76,6 @@ namespace SensFortress.Data.Database
         /// <param name="arr"></param>
         internal T BuildModelsOutOfBytes<T>(byte[] arr) where T : ModelBase
         {
-            if (arr == null)
-            {
-                var ex = new XmlDataCacheException("Tried to build a model, but the byteArray was null.");
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                throw ex;
-            }
-
             try
             {
                 XmlDocument doc = new XmlDocument();
@@ -111,48 +99,13 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
-        /// Takes a byte array and stores it savely in the <see cref="_secureDatacache"/>
-        /// </summary>
-        internal void AddToSecureMemoryDC(byte[] modelBytes)
-        {
-            var encrpytedBytes = CryptMemoryProtection.EncryptInMemoryData(modelBytes);
-            modelBytes = null;
-            _secureDatacache.Add(encrpytedBytes);
-        }
-
-        /// <summary>
-        /// Creates the unsecureDC from a List of models.
-        /// </summary>
-        /// <param name="modelBytes"></param>
-        internal void AddToUnsecureMemoryDC(ModelBase model)
-        {
-            if(_unsecureDatacache.TryGetValue(model.GetType(), out var listOfModels))
-            {
-                listOfModels.Add(model);
-            }
-            else
-            {
-                if(model is ModelBase)
-                {
-                    var newList = new List<ModelBase>() { model };
-                    _unsecureDatacache.Add(model.GetType(), newList);
-                }
-            }
-        }
-
-        /// <summary>
         /// Stores a serializible model into the datacache
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="model"></param>
         internal void StoreOne<T>(ModelBase model) where T : Models.Interfaces.ISerializable
         {
-            if (!_isInitialized)
-            {
-                var ex = new XmlDataCacheException("XmlDataCache has not been initialized.");
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                throw ex;
-            }
+            CheckDatacache();
 
             try
             {
@@ -174,6 +127,70 @@ namespace SensFortress.Data.Database
             }
             catch (Exception ex)
             {
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Takes a byte array and stores it savely in the <see cref="_secureDatacache"/>
+        /// </summary>
+        internal void AddToSecureMemoryDC(byte[] modelBytes)
+        {
+            CheckDatacache();
+            var encrpytedBytes = CryptMemoryProtection.EncryptInMemoryData(modelBytes);
+            modelBytes = null;
+            _secureDatacache.Add(encrpytedBytes);
+        }
+
+        /// <summary>
+        /// Creates the unsecureDC from a List of models.
+        /// </summary>
+        /// <param name="modelBytes"></param>
+        internal void AddToUnsecureMemoryDC(ModelBase model)
+        {
+            CheckDatacache();
+
+            if (_unsecureDatacache.TryGetValue(model.GetType(), out var listOfModels))
+            {
+                listOfModels.Add(model);
+            }
+            else
+            {
+                if(model is ModelBase)
+                {
+                    var newList = new List<ModelBase>() { model };
+                    _unsecureDatacache.Add(model.GetType(), newList);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get all models of type T from the unsecureDatacache.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        internal IEnumerable<T> GetAllFromUnsecure<T>()
+        {
+            CheckDatacache();
+            if(_unsecureDatacache.TryGetValue(typeof(T), out var allModels))
+            {
+                return allModels.Cast<T>();
+            }
+            else
+            {
+                var emptyList = new List<T>();
+                return emptyList;
+            }
+        }
+        /// <summary>
+        /// Throws an exception if the DC has not bene initialzed.
+        /// </summary>
+        private void CheckDatacache()
+        {
+            if (!_isInitialized)
+            {
+                var ex = new XmlDataCacheException("XmlDataCache has not been initialized.");
                 ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
                 throw ex;
             }
@@ -324,7 +341,6 @@ namespace SensFortress.Data.Database
                     // We distinguish between sensible data and normal data. We put the sensible data into the secureDatacache.
                     var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
                     decryptedDb = null;
-                    var unsecureModelList = new List<ModelBase>();
                     foreach (var sensibleBytes in unzippedByteEntriesOfDb.Item2.ToList()) // ToList() otherwise the iterations throws exception
                     {
                         AddToSecureMemoryDC(unzippedByteEntriesOfDb.Item2.Pop()); // Add sensible data to secure DC

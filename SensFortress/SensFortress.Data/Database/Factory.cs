@@ -80,35 +80,7 @@ namespace SensFortress.Data.Database
             catch (Exception ex)
             {
                 Logger.log.Error($"Couldn't start the factory queue. Closing the application.. {Environment.NewLine}{ex}");
-                return false;
-            }
- 
-        }
-
-        /// <summary>
-        /// Builds en existing fortress.
-        /// </summary>
-        /// <param name="fullPath"></param>
-        /// <param name="fortressName"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public bool BuildFortress(string fullPath, string fortressName, string password)
-        {
-            try
-            {
-                _xmlDatacache = new XmlDataCache(fullPath);
-                _xmlDatacache.BuildFortress(fullPath, fortressName, password);
-                password = string.Empty;
-
-                if(StartFactoryQueue(fullPath))
-                    return true;
-
-                _xmlDatacache = null;
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Logger.log.Error($"Couldn't build fortress: {ex}");
+                Application.Current.Shutdown();
                 return false;
             }
         }

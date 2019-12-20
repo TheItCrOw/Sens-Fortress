@@ -2,6 +2,7 @@
 using SensFortress.View.Bases;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace SensFortress.View.Main.ViewModel
@@ -17,6 +18,9 @@ namespace SensFortress.View.Main.ViewModel
 
         public Guid ParentBranchId { get; set; }
         public string Name { get; set; }
+        public ObservableCollection<BranchViewModel> SubBranches { get; set; } = new ObservableCollection<BranchViewModel>();
+        public ObservableCollection<LeafViewModel> Leafes { get; set; } = new ObservableCollection<LeafViewModel>();
+
 
     }
 }

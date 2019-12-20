@@ -1,5 +1,6 @@
 ﻿using SensFortress.Data.Database;
 using SensFortress.Utility;
+using SensFortress.Utility.Exceptions;
 using SensFortress.View.Helper;
 using SensFortress.View.Opening_Dialogs.ViewModels;
 using System;
@@ -62,7 +63,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
                 ;
             // <= Testing
 
-            result = Factory.Instance.BuildFortress(fortressVm.FullName, fortressVm.Name, pw);
+            result = DataAccessService.Instance.BuildFortress(fortressVm.FullName, fortressVm.Name, pw);
 
             if (result)
             {
@@ -74,6 +75,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
                 Application.Current.Dispatcher.Invoke(() => Communication.InformUser("You shall not pass!"));
             }
         }
+
     }
 }
 
