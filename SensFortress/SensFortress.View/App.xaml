@@ -63,7 +63,16 @@
             </Style>
 
             <!--TextBoxes-->
-
+            
+            <!--A textbox for the treeview-->
+            <Style TargetType="{x:Type TextBox}" x:Key="TreeViewTextboxStyle">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Style>
             
             
             <!--Buttons-->

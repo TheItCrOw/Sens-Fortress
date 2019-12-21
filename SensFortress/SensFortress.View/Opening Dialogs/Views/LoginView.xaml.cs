@@ -1,6 +1,7 @@
 ﻿using SensFortress.Data.Database;
 using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
+using SensFortress.Utility.Log;
 using SensFortress.View.Helper;
 using SensFortress.View.Opening_Dialogs.ViewModels;
 using System;
@@ -39,6 +40,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
 
             var pw = MasterKey_PasswordBox.Password;
             var fortressVm = (FortressViewModel)Fortress_TreeView.SelectedItem_;
+            Logger.log.Info($"Login attempt in fortress: {fortressVm.ToString()}");
 
             await Task.Run(() => IsValidMasterKey(fortressVm, pw));
 
@@ -69,10 +71,12 @@ namespace SensFortress.View.Opening_Dialogs.Views
             {
                 pw = string.Empty;
                 Application.Current.Dispatcher.Invoke(() => Navigation.NavigateTo(NavigationViews.HomeView));
+                Logger.log.Info($"Login successfull!");
             }
             else
             {
                 Application.Current.Dispatcher.Invoke(() => Communication.InformUser("You shall not pass!"));
+                Logger.log.Info($"Login failed.");
             }
         }
 

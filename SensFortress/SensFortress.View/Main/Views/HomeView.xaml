@@ -47,24 +47,61 @@
 
             <!--left side menu here-->
             <StackPanel>
-                <TextBlock Style="{StaticResource InformationTextblockStyle}" Margin="10" HorizontalAlignment="Center" Text="Structure"/>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                    <StackPanel>
+                        <Expander>
+                            <Expander.Header>
+                                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Structure"/>
+                            </Expander.Header>
+                            <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
+                                <materialDesign:PackIcon Kind="Search" VerticalAlignment="Top" Height="25" Width="25"/>
+                                <TextBox FontStyle="Italic" FontSize="16" FontWeight="ExtraLight" HorizontalAlignment="Stretch" Margin="5 -15 0 10" materialDesign:HintAssist.Hint="search..." materialDesign:HintAssist.IsFloating="True"/>
+                            </DockPanel>
+                        </Expander>
+                    </StackPanel>
+                </materialDesign:Card>
                 <TreeView ItemsSource="{Binding RootNodes}">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vms:TreeItemViewModel}" ItemsSource="{Binding Children}">
-                            <TextBlock Text="{Binding Name}" Margin="3 2">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CategoryTextblockStyle}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Path=ChildrenType}" Value="{x:Static vms:TreeDepth.Branch}">
-                                                <Setter Property="FontSize" Value="17"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Path=ChildrenType}"  Value="{x:Static vms:TreeDepth.Leaf}">
-                                                <Setter Property="FontSize" Value="17"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+                            <DockPanel>
+                                <materialDesign:PackIcon VerticalAlignment="Center" Margin="0 0 5 0">
+                                    <materialDesign:PackIcon.Style>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=ChildrenType}" Value="{x:Static vms:TreeDepth.Root}">
+                                                    <Setter Property="Kind" Value="FolderMultipleOutline"/>
+                                                    <Setter Property="Width" Value="28"/>
+                                                    <Setter Property="Height" Value="28"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=ChildrenType}" Value="{x:Static vms:TreeDepth.Branch}">
+                                                    <Setter Property="Kind" Value="FolderOutline"/>
+                                                    <Setter Property="Width" Value="25"/>
+                                                    <Setter Property="Height" Value="25"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=ChildrenType}"  Value="{x:Static vms:TreeDepth.Leaf}">
+                                                    <Setter Property="Kind" Value="KeyOutline"/>
+                                                    <Setter Property="Width" Value="25"/>
+                                                    <Setter Property="Height" Value="25"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </materialDesign:PackIcon.Style>
+                                </materialDesign:PackIcon>
+                                <TextBox Text="{Binding Name}" Margin="3 2" Focusable="False" Cursor="Arrow">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource TreeViewTextboxStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=ChildrenType}" Value="{x:Static vms:TreeDepth.Branch}">
+                                                    <Setter Property="FontSize" Value="17"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=ChildrenType}"  Value="{x:Static vms:TreeDepth.Leaf}">
+                                                    <Setter Property="FontSize" Value="17"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                            </DockPanel>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>

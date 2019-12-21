@@ -20,5 +20,14 @@ namespace SensFortress.View.Bases
 
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// Returns the Id.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"{Id}";
+        }
+
     }
 }

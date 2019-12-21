@@ -37,6 +37,7 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         private void LoadTreeView()
         {
+            Logger.log.Info("Loading Home TreeView...");
             var rootNodes = new List<BranchViewModel>();
             var allBranchesVm = DataAccessService.Instance
                 .GetAll<Branch>()
@@ -79,6 +80,7 @@ namespace SensFortress.View.Main.ViewModel
                     }
                 }
             }
+            Logger.log.Info("TreeView loaded!");
         }
 
         /// <summary>
