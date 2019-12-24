@@ -10,9 +10,11 @@ namespace SensFortress.View.Main.ViewModel
     /// <summary>
     /// Represents a modelbase in the TreeView.
     /// </summary>
-    public class TreeItemViewModel
+    public class TreeItemViewModel : ViewModelBase
     {
         private ViewModelBase _currentViewModel;
+        private bool _isSelected;
+
         public TreeItemViewModel(ViewModelBase model, TreeDepth type)
         {
             _currentViewModel = model;
@@ -24,7 +26,17 @@ namespace SensFortress.View.Main.ViewModel
         }
         public TreeDepth ChildrenType { get; set; }
         public string Name { get; set; }
-
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                SetProperty(ref _isSelected, value);
+            }
+        }
         public ObservableCollection<TreeItemViewModel> Children { get; set; } = new ObservableCollection<TreeItemViewModel>();
     }
 

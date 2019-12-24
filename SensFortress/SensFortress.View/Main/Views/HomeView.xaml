@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Main.Views"
              xmlns:vms="clr-namespace:SensFortress.View.Main.ViewModel"
+             xmlns:extensions="clr-namespace:SensFortress.View.Extensions"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1100"           
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -60,26 +61,27 @@
                         </Expander>
                     </StackPanel>
                 </materialDesign:Card>
-                <TreeView ItemsSource="{Binding RootNodes}">
-                    <TreeView.ItemTemplate>
+                <extensions:ExtendedTreeView ItemsSource="{Binding RootNodes}" SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0">
+                    <extensions:ExtendedTreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vms:TreeItemViewModel}" ItemsSource="{Binding Children}">
                             <DockPanel>
-                                <materialDesign:PackIcon VerticalAlignment="Center" Margin="0 0 5 0">
+                                <!--Icon-->
+                                <materialDesign:PackIcon VerticalAlignment="Center" Margin="0 0 5 0" Foreground="Gray">
                                     <materialDesign:PackIcon.Style>
                                         <Style TargetType="materialDesign:PackIcon">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Path=ChildrenType}" Value="{x:Static vms:TreeDepth.Root}">
-                                                    <Setter Property="Kind" Value="FolderMultipleOutline"/>
+                                                    <Setter Property="Kind" Value="FolderMultiple"/>
                                                     <Setter Property="Width" Value="28"/>
                                                     <Setter Property="Height" Value="28"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Path=ChildrenType}" Value="{x:Static vms:TreeDepth.Branch}">
-                                                    <Setter Property="Kind" Value="FolderOutline"/>
+                                                    <Setter Property="Kind" Value="Folder"/>
                                                     <Setter Property="Width" Value="25"/>
                                                     <Setter Property="Height" Value="25"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Path=ChildrenType}"  Value="{x:Static vms:TreeDepth.Leaf}">
-                                                    <Setter Property="Kind" Value="KeyOutline"/>
+                                                    <Setter Property="Kind" Value="Key"/>
                                                     <Setter Property="Width" Value="25"/>
                                                     <Setter Property="Height" Value="25"/>
                                                 </DataTrigger>
@@ -87,6 +89,7 @@
                                         </Style>
                                     </materialDesign:PackIcon.Style>
                                 </materialDesign:PackIcon>
+                                <!--Name textbox-->
                                 <TextBox Text="{Binding Name}" Margin="3 2" Focusable="False" Cursor="Arrow">
                                     <TextBox.Style>
                                         <Style TargetType="TextBox" BasedOn="{StaticResource TreeViewTextboxStyle}">
@@ -101,10 +104,25 @@
                                         </Style>
                                     </TextBox.Style>
                                 </TextBox>
+                                <!--Edit button-->
+                                <Button x:Name="EditTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0"
+                                        Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
+                                    <materialDesign:PackIcon Kind="Edit" ToolTip="Edit"/>
+                                </Button>
+                                <!--Add button-->
+                                <Button x:Name="AddTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0"
+                                        Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
+                                    <materialDesign:PackIcon Kind="Add" ToolTip="Add"/>
+                                </Button>
+                                <!--Delete button-->
+                                <Button x:Name="DeleteTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0"
+                                        Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
+                                    <materialDesign:PackIcon Kind="Delete" ToolTip="Delete"/>
+                                </Button>
                             </DockPanel>
                         </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>
+                    </extensions:ExtendedTreeView.ItemTemplate>
+                </extensions:ExtendedTreeView>
             </StackPanel>
 
             <!--Gridsplitter 1-->

@@ -16,7 +16,27 @@ namespace SensFortress.View.Main.ViewModel
 {
     public class HomeViewModel : ViewModelManagementBase
     {
+        private TreeItemViewModel _selectedTreeViewItem;
+        /// <summary>
+        /// Collection showing in the TreeView
+        /// </summary>
         public ObservableCollection<TreeItemViewModel> RootNodes { get; set; } = new ObservableCollection<TreeItemViewModel>();
+
+        /// <summary>
+        /// Holds the currently selected item in the TreeView UI.
+        /// </summary>
+        public TreeItemViewModel SelectedTreeViewItem
+        {
+            get
+            {
+                return _selectedTreeViewItem;
+            }
+            set
+            {
+                SetProperty(ref _selectedTreeViewItem, value);
+                UpdateRootNodes();
+            }
+        }
 
         public HomeViewModel()
         {
@@ -30,6 +50,29 @@ namespace SensFortress.View.Main.ViewModel
                 ex.SetUserMessage("An error occured while trying to load data.");
                 Communication.InformUserAboutError(ex);
             }
+        }
+
+        /// <summary>
+        /// Updates Items in the TreeView
+        /// </summary>
+        private void UpdateRootNodes()
+        {
+            foreach(var item in RootNodes)
+            {
+                UpdateRootNodes(item);
+            }
+            SelectedTreeViewItem.IsSelected = true;
+        }
+
+        private void UpdateRootNodes(TreeItemViewModel currentItem)
+        {
+            currentItem.IsSelected = false;
+            if (currentItem.Children.Count > 0)
+                foreach (var child in currentItem.Children)
+                {
+                    child.IsSelected = false;
+                    UpdateRootNodes(child);
+                }
         }
 
         /// <summary>
