@@ -16,20 +16,20 @@ namespace SensFortress.View.Main.ViewModel
     {
         private bool _isSelected;
         private bool _isEditable;
+        private bool _mayHaveChildren;
         public ObservableCollection<TreeItemViewModel> Children { get; set; } = new ObservableCollection<TreeItemViewModel>();
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(((HomeViewModel)CurrentViewModel.CurrentBase).EditTreeItemCommand.Execute);
         public DelegateCommand AddTreeItemCommand => new DelegateCommand(((HomeViewModel)CurrentViewModel.CurrentBase).AddTreeItemCommand.Execute);
-
         public TreeItemViewModel(ViewModelBase model, TreeDepth type)
         {
             CurrentViewModel = model;            
-            ChildrenType = type;
+            TreeType = type;
             if (model is BranchViewModel branch)
                 Name = branch.Name;
             else if (model is LeafViewModel leaf)
                 Name = leaf.Name;
         }
-        public TreeDepth ChildrenType { get; set; }
+        public TreeDepth TreeType { get; set; }
         public string Name { get; set; }
         public bool IsSelected
         {
@@ -51,6 +51,17 @@ namespace SensFortress.View.Main.ViewModel
             set
             {
                 SetProperty(ref _isEditable, value);
+            }
+        }
+        public bool MayHaveChildren
+        {
+            get
+            {
+                return _mayHaveChildren;
+            }
+            set
+            {
+                SetProperty(ref _mayHaveChildren, value);
             }
         }
         public ViewModelBase CurrentViewModel { get; }

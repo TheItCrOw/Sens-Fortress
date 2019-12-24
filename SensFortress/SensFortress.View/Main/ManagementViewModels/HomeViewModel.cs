@@ -89,17 +89,21 @@ namespace SensFortress.View.Main.ViewModel
                 SelectedTreeViewItem.IsSelected = true;
             if (isEditable)
                 SelectedTreeViewItem.IsEditable = true;
+            if (SelectedTreeViewItem.TreeType == TreeDepth.Branch || SelectedTreeViewItem.TreeType == TreeDepth.Root)
+                SelectedTreeViewItem.MayHaveChildren = true;
         }
 
         private void UpdateRootNodes(TreeItemViewModel currentItem)
         {
             currentItem.IsSelected = false;
             currentItem.IsEditable = false;
+            currentItem.MayHaveChildren = false;
             if (currentItem.Children.Count > 0)
                 foreach (var child in currentItem.Children)
                 {
                     child.IsSelected = false;
                     child.IsEditable = false;
+                    child.MayHaveChildren = false;
 
                     UpdateRootNodes(child);
                 }
@@ -132,7 +136,7 @@ namespace SensFortress.View.Main.ViewModel
                 // If it's a root branch, just add it
                 if (branch.ParentBranchId == Guid.Empty)
                 {
-                    currentItem.ChildrenType = TreeDepth.Root;
+                    currentItem.TreeType = TreeDepth.Root;
                     foreach (var leaf in GetLeafes(allLeafesVmLookup, branch.Id))
                         currentItem.Children.Add(leaf);
 
