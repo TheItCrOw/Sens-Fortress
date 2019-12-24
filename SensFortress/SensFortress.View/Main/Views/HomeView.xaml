@@ -114,13 +114,13 @@
                                         Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="Edit" ToolTip="Edit"/>
                                 </Button>
-                                <!--Add branch button-->
-                                <Button x:Name="AddBranchButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}"
+                                <!--Add branch button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
+                                <Button x:Name="AddBranchButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranchButton, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory"/>
                                 </Button>
-                                <!--Add leaf button-->
-                                <Button x:Name="AddLeafButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}"
+                                <!--Add leaf button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
+                                <Button x:Name="AddLeafButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranchButton, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
                                 </Button>

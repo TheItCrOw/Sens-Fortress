@@ -76,6 +76,14 @@ namespace SensFortress.Data.Database
             }
         }
 
+        public void AddOneToMemoryDC(ModelBase model, bool isSensibleData = false)
+        {
+            if (!isSensibleData)
+                _xmlDatacache.AddToUnsecureMemoryDC(model);
+            else { }
+                //Implement later
+        }
+
         /// <summary>
         /// Get all models of type T.
         /// </summary>
@@ -85,7 +93,7 @@ namespace SensFortress.Data.Database
         {
             if (!isSensibleData)
                 return _xmlDatacache.GetAllFromUnsecure<T>();
-            else
+            else // Implement later
                 return _xmlDatacache.GetAllFromUnsecure<T>();
         }
 

@@ -22,7 +22,7 @@ namespace SensFortress.View.Main.ViewModel
         /// Collection showing in the TreeView
         /// </summary>
         public ObservableCollection<TreeItemViewModel> RootNodes { get; set; } = new ObservableCollection<TreeItemViewModel>();
-        public DelegateCommand AddTreeItemCommand => new DelegateCommand(AddTreeItem);
+        public DelegateCommand<string> AddTreeItemCommand => new DelegateCommand<string>(AddTreeItem);
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(EditTreeItem);
 
         /// <summary>
@@ -66,18 +66,31 @@ namespace SensFortress.View.Main.ViewModel
         /// <summary>
         /// Adds a new object to the currently selected treeItem
         /// </summary>
-        private void AddTreeItem()
+        private void AddTreeItem(string buttonName)
         {
             if (SelectedTreeViewItem == null)
                 return;
 
-            if(SelectedTreeViewItem.CurrentViewModel is BranchViewModel selectedBranch)
+            if(SelectedTreeViewItem.CurrentViewModel is BranchViewModel && SelectedTreeViewItem.MayHaveChildren)
             {
+                if(buttonName == "AddBranchButton")
+                {
+                    var newBranch = new Branch{ Name="(new)", ParentBranchId = SelectedTreeViewItem.CurrentViewModel.Id};
+                    var newBranchVm = new BranchViewModel(newBranch, this);
+                    var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Branch);
+                    DataAccessService.Instance.AddOneToMemoryDC(newBranch); // Store the newly created model into the MemoryDc.
+                    SelectedTreeViewItem.Children.Add(newTreeViewItem);
+                    SelectedTreeViewItem = newTreeViewItem;
+                }
+                else if(buttonName == "AddLeafButton")
+                {
+
+                }
             }
         }
 
         /// <summary>
-        /// Updates Items in the TreeView
+        /// Updates Properties of all items in the TreeView
         /// </summary>
         private void UpdateRootNodes(bool isSelected = false, bool isEditable = false)
         {
@@ -89,7 +102,7 @@ namespace SensFortress.View.Main.ViewModel
                 SelectedTreeViewItem.IsSelected = true;
             if (isEditable)
                 SelectedTreeViewItem.IsEditable = true;
-            if (SelectedTreeViewItem.TreeType == TreeDepth.Branch || SelectedTreeViewItem.TreeType == TreeDepth.Root)
+            if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel)
                 SelectedTreeViewItem.MayHaveChildren = true;
         }
 
