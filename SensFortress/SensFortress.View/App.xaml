@@ -95,8 +95,11 @@
             
             
             <!--Converters-->
+            
             <!--Bool to vis converter-->
             <converters:BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+            <!--Specific converter for Leaf/Branch in TreeVIew-->
+            <converters:SpecificMultiBooleanToVisibilityConverter x:Key="MultiSpecificBoolToMultiCoverter"/>
 
 
         </ResourceDictionary>

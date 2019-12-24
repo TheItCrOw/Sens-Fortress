@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SensFortress.View.Main.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;

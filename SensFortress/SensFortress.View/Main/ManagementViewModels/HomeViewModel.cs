@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 using SensFortress.Data.Database;
 using SensFortress.Models.Fortress;
 using SensFortress.Models.ViewModels;
@@ -21,6 +22,8 @@ namespace SensFortress.View.Main.ViewModel
         /// Collection showing in the TreeView
         /// </summary>
         public ObservableCollection<TreeItemViewModel> RootNodes { get; set; } = new ObservableCollection<TreeItemViewModel>();
+        public DelegateCommand AddTreeItemCommand => new DelegateCommand(AddTreeItem);
+        public DelegateCommand EditTreeItemCommand => new DelegateCommand(EditTreeItem);
 
         /// <summary>
         /// Holds the currently selected item in the TreeView UI.
@@ -34,7 +37,7 @@ namespace SensFortress.View.Main.ViewModel
             set
             {
                 SetProperty(ref _selectedTreeViewItem, value);
-                UpdateRootNodes();
+                UpdateRootNodes(true, false);
             }
         }
 
@@ -53,24 +56,51 @@ namespace SensFortress.View.Main.ViewModel
         }
 
         /// <summary>
+        /// Marks the TreeItem as editable
+        /// </summary>
+        private void EditTreeItem()
+        {
+            UpdateRootNodes(true, true);
+        }
+
+        /// <summary>
+        /// Adds a new object to the currently selected treeItem
+        /// </summary>
+        private void AddTreeItem()
+        {
+            if (SelectedTreeViewItem == null)
+                return;
+
+            if(SelectedTreeViewItem.CurrentViewModel is BranchViewModel selectedBranch)
+            {
+            }
+        }
+
+        /// <summary>
         /// Updates Items in the TreeView
         /// </summary>
-        private void UpdateRootNodes()
+        private void UpdateRootNodes(bool isSelected = false, bool isEditable = false)
         {
-            foreach(var item in RootNodes)
+            foreach (var item in RootNodes)
             {
                 UpdateRootNodes(item);
             }
-            SelectedTreeViewItem.IsSelected = true;
+            if (isSelected)
+                SelectedTreeViewItem.IsSelected = true;
+            if (isEditable)
+                SelectedTreeViewItem.IsEditable = true;
         }
 
         private void UpdateRootNodes(TreeItemViewModel currentItem)
         {
             currentItem.IsSelected = false;
+            currentItem.IsEditable = false;
             if (currentItem.Children.Count > 0)
                 foreach (var child in currentItem.Children)
                 {
                     child.IsSelected = false;
+                    child.IsEditable = false;
+
                     UpdateRootNodes(child);
                 }
         }
@@ -84,11 +114,11 @@ namespace SensFortress.View.Main.ViewModel
             var rootNodes = new List<BranchViewModel>();
             var allBranchesVm = DataAccessService.Instance
                 .GetAll<Branch>()
-                .Select(b => new BranchViewModel(b));
+                .Select(b => new BranchViewModel(b, this));
 
             var allLeafesVmLookup = DataAccessService.Instance
                 .GetAll<Leaf>()
-                .Select(l => new LeafViewModel(l))
+                .Select(l => new LeafViewModel(l, this))
                 .ToLookup(l => l.BranchId, l => l);
 
             var allBranchesVmLookup = allBranchesVm.ToLookup(b => b.ParentBranchId, b => b);

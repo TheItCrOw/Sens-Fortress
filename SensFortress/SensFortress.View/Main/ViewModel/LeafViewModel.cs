@@ -9,12 +9,13 @@ namespace SensFortress.View.Main.ViewModel
 {
     public class LeafViewModel : ViewModelBase
     {
-        public LeafViewModel(Leaf model)
+        public LeafViewModel(Leaf model, ViewModelManagementBase currentBase)
         {
             Id = model.Id;
             BranchId = model.BranchId;
             Name = model.Name;
             Description = model.Description;
+            CurrentBase = currentBase;
         }
         public Guid BranchId { get; set; }
         public string Name { get; set; }

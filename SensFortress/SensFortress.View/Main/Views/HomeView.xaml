@@ -90,7 +90,7 @@
                                     </materialDesign:PackIcon.Style>
                                 </materialDesign:PackIcon>
                                 <!--Name textbox-->
-                                <TextBox Text="{Binding Name}" Margin="3 2" Focusable="False" Cursor="Arrow">
+                                <TextBox Text="{Binding Name}" Margin="3 2" Focusable="{Binding IsEditable}" Cursor="Arrow">
                                     <TextBox.Style>
                                         <Style TargetType="TextBox" BasedOn="{StaticResource TreeViewTextboxStyle}">
                                             <Style.Triggers>
@@ -100,19 +100,29 @@
                                                 <DataTrigger Binding="{Binding Path=ChildrenType}"  Value="{x:Static vms:TreeDepth.Leaf}">
                                                     <Setter Property="FontSize" Value="17"/>
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=IsEditable}"  Value="True">
+                                                    <Setter Property="BorderThickness" Value="0 0 0 1"/>
+                                                    <Setter Property="Background" Value="FloralWhite"/>
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </TextBox.Style>
                                 </TextBox>
                                 <!--Edit button-->
-                                <Button x:Name="EditTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0"
+                                <Button x:Name="EditTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding EditTreeItemCommand}"
                                         Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="Edit" ToolTip="Edit"/>
                                 </Button>
-                                <!--Add button-->
-                                <Button x:Name="AddTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0"
+                                <!--Add branch button-->
+                                <Button x:Name="AddBranchButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}"
+                                        Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}, ConverterParameter={Binding CurrentViewModel}}">
+                                    <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory"/>
+                                </Button>
+                                <!--Add leaf button-->
+                                <Button x:Name="AddLeafButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}"
                                         Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
-                                    <materialDesign:PackIcon Kind="Add" ToolTip="Add"/>
+                                    <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
                                 </Button>
                                 <!--Delete button-->
                                 <Button x:Name="DeleteTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0"

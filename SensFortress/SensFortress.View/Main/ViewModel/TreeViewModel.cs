@@ -1,4 +1,6 @@
-﻿using SensFortress.Models.BaseClasses;
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using SensFortress.Models.BaseClasses;
 using SensFortress.View.Bases;
 using System;
 using System.Collections.Generic;
@@ -10,14 +12,17 @@ namespace SensFortress.View.Main.ViewModel
     /// <summary>
     /// Represents a modelbase in the TreeView.
     /// </summary>
-    public class TreeItemViewModel : ViewModelBase
+    public class TreeItemViewModel : BindableBase
     {
-        private ViewModelBase _currentViewModel;
         private bool _isSelected;
+        private bool _isEditable;
+        public ObservableCollection<TreeItemViewModel> Children { get; set; } = new ObservableCollection<TreeItemViewModel>();
+        public DelegateCommand EditTreeItemCommand => new DelegateCommand(((HomeViewModel)CurrentViewModel.CurrentBase).EditTreeItemCommand.Execute);
+        public DelegateCommand AddTreeItemCommand => new DelegateCommand(((HomeViewModel)CurrentViewModel.CurrentBase).AddTreeItemCommand.Execute);
 
         public TreeItemViewModel(ViewModelBase model, TreeDepth type)
         {
-            _currentViewModel = model;
+            CurrentViewModel = model;            
             ChildrenType = type;
             if (model is BranchViewModel branch)
                 Name = branch.Name;
@@ -37,7 +42,19 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _isSelected, value);
             }
         }
-        public ObservableCollection<TreeItemViewModel> Children { get; set; } = new ObservableCollection<TreeItemViewModel>();
+        public bool IsEditable
+        {
+            get
+            {
+                return _isEditable;
+            }
+            set
+            {
+                SetProperty(ref _isEditable, value);
+            }
+        }
+        public ViewModelBase CurrentViewModel { get; }
+
     }
 
     public enum TreeDepth
