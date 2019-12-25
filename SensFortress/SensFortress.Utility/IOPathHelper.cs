@@ -51,10 +51,16 @@ namespace SensFortress.Utility
         public static string GetDefaultFortressDirectory() => $"{_appdataPath}\\Sen's Fortress\\Fortresses";
 
         /// <summary>
-        /// Gets the location of the xml file that holds newly selected fortresses.
+        /// Gets the location of the file that holds newly selected fortresses.
         /// </summary>
         /// <returns></returns>
         public static string GetLinkedFortressListFile() => $"{_appdataPath}\\Sen's Fortress\\Configs\\Linked Fortresses.config";
+
+        /// <summary>
+        /// Gets the location of the directory where the linkedFortresses are being written to.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLinkedFortressListDirectory() => $"{_appdataPath}\\Sen's Fortress\\Configs";
 
     }
 }

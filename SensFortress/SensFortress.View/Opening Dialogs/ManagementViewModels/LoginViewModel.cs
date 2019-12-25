@@ -107,6 +107,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
                 // If the linkedFortressesFile doesn't exist - write it.
                 else
                 {
+                    IOPathHelper.CreateDirectory(IOPathHelper.GetLinkedFortressListDirectory());
                     File.WriteAllLines(IOPathHelper.GetLinkedFortressListFile(), openFileDialog.FileNames);
                 }
 
