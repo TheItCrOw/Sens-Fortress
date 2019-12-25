@@ -17,6 +17,16 @@
             Background="{DynamicResource MaterialDesignPaper}"
             FontFamily="{DynamicResource MaterialDesignFont}">
 
+    <UserControl.Resources>
+        <Style x:Key="TreeViewItemContainerStyle" TargetType="{x:Type TreeViewItem}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                     Color="Black" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                             Color="Black"/>
+            </Style.Resources>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <!--Background Image-->
         <!--<Grid.Background>
@@ -62,6 +72,11 @@
                     </StackPanel>
                 </materialDesign:Card>
                 <extensions:ExtendedTreeView ItemsSource="{Binding RootNodes}" SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0">
+                    <extensions:ExtendedTreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemContainerStyle}">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Style>
+                    </extensions:ExtendedTreeView.ItemContainerStyle>
                     <extensions:ExtendedTreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vms:TreeItemViewModel}" ItemsSource="{Binding Children}">
                             <DockPanel>
@@ -84,6 +99,10 @@
                                                     <Setter Property="Kind" Value="Key"/>
                                                     <Setter Property="Width" Value="25"/>
                                                     <Setter Property="Height" Value="25"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=IsHighlighted}" Value="true">
+                                                    <Setter Property="Foreground" Value="Red"/>
+                                                    <Setter Property="FontWeight" Value="ExtraBold"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -120,7 +139,7 @@
                                     <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory"/>
                                 </Button>
                                 <!--Add leaf button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
-                                <Button x:Name="AddLeafButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranchButton, Path=Name}"
+                                <Button x:Name="AddLeafButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddLeafButton, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
                                 </Button>

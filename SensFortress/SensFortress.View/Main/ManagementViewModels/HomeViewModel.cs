@@ -80,11 +80,16 @@ namespace SensFortress.View.Main.ViewModel
                     var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Branch);
                     DataAccessService.Instance.AddOneToMemoryDC(newBranch); // Store the newly created model into the MemoryDc.
                     SelectedTreeViewItem.Children.Add(newTreeViewItem);
-                    SelectedTreeViewItem = newTreeViewItem;
+                    SelectedTreeViewItem.IsExpanded = true;
                 }
                 else if(buttonName == "AddLeafButton")
                 {
-
+                    var newLeaf = new Leaf { Name = "(new)", BranchId = SelectedTreeViewItem.CurrentViewModel.Id, Description = "This is a new password!" };
+                    var newLeafVm = new LeafViewModel(newLeaf, this);
+                    var newTreeItem = new TreeItemViewModel(newLeafVm, TreeDepth.Leaf);
+                    DataAccessService.Instance.AddOneToMemoryDC(newLeaf);
+                    SelectedTreeViewItem.Children.Add(newTreeItem);
+                    SelectedTreeViewItem.IsExpanded = true;
                 }
             }
         }
