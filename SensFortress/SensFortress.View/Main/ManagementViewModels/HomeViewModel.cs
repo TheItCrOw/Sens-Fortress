@@ -71,6 +71,12 @@ namespace SensFortress.View.Main.ViewModel
             else
             {
                 ExpandAndHighlightAllChildren(SelectedTreeViewItem);
+                if (Communication.AskForAnswer("All highlighted items will be deleted."))
+                {
+                    ;
+                }
+                else
+                    return;
             }
         }
 

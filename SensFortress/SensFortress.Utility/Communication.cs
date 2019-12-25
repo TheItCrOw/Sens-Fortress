@@ -31,5 +31,23 @@ namespace SensFortress.Utility
             infoView.Show();
         }
 
+        /// <summary>
+        /// Asks the user via UI about a given question. Return true or false.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static bool AskForAnswer(string message)
+        {
+            var askForAnswerView = new AskForAnswerView(message);
+            askForAnswerView.ShowDialog();
+
+            if (askForAnswerView.DialogResult == true)
+                return true;
+            else if(askForAnswerView.DialogResult == false)
+                return false;
+
+            return false;
+        }
+
     }
 }
