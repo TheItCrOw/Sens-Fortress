@@ -70,7 +70,27 @@ namespace SensFortress.View.Main.ViewModel
             }
             else
             {
+                ExpandAndHighlightAllChildren(SelectedTreeViewItem);
+            }
+        }
 
+        /// <summary>
+        /// Expands an highlights all children and children children of the given TreeItem.
+        /// </summary>
+        /// <param name="currentItem"></param>
+        private void ExpandAndHighlightAllChildren(TreeItemViewModel currentItem)
+        {
+            if (currentItem.Children.Count == 0)
+                return;
+
+            currentItem.IsHighlighted = true;
+            currentItem.IsExpanded = true;
+
+            foreach(var child in currentItem.Children)
+            {
+                child.IsExpanded = true;
+                child.IsHighlighted = true;
+                ExpandAndHighlightAllChildren(child);
             }
         }
 

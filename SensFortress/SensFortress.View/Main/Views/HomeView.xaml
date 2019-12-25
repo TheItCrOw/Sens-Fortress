@@ -100,10 +100,6 @@
                                                     <Setter Property="Width" Value="25"/>
                                                     <Setter Property="Height" Value="25"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=IsHighlighted}" Value="true">
-                                                    <Setter Property="Foreground" Value="Red"/>
-                                                    <Setter Property="FontWeight" Value="ExtraBold"/>
-                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </materialDesign:PackIcon.Style>
@@ -123,6 +119,10 @@
                                                     <Setter Property="BorderThickness" Value="0 0 0 1"/>
                                                     <Setter Property="Background" Value="FloralWhite"/>
                                                     <Setter Property="Foreground" Value="Black"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=IsHighlighted}" Value="true">
+                                                    <Setter Property="Foreground" Value="Red"/>
+                                                    <Setter Property="FontWeight" Value="ExtraBold"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
