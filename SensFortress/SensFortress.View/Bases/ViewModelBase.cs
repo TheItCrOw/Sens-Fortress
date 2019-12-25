@@ -17,7 +17,7 @@ namespace SensFortress.View.Bases
         /// For communication with the current ManagementBase
         /// </summary>
         public ViewModelManagementBase CurrentBase { get; protected set; }
-
+        public ModelBase Model { get; protected set; }
         public Guid Id { get; set; }
 
         /// <summary>

@@ -76,12 +76,36 @@ namespace SensFortress.Data.Database
             }
         }
 
+        /// <summary>
+        /// Adds a ModelBase to the MemoryDC
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="isSensibleData"></param>
         public void AddOneToMemoryDC(ModelBase model, bool isSensibleData = false)
         {
             if (!isSensibleData)
                 _xmlDatacache.AddToUnsecureMemoryDC(model);
             else { }
-                //Implement later
+            //Implement later
+        }
+
+        /// <summary>
+        /// Deletes the given Modelbase from the MemoryDC
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="isSensibleData"></param>
+        public void DeleteOneFromMemoryDC(ModelBase model, bool isSensibleData = false)
+        {
+            try
+            {
+                if (!isSensibleData)
+                    _xmlDatacache.DeleteOneFromUnsecureMemoryDC(model);
+                else { } // Implement sensible part later
+            }
+            catch (Exception ex)
+            {
+                Communication.InformUserAboutError(ex);
+            }
         }
 
         /// <summary>

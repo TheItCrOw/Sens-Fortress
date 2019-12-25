@@ -11,6 +11,7 @@ namespace SensFortress.View.Main.ViewModel
     {
         public LeafViewModel(Leaf model, ViewModelManagementBase currentBase)
         {
+            Model = model;
             Id = model.Id;
             BranchId = model.BranchId;
             Name = model.Name;

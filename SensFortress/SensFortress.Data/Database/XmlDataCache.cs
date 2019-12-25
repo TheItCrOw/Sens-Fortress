@@ -157,11 +157,36 @@ namespace SensFortress.Data.Database
             }
             else
             {
-                if(model is ModelBase)
+                if (model is ModelBase)
                 {
                     var newList = new List<ModelBase>() { model };
                     _unsecureDatacache.Add(model.GetType(), newList);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Deletes the given ModelBase from the unsecure MemoryDC
+        /// </summary>
+        /// <param name="model"></param>
+        internal void DeleteOneFromUnsecureMemoryDC(ModelBase model)
+        {
+            if (_unsecureDatacache.TryGetValue(model.GetType(), out var listOfModels))
+            {
+                if (listOfModels.Contains(model))
+                    listOfModels.Remove(model);
+                else
+                {
+                    var ex = new ArgumentNullException($"{model.ToString()} could not be found in the MemoryDC for deletion.");
+                    ex.SetUserMessage("Item has already been deleted.");
+                    throw ex;
+                }
+            }
+            else
+            {
+                var ex = new ArgumentNullException($"{model.ToString()} could not be found in the MemoryDC for deletion.");
+                ex.SetUserMessage("Item has already been deleted.");
+                throw ex;
             }
         }
 
@@ -173,7 +198,7 @@ namespace SensFortress.Data.Database
         internal IEnumerable<T> GetAllFromUnsecure<T>()
         {
             CheckDatacache();
-            if(_unsecureDatacache.TryGetValue(typeof(T), out var allModels))
+            if (_unsecureDatacache.TryGetValue(typeof(T), out var allModels))
             {
                 return allModels.Cast<T>();
             }

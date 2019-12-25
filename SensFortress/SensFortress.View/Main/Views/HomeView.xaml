@@ -144,7 +144,7 @@
                                     <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
                                 </Button>
                                 <!--Delete button-->
-                                <Button x:Name="DeleteTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0"
+                                <Button x:Name="DeleteTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding DeleteTreeItemCommand}"
                                         Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="Delete" ToolTip="Delete"/>
                                 </Button>

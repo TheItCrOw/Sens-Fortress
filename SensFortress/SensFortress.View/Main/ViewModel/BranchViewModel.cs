@@ -11,6 +11,7 @@ namespace SensFortress.View.Main.ViewModel
     {
         public BranchViewModel(Branch model, ViewModelManagementBase currentBase)
         {
+            Model = model;
             Id = model.Id;
             ParentBranchId = model.ParentBranchId;
             Name = model.Name;

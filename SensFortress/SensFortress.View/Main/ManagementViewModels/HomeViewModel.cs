@@ -24,6 +24,7 @@ namespace SensFortress.View.Main.ViewModel
         public ObservableCollection<TreeItemViewModel> RootNodes { get; set; } = new ObservableCollection<TreeItemViewModel>();
         public DelegateCommand<string> AddTreeItemCommand => new DelegateCommand<string>(AddTreeItem);
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(EditTreeItem);
+        public DelegateCommand DeleteTreeItemCommand => new DelegateCommand(DeleteTreeItem);
 
         /// <summary>
         /// Holds the currently selected item in the TreeView UI.
@@ -53,6 +54,47 @@ namespace SensFortress.View.Main.ViewModel
                 ex.SetUserMessage("An error occured while trying to load data.");
                 Communication.InformUserAboutError(ex);
             }
+        }
+
+        /// <summary>
+        /// Deletes the currently selected treeItem.
+        /// </summary>
+        private void DeleteTreeItem()
+        {
+            if(SelectedTreeViewItem.Children.Count == 0)
+            {
+                DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
+
+                foreach (var node in RootNodes)
+                    DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+            }
+            else
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Deletes the given Item from its parent children
+        /// </summary>
+        /// <param name="deletableItem"></param>
+        /// <param name="currentNode"></param>
+        private void DeleteItemFromParentChildren(TreeItemViewModel deletableItem, TreeItemViewModel currentNode)
+        {
+            if (currentNode.Children.Count == 0)
+                return;
+
+            var foundItem = false;
+
+            foreach(var child in currentNode.Children)
+            {
+                if (child == deletableItem)
+                    foundItem = true;
+                else
+                    DeleteItemFromParentChildren(deletableItem, child);
+            }
+
+            currentNode.Children.Remove(deletableItem);
         }
 
         /// <summary>
