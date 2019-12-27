@@ -10,14 +10,20 @@ using SensFortress.View.Bases;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace SensFortress.View.Main.ViewModel
 {
     public class HomeViewModel : ViewModelManagementBase
     {
         private TreeItemViewModel _selectedTreeViewItem;
+        private bool _isLoading;
+        private int _changesTracker;
+
         /// <summary>
         /// Collection showing in the TreeView
         /// </summary>
@@ -25,7 +31,6 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand<string> AddTreeItemCommand => new DelegateCommand<string>(AddTreeItem);
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(EditTreeItem);
         public DelegateCommand DeleteTreeItemCommand => new DelegateCommand(DeleteTreeItem);
-
         /// <summary>
         /// Holds the currently selected item in the TreeView UI.
         /// </summary>
@@ -39,6 +44,34 @@ namespace SensFortress.View.Main.ViewModel
             {
                 SetProperty(ref _selectedTreeViewItem, value);
                 UpdateRootNodes(true, false);
+            }
+        }
+        /// <summary>
+        /// Is bound to the progressBar in UI.
+        /// </summary>
+        public bool IsLoading
+        {
+            get
+            {
+                return _isLoading;
+            }
+            set
+            {
+                SetProperty(ref _isLoading, value);
+            }
+        }
+        /// <summary>
+        /// Keeps track, of how many changes have been made, that are savable.
+        /// </summary>
+        public int ChangesTracker
+        {
+            get
+            {
+                return _changesTracker;
+            }
+            set
+            {
+                SetProperty(ref _changesTracker, value);
             }
         }
 
@@ -58,25 +91,70 @@ namespace SensFortress.View.Main.ViewModel
 
         /// <summary>
         /// Deletes the currently selected treeItem.
+        /// Could take a while with great amount of data, thats why we do it async.
         /// </summary>
-        private void DeleteTreeItem()
+        private async void DeleteTreeItem()
         {
-            if(SelectedTreeViewItem.Children.Count == 0)
+            IsLoading = true;
+            await Task.Run(() =>
             {
-                DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
-
-                foreach (var node in RootNodes)
-                    DeleteItemFromParentChildren(SelectedTreeViewItem, node);
-            }
-            else
-            {
-                ExpandAndHighlightAllChildren(SelectedTreeViewItem);
-                if (Communication.AskForAnswer("All highlighted items will be deleted."))
+                if (SelectedTreeViewItem.Children.Count == 0)
                 {
-                    ;
+                    DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
+
+                    foreach (var node in RootNodes)
+                        DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+
+                    ChangesTracker++;
                 }
                 else
-                    return;
+                {
+                    Application.Current.Dispatcher.Invoke(() => ExpandAndHighlightAllChildren(SelectedTreeViewItem));
+                    if (Application.Current.Dispatcher.Invoke(() => Communication.AskForAnswer("All highlighted items will be deleted.")))
+                    {
+                        foreach (var child in SelectedTreeViewItem.Children)
+                            DeleteAllChildren(child);
+
+                        if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel branchVm)
+                        {
+                            // If its a root, just delete it.
+                            if (branchVm.ParentBranchId == Guid.Empty)
+                            {
+                                Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem));
+                                return;
+                            }
+
+                            // if its not a root, then delete the item from its parent.
+                            foreach (var node in RootNodes)
+                                DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+
+                        }
+                    }
+                    else
+                    {
+                        UpdateRootNodes(true, false);
+                        IsLoading = false; 
+                        return;
+                    }
+                }});
+            IsLoading = false;
+        }
+
+        /// <summary>
+        /// Recursivly deletes all children.
+        /// </summary>
+        /// <param name="currentItem"></param>
+        private void DeleteAllChildren(TreeItemViewModel currentItem)
+        {
+            DataAccessService.Instance.DeleteOneFromMemoryDC(currentItem.CurrentViewModel.Model);
+            ChangesTracker++;
+
+            if (currentItem.Children.Count > 0)
+            {
+                foreach (var child in currentItem.Children)
+                {
+                    DeleteAllChildren(child);
+                }
             }
         }
 
@@ -92,7 +170,7 @@ namespace SensFortress.View.Main.ViewModel
             currentItem.IsHighlighted = true;
             currentItem.IsExpanded = true;
 
-            foreach(var child in currentItem.Children)
+            foreach (var child in currentItem.Children)
             {
                 child.IsExpanded = true;
                 child.IsHighlighted = true;
@@ -112,7 +190,7 @@ namespace SensFortress.View.Main.ViewModel
 
             var foundItem = false;
 
-            foreach(var child in currentNode.Children)
+            foreach (var child in currentNode.Children)
             {
                 if (child == deletableItem)
                     foundItem = true;
@@ -120,7 +198,8 @@ namespace SensFortress.View.Main.ViewModel
                     DeleteItemFromParentChildren(deletableItem, child);
             }
 
-            currentNode.Children.Remove(deletableItem);
+            if(foundItem)
+                Application.Current.Dispatcher.Invoke(() => currentNode.Children.Remove(deletableItem));
         }
 
         /// <summary>
@@ -139,18 +218,18 @@ namespace SensFortress.View.Main.ViewModel
             if (SelectedTreeViewItem == null)
                 return;
 
-            if(SelectedTreeViewItem.CurrentViewModel is BranchViewModel && SelectedTreeViewItem.MayHaveChildren)
+            if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel && SelectedTreeViewItem.MayHaveChildren)
             {
-                if(buttonName == "AddBranchButton")
+                if (buttonName == "AddBranchButton")
                 {
-                    var newBranch = new Branch{ Name="(new)", ParentBranchId = SelectedTreeViewItem.CurrentViewModel.Id};
+                    var newBranch = new Branch { Name = "(new)", ParentBranchId = SelectedTreeViewItem.CurrentViewModel.Id };
                     var newBranchVm = new BranchViewModel(newBranch, this);
                     var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Branch);
                     DataAccessService.Instance.AddOneToMemoryDC(newBranch); // Store the newly created model into the MemoryDc.
                     SelectedTreeViewItem.Children.Add(newTreeViewItem);
                     SelectedTreeViewItem.IsExpanded = true;
                 }
-                else if(buttonName == "AddLeafButton")
+                else if (buttonName == "AddLeafButton")
                 {
                     var newLeaf = new Leaf { Name = "(new)", BranchId = SelectedTreeViewItem.CurrentViewModel.Id, Description = "This is a new password!" };
                     var newLeafVm = new LeafViewModel(newLeaf, this);
@@ -160,6 +239,8 @@ namespace SensFortress.View.Main.ViewModel
                     SelectedTreeViewItem.IsExpanded = true;
                 }
             }
+
+            ChangesTracker++;
         }
 
         /// <summary>
@@ -184,12 +265,14 @@ namespace SensFortress.View.Main.ViewModel
             currentItem.IsSelected = false;
             currentItem.IsEditable = false;
             currentItem.MayHaveChildren = false;
+            currentItem.IsHighlighted = false;
             if (currentItem.Children.Count > 0)
                 foreach (var child in currentItem.Children)
                 {
                     child.IsSelected = false;
                     child.IsEditable = false;
                     child.MayHaveChildren = false;
+                    child.IsHighlighted= false;
 
                     UpdateRootNodes(child);
                 }

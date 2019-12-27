@@ -35,19 +35,25 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!--Header Title-->
-        <materialDesign:Card Height="50">
-            <DockPanel>
-                <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Width="50" VerticalAlignment="Stretch" ToolTip="Resource name: MaterialDesignRaisedLightButton">
-                    _LIGHT
-                </Button>
+        <materialDesign:Card Height="60">
+            <DockPanel HorizontalAlignment="Left" Margin="10 0 0 0" VerticalAlignment="Center">
+                <materialDesign:Badged Badge="{Binding ChangesTracker}" BadgeColorZoneMode="Dark">
+                    <Button Style="{StaticResource MaterialDesignRaisedLightButton}">
+                        <materialDesign:PackIcon Kind="Gate" Height="30" Width="30" VerticalAlignment="Center"/>
+                    </Button>
+                </materialDesign:Badged>
             </DockPanel>
         </materialDesign:Card>
 
-        <Grid Grid.Row="1">
+        <!--Progress Bar-->
+        <ProgressBar x:Name="HomeLoading_ProgressBar" Grid.Row="1" IsIndeterminate="{Binding IsLoading}" Foreground="White" Height="10" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"/>
+
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400" MinWidth="200"/>
                 <ColumnDefinition Width="5"/>
