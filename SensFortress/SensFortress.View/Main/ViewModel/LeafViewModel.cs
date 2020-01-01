@@ -9,6 +9,9 @@ namespace SensFortress.View.Main.ViewModel
 {
     public class LeafViewModel : ViewModelBase
     {
+        private string _name;
+        private string _description;
+
         public LeafViewModel(Leaf model, ViewModelManagementBase currentBase)
         {
             Model = model;
@@ -19,8 +22,28 @@ namespace SensFortress.View.Main.ViewModel
             CurrentBase = currentBase;
         }
         public Guid BranchId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                SetProperty(ref _name, value);
+            }
+        }
+        public string Description
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                SetProperty(ref _description, value);
+            }
+        }
         public string Password { get; set; }
     }
 }

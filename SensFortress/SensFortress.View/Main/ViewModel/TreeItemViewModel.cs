@@ -19,22 +19,40 @@ namespace SensFortress.View.Main.ViewModel
         private bool _mayHaveChildren;
         private bool _isExpanded;
         private bool _isHighlighted;
+        private string _name;
+        private bool _isDirty;
 
         public ObservableCollection<TreeItemViewModel> Children { get; set; } = new ObservableCollection<TreeItemViewModel>();
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(((HomeViewModel)CurrentViewModel.CurrentBase).EditTreeItemCommand.Execute);
         public DelegateCommand<string> AddTreeItemCommand => new DelegateCommand<string>(((HomeViewModel)CurrentViewModel.CurrentBase).AddTreeItemCommand.Execute);
         public DelegateCommand DeleteTreeItemCommand => new DelegateCommand(((HomeViewModel)CurrentViewModel.CurrentBase).DeleteTreeItemCommand.Execute);
-        public TreeItemViewModel(ViewModelBase model, TreeDepth type)
+        public TreeItemViewModel(ViewModelBase modelVm, TreeDepth type, bool isNew = false)
         {
-            CurrentViewModel = model;
+            CurrentViewModel = modelVm;
             TreeType = type;
-            if (model is BranchViewModel branch)
+            if (modelVm is BranchViewModel branch)
                 Name = branch.Name;
-            else if (model is LeafViewModel leaf)
+            else if (modelVm is LeafViewModel leaf)
                 Name = leaf.Name;
+
+            if (isNew) // If the item has been newly created - then it's saveable.
+                IsDirty = true;
+            else
+                IsDirty = false;
         }
         public TreeDepth TreeType { get; set; }
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                SetProperty(ref _name, value);
+                IsDirty = true;
+            }
+        }
         public bool IsSelected
         {
             get
@@ -89,6 +107,17 @@ namespace SensFortress.View.Main.ViewModel
             set
             {
                 SetProperty(ref _isHighlighted, value);
+            }
+        }
+        public bool IsDirty
+        {
+            get
+            {
+                return _isDirty;
+            }
+            set
+            {
+                SetProperty(ref _isDirty, value);
             }
         }
         public ViewModelBase CurrentViewModel { get; }

@@ -31,6 +31,7 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand<string> AddTreeItemCommand => new DelegateCommand<string>(AddTreeItem);
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(EditTreeItem);
         public DelegateCommand DeleteTreeItemCommand => new DelegateCommand(DeleteTreeItem);
+        public DelegateCommand SaveTreeChangesCommand => new DelegateCommand(SaveTreeChanges);
         /// <summary>
         /// Holds the currently selected item in the TreeView UI.
         /// </summary>
@@ -90,6 +91,15 @@ namespace SensFortress.View.Main.ViewModel
         }
 
         /// <summary>
+        /// Saves changes made in the TreeView.
+        /// Mainly Models added, changed or deleted.
+        /// </summary>
+        private void SaveTreeChanges()
+        {
+
+        }
+
+        /// <summary>
         /// Deletes the currently selected treeItem.
         /// Could take a while with great amount of data, thats why we do it async.
         /// </summary>
@@ -127,7 +137,6 @@ namespace SensFortress.View.Main.ViewModel
                             // if its not a root, then delete the item from its parent.
                             foreach (var node in RootNodes)
                                 DeleteItemFromParentChildren(SelectedTreeViewItem, node);
-
                         }
                     }
                     else
@@ -224,7 +233,7 @@ namespace SensFortress.View.Main.ViewModel
                 {
                     var newBranch = new Branch { Name = "(new)", ParentBranchId = SelectedTreeViewItem.CurrentViewModel.Id };
                     var newBranchVm = new BranchViewModel(newBranch, this);
-                    var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Branch);
+                    var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Branch, true);
                     DataAccessService.Instance.AddOneToMemoryDC(newBranch); // Store the newly created model into the MemoryDc.
                     SelectedTreeViewItem.Children.Add(newTreeViewItem);
                     SelectedTreeViewItem.IsExpanded = true;
@@ -233,7 +242,7 @@ namespace SensFortress.View.Main.ViewModel
                 {
                     var newLeaf = new Leaf { Name = "(new)", BranchId = SelectedTreeViewItem.CurrentViewModel.Id, Description = "This is a new password!" };
                     var newLeafVm = new LeafViewModel(newLeaf, this);
-                    var newTreeItem = new TreeItemViewModel(newLeafVm, TreeDepth.Leaf);
+                    var newTreeItem = new TreeItemViewModel(newLeafVm, TreeDepth.Leaf, true);
                     DataAccessService.Instance.AddOneToMemoryDC(newLeaf);
                     SelectedTreeViewItem.Children.Add(newTreeItem);
                     SelectedTreeViewItem.IsExpanded = true;

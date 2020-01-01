@@ -9,6 +9,8 @@ namespace SensFortress.View.Main.ViewModel
 {
     public class BranchViewModel : ViewModelBase
     {
+        private string _name;
+
         public BranchViewModel(Branch model, ViewModelManagementBase currentBase)
         {
             Model = model;
@@ -18,7 +20,18 @@ namespace SensFortress.View.Main.ViewModel
             CurrentBase = currentBase;
         }
         public Guid ParentBranchId { get; set; }
-        public string Name { get; set; }
+
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                SetProperty(ref _name, value);
+            }
+        }
 
     }
 }
