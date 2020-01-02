@@ -40,6 +40,11 @@ namespace SensFortress.Data.Database
         private Dictionary<Type, List<ModelBase>> _unsecureDatacache;
 
         /// <summary>
+        /// Stores all deleted models.
+        /// </summary>
+        private Stack<ModelBase> _deletedModels;
+
+        /// <summary>
         /// Set the path of the current <see cref="TermHelper.GetDatabaseTerm()"/>.
         /// </summary>
         /// <param name="path"></param>
@@ -51,6 +56,7 @@ namespace SensFortress.Data.Database
             _modelTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes());
             _secureDatacache = new List<byte[]>();
             _unsecureDatacache = new Dictionary<Type, List<ModelBase>>();
+            _deletedModels = new Stack<ModelBase>();
         }
         /// <summary>
         /// Do NOT use this unless a salt is stored in a single file.
@@ -59,15 +65,7 @@ namespace SensFortress.Data.Database
         {
             CheckDatacache();
 
-            try
-            {
-                File.WriteAllBytes(Path.Combine(path, $"salt{TermHelper.GetTextFileEnding()}"), salt);
-            }
-            catch (Exception ex)
-            {
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                throw ex;
-            }
+            File.WriteAllBytes(Path.Combine(path, $"salt{TermHelper.GetTextFileEnding()}"), salt);
         }
 
         /// <summary>
@@ -76,27 +74,21 @@ namespace SensFortress.Data.Database
         /// <param name="arr"></param>
         internal T BuildModelsOutOfBytes<T>(byte[] arr) where T : ModelBase
         {
-            try
+
+            XmlDocument doc = new XmlDocument();
+            using (var ms = new MemoryStream(arr))
             {
-                XmlDocument doc = new XmlDocument();
-                using (var ms = new MemoryStream(arr))
-                {
-                    // doc holds the current xml File
-                    doc.Load(ms);
-                    var type = _modelTypes.First(t => t.Name == doc.DocumentElement.Name);
-                    // Deserialize model
-                    var reader = XmlDictionaryReader.CreateTextReader(arr, new XmlDictionaryReaderQuotas());
-                    var dcs = new DataContractSerializer(type);
-                    var model = dcs.ReadObject(reader);
-                    return (T)model;
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                throw ex;
+                // doc holds the current xml File
+                doc.Load(ms);
+                var type = _modelTypes.First(t => t.Name == doc.DocumentElement.Name);
+                // Deserialize model
+                var reader = XmlDictionaryReader.CreateTextReader(arr, new XmlDictionaryReaderQuotas());
+                var dcs = new DataContractSerializer(type);
+                var model = dcs.ReadObject(reader);
+                return (T)model;
             }
         }
+
 
         /// <summary>
         /// Stores a serializible model into the datacache
@@ -107,28 +99,20 @@ namespace SensFortress.Data.Database
         {
             CheckDatacache();
 
-            try
+            var ds = new DataContractSerializer(typeof(T));
+            var obj = CastModelBase<T>(model);
+            var settings = new XmlWriterSettings { Indent = true };
+            var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), typeof(T).Name);
+
+            // Always check if a directory exists. If not, create it.
+            IOPathHelper.CreateDirectory(currentSaveLocation);
+
+            using (var sww = new StringWriter())
             {
-                var ds = new DataContractSerializer(typeof(T));
-                var obj = CastModelBase<T>(model);
-                var settings = new XmlWriterSettings { Indent = true };
-                var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), typeof(T).Name);
-
-                // Always check if a directory exists. If not, create it.
-                IOPathHelper.CreateDirectory(currentSaveLocation);
-
-                using (var sww = new StringWriter())
+                using (var w = XmlWriter.Create(Path.Combine(currentSaveLocation, $"{model.Id}.xml"), settings))
                 {
-                    using (var w = XmlWriter.Create(Path.Combine(currentSaveLocation, $"{model.Id}.xml"), settings))
-                    {
-                        ds.WriteObject(w, obj);
-                    }
+                    ds.WriteObject(w, obj);
                 }
-            }
-            catch (Exception ex)
-            {
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                throw ex;
             }
         }
 
@@ -144,7 +128,7 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
-        /// Creates the unsecureDC from a List of models.
+        /// Add a <see cref="ModelBase"/> to the unsecureMemoryDc
         /// </summary>
         /// <param name="modelBytes"></param>
         internal void AddToUnsecureMemoryDC(ModelBase model)
@@ -174,7 +158,10 @@ namespace SensFortress.Data.Database
             if (_unsecureDatacache.TryGetValue(model.GetType(), out var listOfModels))
             {
                 if (listOfModels.Contains(model))
+                {
                     listOfModels.Remove(model);
+                    _deletedModels.Push(model);
+                }
                 else
                 {
                     var ex = new ArgumentNullException($"{model.ToString()} could not be found in the MemoryDC for deletion.");
@@ -188,6 +175,18 @@ namespace SensFortress.Data.Database
                 ex.SetUserMessage("Item has already been deleted.");
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// Saves all changes made in memory to disk
+        /// </summary>
+        internal void SaveFortress(Masterkey masterkey)
+        {
+            foreach(var modelList in _unsecureDatacache.Values)
+                foreach(var model in modelList)
+                {
+                    
+                }
         }
 
         /// <summary>

@@ -12,9 +12,7 @@ namespace SensFortress.Models.Fortress
         {
             Id = Guid.NewGuid();
         }
-
         public Guid LeafId { get; set; }
-
         public byte[] Value { get; set; }
     }
 }

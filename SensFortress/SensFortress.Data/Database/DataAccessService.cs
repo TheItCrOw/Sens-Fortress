@@ -4,6 +4,7 @@ using SensFortress.Models.Fortress;
 using SensFortress.Security;
 using SensFortress.Security.AES;
 using SensFortress.Utility;
+using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
@@ -96,16 +97,19 @@ namespace SensFortress.Data.Database
         /// <param name="isSensibleData"></param>
         public void DeleteOneFromMemoryDC(ModelBase model, bool isSensibleData = false)
         {
-            try
-            {
-                if (!isSensibleData)
-                    _xmlDatacache.DeleteOneFromUnsecureMemoryDC(model);
-                else { } // Implement sensible part later
-            }
-            catch (Exception ex)
-            {
-                Communication.InformUserAboutError(ex);
-            }
+            if (!isSensibleData)
+                _xmlDatacache.DeleteOneFromUnsecureMemoryDC(model);
+            else { } // Implement sensible part later
+        }
+
+        /// <summary>
+        /// Saves the fortress with all it's changes.
+        /// </summary>
+        /// <param name="masterKey"></param>
+        /// <param name="alsoSaveSecureDC"></param>
+        public void SaveFortress(Masterkey masterKey, bool alsoSaveSecureDC)
+        {
+            
         }
 
         /// <summary>

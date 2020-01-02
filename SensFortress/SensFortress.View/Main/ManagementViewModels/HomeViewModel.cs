@@ -7,6 +7,7 @@ using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
+using SensFortress.View.Main.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -96,7 +97,8 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         private void SaveTreeChanges()
         {
-
+            var saveView = new SaveFortressView();
+            saveView.Show();
         }
 
         /// <summary>
@@ -106,47 +108,60 @@ namespace SensFortress.View.Main.ViewModel
         private async void DeleteTreeItem()
         {
             IsLoading = true;
-            await Task.Run(() =>
+            try
             {
-                if (SelectedTreeViewItem.Children.Count == 0)
+                await Task.Run(() =>
                 {
-                    DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
-
-                    foreach (var node in RootNodes)
-                        DeleteItemFromParentChildren(SelectedTreeViewItem, node);
-
-                    ChangesTracker++;
-                }
-                else
-                {
-                    Application.Current.Dispatcher.Invoke(() => ExpandAndHighlightAllChildren(SelectedTreeViewItem));
-                    if (Application.Current.Dispatcher.Invoke(() => Communication.AskForAnswer("All highlighted items will be deleted.")))
+                    if (SelectedTreeViewItem.Children.Count == 0)
                     {
-                        foreach (var child in SelectedTreeViewItem.Children)
-                            DeleteAllChildren(child);
+                        DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
 
-                        if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel branchVm)
-                        {
-                            // If its a root, just delete it.
-                            if (branchVm.ParentBranchId == Guid.Empty)
-                            {
-                                Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem));
-                                return;
-                            }
+                        foreach (var node in RootNodes)
+                            DeleteItemFromParentChildren(SelectedTreeViewItem, node);
 
-                            // if its not a root, then delete the item from its parent.
-                            foreach (var node in RootNodes)
-                                DeleteItemFromParentChildren(SelectedTreeViewItem, node);
-                        }
+                        ChangesTracker++;
                     }
                     else
                     {
-                        UpdateRootNodes(true, false);
-                        IsLoading = false; 
-                        return;
+                        Application.Current.Dispatcher.Invoke(() => ExpandAndHighlightAllChildren(SelectedTreeViewItem));
+                        if (Application.Current.Dispatcher.Invoke(() => Communication.AskForAnswer("All highlighted items will be deleted.")))
+                        {
+                            foreach (var child in SelectedTreeViewItem.Children)
+                                DeleteAllChildren(child);
+
+                            if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel branchVm)
+                            {
+                            // If its a root, just delete it.
+                            if (branchVm.ParentBranchId == Guid.Empty)
+                                {
+                                    Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem));
+                                    return;
+                                }
+
+                            // if its not a root, then delete the item from its parent.
+                            foreach (var node in RootNodes)
+                                    DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+                            }
+                        }
+                        else
+                        {
+                            UpdateRootNodes(true, false);
+                            IsLoading = false;
+                            return;
+                        }
                     }
-                }});
-            IsLoading = false;
+                });
+            }
+            catch (Exception ex)
+            {
+                ex.SetUserMessage("There was an error while trying to delete the item.");
+                Logger.log.Error(ex);
+                Communication.InformUserAboutError(ex);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         /// <summary>
@@ -207,7 +222,7 @@ namespace SensFortress.View.Main.ViewModel
                     DeleteItemFromParentChildren(deletableItem, child);
             }
 
-            if(foundItem)
+            if (foundItem)
                 Application.Current.Dispatcher.Invoke(() => currentNode.Children.Remove(deletableItem));
         }
 
@@ -281,7 +296,7 @@ namespace SensFortress.View.Main.ViewModel
                     child.IsSelected = false;
                     child.IsEditable = false;
                     child.MayHaveChildren = false;
-                    child.IsHighlighted= false;
+                    child.IsHighlighted = false;
 
                     UpdateRootNodes(child);
                 }
@@ -356,34 +371,6 @@ namespace SensFortress.View.Main.ViewModel
             return returnList;
         }
 
-        #region Testing
-        //=> testing
-        //private void Testing()
-        //{
-        //    var testVM = new TestViewModel { Name = "Projects", TreeType = TreeDepth.Root };
-        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-        //    testVM.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-
-        //    var testVM2 = new TestViewModel { Name = "Projects", TreeType = TreeDepth.Root };
-        //    var child = new TestViewModel { Name = "SubSubProjects", TreeType = TreeDepth.Leaf };
-        //    testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
-        //    testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
-        //    testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch, Children = new ObservableCollection<TestViewModel> { child } });
-        //    testVM2.Children.Add(new TestViewModel { Name = "SubProject", TreeType = TreeDepth.Branch });
-
-
-        //    TestCollection.Add(testVM);
-        //    TestCollection.Add(testVM2);
-        //}
-
-        //public ObservableCollection<TestViewModel> TestCollection { get; set; } = new ObservableCollection<TestViewModel>();
-
-        //<= testing
-        #endregion
     }
 }
 

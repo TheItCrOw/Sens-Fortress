@@ -10,11 +10,11 @@ namespace SensFortress.Security.AES
     /// </summary>
     public class Masterkey
     {
-
         public Masterkey(byte[] keyBytes)
         {
             var encryptedKey = Encoding.UTF8.GetString(keyBytes);
             Value = GetSecureString(encryptedKey);
+            encryptedKey = null;
         }
 
         public SecureString Value { get; }

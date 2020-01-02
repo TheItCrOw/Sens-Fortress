@@ -141,14 +141,14 @@
                         <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Choosing a masterkey:" Margin="0 20 0 0"/>
                         <DockPanel LastChildFill="False" Margin="0 12 0 0">
                             <!--PasswordBox of masterkey-->
-                            <PasswordBox x:Name="masterPasswordBox" materialDesign:HintAssist.Hint="Masterkey" Width="700" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="0 0 20 0"/>
+                            <PasswordBox x:Name="Master_PasswordBox" materialDesign:HintAssist.Hint="Masterkey" Width="700" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="0 0 20 0"/>
                             <!--Generate random key-->
                             <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="50" ToolTip="Generate random key" >
                                 <materialDesign:PackIcon Kind="Key" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Button>
                         </DockPanel>
                         <!--Re-Enter masterkey-->
-                        <PasswordBox x:Name="masterPasswordBoxReentered" HorizontalAlignment="Left" materialDesign:HintAssist.Hint="Re-Enter" Width="700" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="0 12 20 0"/>
+                        <PasswordBox x:Name="MasterReentered_PasswordBox" HorizontalAlignment="Left" materialDesign:HintAssist.Hint="Re-Enter" Width="700" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="0 12 20 0"/>
                         <!--I have read...-->
                         <CheckBox IsChecked="False" Margin="0 20 0 0" Content="I have read both of the informative texts on the left and fully understand the functions and properties of a masterkey."/>
                         <!--Register Button-->

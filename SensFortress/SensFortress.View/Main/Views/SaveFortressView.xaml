@@ -1,0 +1,61 @@
+﻿<Window x:Class="SensFortress.View.Main.Views.SaveFortressView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SensFortress.View.Main.Views"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"        
+             d:DesignHeight="500" d:DesignWidth="500"           
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}" Height="500" Width="500">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!--Header Title-->
+        <Border VerticalAlignment="Top" BorderBrush="Black" BorderThickness="1" Background="GhostWhite" Height="45">
+            <DockPanel LastChildFill="False" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="ErrorTitle_Textblock" Style="{StaticResource InformationTextblockStyle}" Text="Save the fortress" Foreground="Black"/>
+            </DockPanel>
+        </Border>
+
+        <!--Content-->
+        <StackPanel Grid.Row="1">
+            <TextBlock x:Name="Info_Textblock" Style="{StaticResource SmallTextblockStyle}"  TextAlignment="Center" Margin="10" TextWrapping="Wrap">
+            You are about to save changes made in the fortress. Please note that this operation is highly sensitive and crucial. The guards will firstly proceed to backup your lastly saved fortress - 
+            meaning that in case of emergency or failure, you will be able to retreive your fortress and only lose the currently unsaved data.
+            <LineBreak/>
+            <LineBreak/>
+            Secondly, as it has already been mentioned: This operation is very crucial as in order to save your sensible data on your harddrive, they will be exposed to the outer worlds behind the fortress'
+            gates. Naturally they will still be protected - However: Shutting down your computer or disturbing the saving-process can lead to unknown scenarios. Try to avoid it.
+            </TextBlock>
+            <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Give the order." HorizontalAlignment="Center" Margin="0 10 0 10"/>
+            <!--PasswordBox of masterkey-->
+            <PasswordBox x:Name="masterPasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="10 0 10 0"/>
+        </StackPanel>
+
+        <!--Buttons-->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="Save_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="Save" Margin="8"/>
+            <Button x:Name="Cancel_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="Cancel" Grid.Column="1" Foreground="White" Margin="8" Background="DarkRed"/>
+        </Grid>
+
+    </Grid>
+</Window>
