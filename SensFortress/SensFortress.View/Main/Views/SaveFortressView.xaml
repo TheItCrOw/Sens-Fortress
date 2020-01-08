@@ -15,12 +15,14 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" Height="500" Width="500">
+        FontFamily="{DynamicResource MaterialDesignFont}" Height="400" Width="500">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -32,29 +34,37 @@
         </Border>
 
         <!--Content-->
-        <StackPanel Grid.Row="1">
-            <TextBlock x:Name="Info_Textblock" Style="{StaticResource SmallTextblockStyle}"  TextAlignment="Center" Margin="10" TextWrapping="Wrap">
+        <Expander Grid.Row="1" Header="READ ME" Foreground="Orange">
+                <TextBlock x:Name="Info_Textblock" Style="{StaticResource SmallTextblockStyle}"  TextAlignment="Center" Margin="10" TextWrapping="Wrap">
             You are about to save changes made in the fortress. Please note that this operation is highly sensitive and crucial. The guards will firstly proceed to backup your lastly saved fortress - 
             meaning that in case of emergency or failure, you will be able to retreive your fortress and only lose the currently unsaved data.
             <LineBreak/>
             <LineBreak/>
             Secondly, as it has already been mentioned: This operation is very crucial as in order to save your sensible data on your harddrive, they will be exposed to the outer worlds behind the fortress'
             gates. Naturally they will still be protected - However: Shutting down your computer or disturbing the saving-process can lead to unknown scenarios. Try to avoid it.
-            </TextBlock>
+                </TextBlock>
+        </Expander>
+
+        <StackPanel Grid.Row="2">
             <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Give the order." HorizontalAlignment="Center" Margin="0 10 0 10"/>
-            <!--PasswordBox of masterkey-->
-            <PasswordBox x:Name="masterPasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="10 0 10 0"/>
+                <!--PasswordBox of masterkey-->
+                <PasswordBox x:Name="masterPasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="10 0 10 0"/>
         </StackPanel>
 
+        <!--Information panel-->
+        <materialDesign:Card Grid.Row="3">
+            <TextBlock x:Name="InformationPanel_Textblock" Margin="5" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
+        </materialDesign:Card>
+        
         <!--Buttons-->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="Save_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="Save" Margin="8"/>
-            <Button x:Name="Cancel_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="Cancel" Grid.Column="1" Foreground="White" Margin="8" Background="DarkRed"/>
+            <Button x:Name="Save_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="Save" Margin="8" Click="Save_Button_Click"/>
+            <Button x:Name="Cancel_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="Cancel" Grid.Column="1" Foreground="White" Margin="8" Background="DarkRed" Click="Cancel_Button_Click"/>
         </Grid>
 
     </Grid>

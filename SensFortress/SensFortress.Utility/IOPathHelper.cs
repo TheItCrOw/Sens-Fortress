@@ -62,5 +62,11 @@ namespace SensFortress.Utility
         /// <returns></returns>
         public static string GetLinkedFortressListDirectory() => $"{_appdataPath}\\Sen's Fortress\\Configs";
 
+        /// <summary>
+        /// Gets the location of the backed up fortresses.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetBackedUpFortressDirectory() => $"{_appdataPath}\\Sen's Fortress\\Backups";
+
     }
 }

@@ -29,17 +29,18 @@ namespace SensFortress.Models.Fortress
         /// <summary>
         /// Random salt that is needed to decrypt the database.
         /// </summary>
-        public byte[] Salt { get; }
+        [DataMember]
+        public byte[] Salt { get; set; }
 
         /// <summary>
         /// SecureString of the masterkey for passing in memory.
         /// </summary>
-        public Masterkey MasterKey { get; } 
+        public Masterkey MasterKey { get; set; } 
 
         /// <summary>
         /// Path in which the new fortress will be build.
         /// </summary>
-        public string FullPath { get; }
+        public string FullPath { get; set; }
 
         [DataMember]
         public string Name { get; set; }

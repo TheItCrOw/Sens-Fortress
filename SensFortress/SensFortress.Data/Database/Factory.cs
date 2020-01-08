@@ -142,7 +142,7 @@ namespace SensFortress.Data.Database
                     return true;
                 case FactoryTaskType.Create:
                     // Have to later consider other models than fortresses
-                    _xmlDatacache.CreateNewFortress((Fortress)taskParams.Item2[0]);
+                    _xmlDatacache.WriteFortress((Fortress)taskParams.Item2[0]);
                     return true;
                 case FactoryTaskType.Read:
                     break;

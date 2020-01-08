@@ -32,8 +32,6 @@ namespace SensFortress.Security
     /// </summary>
     public class AesAlgorithm
     {
-        public byte[] onlyForTestingVariable;
-
         /// <summary>
         /// Encrypts the data with the given password and salt with the AES algorithm.
         /// </summary>
@@ -73,7 +71,6 @@ namespace SensFortress.Security
 
             }
             return encryptedData;
-
         }
 
         /// <summary>

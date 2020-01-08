@@ -11,16 +11,5 @@ namespace SensFortress.Models.BaseClasses
     {
         [DataMember]
         public Guid Id { get; set; }
-        public override string ToString()
-        {
-            var properties = this.GetType().GetProperties();
-            var sb = new StringBuilder();
-            foreach(var prop in properties)
-            {
-                sb.Append($"{prop.Name} | {prop.GetValue(prop)}");
-                sb.AppendLine();
-            }
-            return sb.ToString();
-        }
     }
 }

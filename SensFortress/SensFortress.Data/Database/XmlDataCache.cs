@@ -40,23 +40,18 @@ namespace SensFortress.Data.Database
         private Dictionary<Type, List<ModelBase>> _unsecureDatacache;
 
         /// <summary>
-        /// Stores all deleted models.
-        /// </summary>
-        private Stack<ModelBase> _deletedModels;
-
-        /// <summary>
         /// Set the path of the current <see cref="TermHelper.GetDatabaseTerm()"/>.
         /// </summary>
         /// <param name="path"></param>
         internal XmlDataCache(string path)
         {
-            _databasePath = path;
+            var splited = path.Split('.');
+            _databasePath = splited[0];
             _isInitialized = true;
             // Get a list of all modeltypes in the assembly for creating them again
             _modelTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes());
             _secureDatacache = new List<byte[]>();
             _unsecureDatacache = new Dictionary<Type, List<ModelBase>>();
-            _deletedModels = new Stack<ModelBase>();
         }
         /// <summary>
         /// Do NOT use this unless a salt is stored in a single file.
@@ -74,7 +69,6 @@ namespace SensFortress.Data.Database
         /// <param name="arr"></param>
         internal T BuildModelsOutOfBytes<T>(byte[] arr) where T : ModelBase
         {
-
             XmlDocument doc = new XmlDocument();
             using (var ms = new MemoryStream(arr))
             {
@@ -95,14 +89,12 @@ namespace SensFortress.Data.Database
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="model"></param>
-        internal void StoreOne<T>(ModelBase model) where T : Models.Interfaces.ISerializable
+        internal void StoreOne(ModelBase model)
         {
             CheckDatacache();
-
-            var ds = new DataContractSerializer(typeof(T));
-            var obj = CastModelBase<T>(model);
+            var ds = new DataContractSerializer(model.GetType());
             var settings = new XmlWriterSettings { Indent = true };
-            var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), typeof(T).Name);
+            var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), model.GetType().Name);
 
             // Always check if a directory exists. If not, create it.
             IOPathHelper.CreateDirectory(currentSaveLocation);
@@ -111,7 +103,7 @@ namespace SensFortress.Data.Database
             {
                 using (var w = XmlWriter.Create(Path.Combine(currentSaveLocation, $"{model.Id}.xml"), settings))
                 {
-                    ds.WriteObject(w, obj);
+                    ds.WriteObject(w, model);
                 }
             }
         }
@@ -160,18 +152,17 @@ namespace SensFortress.Data.Database
                 if (listOfModels.Contains(model))
                 {
                     listOfModels.Remove(model);
-                    _deletedModels.Push(model);
                 }
                 else
                 {
-                    var ex = new ArgumentNullException($"{model.ToString()} could not be found in the MemoryDC for deletion.");
+                    var ex = new ArgumentNullException($"{model.Id} could not be found in the MemoryDC for deletion.");
                     ex.SetUserMessage("Item has already been deleted.");
                     throw ex;
                 }
             }
             else
             {
-                var ex = new ArgumentNullException($"{model.ToString()} could not be found in the MemoryDC for deletion.");
+                var ex = new ArgumentNullException($"{model.Id} could not be found in the MemoryDC for deletion.");
                 ex.SetUserMessage("Item has already been deleted.");
                 throw ex;
             }
@@ -182,11 +173,12 @@ namespace SensFortress.Data.Database
         /// </summary>
         internal void SaveFortress(Masterkey masterkey)
         {
-            foreach(var modelList in _unsecureDatacache.Values)
-                foreach(var model in modelList)
-                {
-                    
-                }
+            var currentFortress = GetAllFromUnsecure<Fortress>().FirstOrDefault();
+            currentFortress.FullPath = _databasePath;
+            currentFortress.MasterKey = masterkey;
+            currentFortress.Salt = DataAccessService.Instance.CurrentFortressSalt;
+            WriteFortress(currentFortress, true);
+            masterkey = null;
         }
 
         /// <summary>
@@ -220,24 +212,11 @@ namespace SensFortress.Data.Database
             }
         }
 
-        /// <summary>
-        /// Casts the ModelBase into T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        private T CastModelBase<T>(ModelBase model)
-        {
-            if (model is T)
-                return (T)Convert.ChangeType(model, typeof(T));
-            else
-                throw new InvalidCastException($"Cannot cast type {model.GetType()} to {typeof(T)}");
-        }
 
         /// <summary>
         /// Creates a new <see cref="Fortress"/> with a <see cref="MasterKey"/> and saves it encrypted.
         /// </summary>
-        internal void CreateNewFortress(Fortress fortress)
+        internal void WriteFortress(Fortress fortress, bool overwrite = false)
         {
             try
             {
@@ -261,20 +240,12 @@ namespace SensFortress.Data.Database
 
                 // =========================================================== Store the user Input and initial data in the database
 
-                var rootBranch = new Branch { Name = "Example: Projects", ParentBranchId = Guid.Empty };
-                var rootBranch2 = new Branch { Name = "Example: Projects2", ParentBranchId = Guid.Empty };
-                var subBranch = new Branch { Name = "Example: Passwords", ParentBranchId = rootBranch.Id };
-                var examplePw = ByteHelper.StringToByteArray("thisIsAnExamplePassword");
-                var leaf = new Leaf { Name = "Password1", Description = "Here you can describe this entry.", BranchId = subBranch.Id };
-                var leafPw = new LeafPassword { LeafId = leaf.Id, Value = examplePw };
-                examplePw = null;
-                StoreOne<Fortress>(fortress);
-                StoreOne<Branch>(rootBranch);
-                StoreOne<Branch>(rootBranch2);
-                StoreOne<Branch>(subBranch);
-                StoreOne<Leaf>(leaf);
-                StoreOne<LeafPassword>(leafPw);
-                leafPw = null;
+                foreach (var modelList in _unsecureDatacache.Values)
+                    foreach (var model in modelList)
+                    {
+                        StoreOne(model);
+                    }
+
                 Logger.log.Debug("Stored fortress information.");
 
                 // =========================================================== Zip only the database 
@@ -297,6 +268,9 @@ namespace SensFortress.Data.Database
                 Logger.log.Debug($"Encrypted {TermHelper.GetDatabaseTerm()}");
 
                 // =========================================================== Zip the whole fortress
+
+                if (overwrite)
+                    File.Delete($"{fortress.FullPath}{TermHelper.GetZippedFileEnding()}");
 
                 ZipHelper.ZipSavedArchives(fortress.FullPath, $"{fortress.FullPath}{TermHelper.GetZippedFileEnding()}");
                 Directory.Delete(fortress.FullPath, true);
@@ -333,51 +307,111 @@ namespace SensFortress.Data.Database
                 // =========================================================== Unzip the fortress - Read salt
 
                 var unzippedFortress = ZipHelper.UnzipSavedZip(fortressFullPath);
-                var entryOfSalt = fortressName + "/salt" + TermHelper.GetTextFileEnding();
-                var saltEntry = unzippedFortress.GetEntry(entryOfSalt);
-
-                var saltBytes = new byte[32];
-                using (var stream = saltEntry.Open())
+                using (unzippedFortress)
                 {
-                    saltBytes = ByteHelper.ReadBytesOfStream(stream);
-                    stream.Close();
+                    var entryOfSalt = fortressName + "/salt" + TermHelper.GetTextFileEnding();
+                    var saltEntry = unzippedFortress.GetEntry(entryOfSalt);
+
+                    var saltBytes = new byte[32];
+                    using (var stream = saltEntry.Open())
+                    {
+                        saltBytes = ByteHelper.ReadBytesOfStream(stream);
+                    }
+                    DataAccessService.Instance.CurrentFortressSalt = saltBytes;
+                    Logger.log.Debug("Unzipped fortress - Salt bytes read.");
+
+                    // =========================================================== Create masterkey
+
+                    var hashedKey = aesHelper.CreateKey(password, 512, saltBytes);
+                    password = string.Empty; // Delete the password in plaintext from RAM
+                    var masterKey = new Masterkey(hashedKey);
+                    hashedKey = null; // Hash also
+                    Logger.log.Debug("Masterkey created.");
+
+                    // =========================================================== Decrypt database
+
+                    var entryOfDatabase = fortressName + "/" + TermHelper.GetDatabaseTerm() + TermHelper.GetDatabaseEnding();
+                    var databaseEntry = unzippedFortress.GetEntry(entryOfDatabase);
+                    var aesAlg = new AesAlgorithm();
+
+                    using (var stream = databaseEntry.Open())
+                    {
+                        var dbBytes = ByteHelper.ReadBytesOfStream(stream);
+                        var decryptedDb = aesAlg.Decrypt(dbBytes, masterKey.Value, saltBytes);
+                        Logger.log.Info($"Decrypted {TermHelper.GetDatabaseTerm()}");
+
+                        // =========================================================== Unzip database
+                        // We distinguish between sensible data and normal data. We put the sensible data into the secureDatacache.
+                        var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
+                        decryptedDb = null;
+                        foreach (var sensibleBytes in unzippedByteEntriesOfDb.Item2.ToList()) // ToList() otherwise the iterations throws exception
+                        {
+                            AddToSecureMemoryDC(unzippedByteEntriesOfDb.Item2.Pop()); // Add sensible data to secure DC
+                        }
+                        foreach (var bytes in unzippedByteEntriesOfDb.Item1.ToList()) // Add not sensible data to the "unsecure" DC.
+                        {
+                            AddToUnsecureMemoryDC(BuildModelsOutOfBytes<ModelBase>(unzippedByteEntriesOfDb.Item1.Pop()));
+                        }
+                        unzippedByteEntriesOfDb = null;
+                    }
                 }
-                Logger.log.Debug("Unzipped fortress - Salt bytes read.");
+            }
+            catch (Exception ex)
+            {
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
+                throw ex;
+            }
+        }
 
-                // =========================================================== Create masterkey
+        /// <summary>
+        /// Validates the masterkey by decrypting the given fortress and flushing the memory afterwards.
+        /// </summary>
+        /// <param name="fortressFullPath"></param>
+        /// <param name="fortressName"></param>
+        /// <param name="password"></param>
+        internal void ValidateMasterKey(string fortressFullPath, string fortressName, string password)
+        {
+            try
+            {
+                Logger.log.Info($"Start validating the masterkey of fortress {fortressFullPath}...");
+                var aesHelper = new AesHelper();
 
-                var hashedKey = aesHelper.CreateKey(password, 512, saltBytes);
-                password = string.Empty; // Delete the password in plaintext from RAM
-                var masterKey = new Masterkey(hashedKey);
-                Logger.log.Debug("Masterkey created.");
+                // =========================================================== Unzip the fortress - Read salt
 
-                // =========================================================== Decrypt database
-
-                var entryOfDatabase = fortressName + "/" + TermHelper.GetDatabaseTerm() + TermHelper.GetDatabaseEnding();
-                var databaseEntry = unzippedFortress.GetEntry(entryOfDatabase);
-                var aesAlg = new AesAlgorithm();
-
-                using (var stream = databaseEntry.Open())
+                var unzippedFortress = ZipHelper.UnzipSavedZip(fortressFullPath);
+                using (unzippedFortress)
                 {
-                    var dbBytes = ByteHelper.ReadBytesOfStream(stream);
-                    var decryptedDb = aesAlg.Decrypt(dbBytes, masterKey.Value, saltBytes);
-                    Logger.log.Info($"Decrypted {TermHelper.GetDatabaseTerm()}");
+                    var entryOfSalt = fortressName + "/salt" + TermHelper.GetTextFileEnding();
+                    var saltEntry = unzippedFortress.GetEntry(entryOfSalt);
 
-                    // =========================================================== Unzip database
-                    // We distinguish between sensible data and normal data. We put the sensible data into the secureDatacache.
-                    var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
-                    decryptedDb = null;
-                    foreach (var sensibleBytes in unzippedByteEntriesOfDb.Item2.ToList()) // ToList() otherwise the iterations throws exception
+                    var saltBytes = new byte[32];
+                    using (var stream = saltEntry.Open())
                     {
-                        AddToSecureMemoryDC(unzippedByteEntriesOfDb.Item2.Pop()); // Add sensible data to secure DC
+                        saltBytes = ByteHelper.ReadBytesOfStream(stream);
                     }
-                    foreach (var bytes in unzippedByteEntriesOfDb.Item1.ToList()) // Add not sensible data to the "unsecure" DC.
+                    Logger.log.Debug("Unzipped fortress - Salt bytes read.");
+
+                    // =========================================================== Create masterkey
+
+                    var hashedKey = aesHelper.CreateKey(password, 512, saltBytes);
+                    password = string.Empty; // Delete the password in plaintext from RAM
+                    var masterKey = new Masterkey(hashedKey);
+                    Logger.log.Debug("Masterkey created.");
+
+                    // =========================================================== Decrypt database
+
+                    var entryOfDatabase = fortressName + "/" + TermHelper.GetDatabaseTerm() + TermHelper.GetDatabaseEnding();
+                    var databaseEntry = unzippedFortress.GetEntry(entryOfDatabase);
+                    var aesAlg = new AesAlgorithm();
+
+                    using (var stream = databaseEntry.Open())
                     {
-                        AddToUnsecureMemoryDC(BuildModelsOutOfBytes<ModelBase>(unzippedByteEntriesOfDb.Item1.Pop()));
+                        var dbBytes = ByteHelper.ReadBytesOfStream(stream);
+                        var decryptedDb = aesAlg.Decrypt(dbBytes, masterKey.Value, saltBytes);
+                        Logger.log.Info($"Validated {TermHelper.GetDatabaseTerm()}");
+                        decryptedDb = null;
                     }
-                    unzippedByteEntriesOfDb = null;
                 }
-
             }
             catch (Exception ex)
             {

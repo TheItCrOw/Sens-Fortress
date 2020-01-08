@@ -98,7 +98,14 @@ namespace SensFortress.View.Main.ViewModel
         private void SaveTreeChanges()
         {
             var saveView = new SaveFortressView();
-            saveView.Show();
+            saveView.ShowDialog();
+
+            if (saveView.DialogResult == true) // The key is then proven valid.
+            {
+                
+            }
+            else
+                return;
         }
 
         /// <summary>
@@ -118,6 +125,9 @@ namespace SensFortress.View.Main.ViewModel
 
                         foreach (var node in RootNodes)
                             DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+
+                        // If the deletable object is a root node.
+                        Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem));
 
                         ChangesTracker++;
                     }
@@ -317,7 +327,7 @@ namespace SensFortress.View.Main.ViewModel
                 .GetAll<Leaf>()
                 .Select(l => new LeafViewModel(l, this))
                 .ToLookup(l => l.BranchId, l => l);
-
+            // BIG MISTAKE HERE....FIX LATER
             var allBranchesVmLookup = allBranchesVm.ToLookup(b => b.ParentBranchId, b => b);
 
             RootNodes.Clear();

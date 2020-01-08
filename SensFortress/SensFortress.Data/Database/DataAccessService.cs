@@ -21,6 +21,7 @@ namespace SensFortress.Data.Database
     /// </summary>
     public sealed class DataAccessService
     {
+        #region Implement lazy
         private static readonly Lazy<DataAccessService>
             lazy =
             new Lazy<DataAccessService>
@@ -30,7 +31,21 @@ namespace SensFortress.Data.Database
         /// Instance of the <see cref="DataAccessService"/> class.
         /// </summary>
         public static DataAccessService Instance { get { return lazy.Value; } }
+        #endregion
 
+        /// <summary>
+        /// Gets the params of the current fortress: Fullpath, Fortressname.
+        /// </summary>
+        public string[] CurrentFortressGeneralData { get; set;}
+
+        /// <summary>
+        /// Gets or sets the salt of the current fortress.
+        /// </summary>
+        public byte[] CurrentFortressSalt { get; set; }
+
+        /// <summary>
+        /// Current xmlDataCache Instance.
+        /// </summary>
         private XmlDataCache _xmlDatacache;
 
         /// <summary>
@@ -47,6 +62,9 @@ namespace SensFortress.Data.Database
                 _xmlDatacache = new XmlDataCache(fullPath);
                 _xmlDatacache.BuildFortress(fullPath, fortressName, password);
                 password = string.Empty;
+                CurrentFortressGeneralData = new string[2];
+                CurrentFortressGeneralData[0] = fullPath;
+                CurrentFortressGeneralData[1] = fortressName;
 
                 return true;
             }
@@ -60,6 +78,34 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
+        /// Only validate a masterkey with the given fortress.
+        /// </summary>
+        /// <param name="fortressFullPath"></param>
+        /// <param name="fortressName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public bool ValidateMasterkey(string password, bool useDefaultValues = true, string fortressFullPath = "", string fortressName = "")
+        {
+            try
+            {
+                if(useDefaultValues)
+                {
+                    fortressFullPath = CurrentFortressGeneralData[0];
+                    fortressName = CurrentFortressGeneralData[1];
+                }
+                _xmlDatacache.ValidateMasterKey(fortressFullPath, fortressName, password);
+                password = string.Empty;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                password = string.Empty;
+                Logger.log.Error($"Couldn't validate key: {ex}");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Builds a new fortress.
         /// </summary>
         /// <param name="fortess"></param>
@@ -68,12 +114,31 @@ namespace SensFortress.Data.Database
             try
             {
                 _xmlDatacache = new XmlDataCache(fortess.FullPath);
-                _xmlDatacache.CreateNewFortress(fortess);
+
+                // Store the example data:
+                var rootBranch = new Branch { Name = "Example: Projects", ParentBranchId = Guid.Empty };
+                var rootBranch2 = new Branch { Name = "Example: Projects2", ParentBranchId = Guid.Empty };
+                var subBranch = new Branch { Name = "Example: Passwords", ParentBranchId = rootBranch.Id };
+                var examplePw = ByteHelper.StringToByteArray("thisIsAnExamplePassword");
+                var leaf = new Leaf { Name = "Password1", Description = "Here you can describe this entry.", BranchId = subBranch.Id };
+                var leafPw = new LeafPassword { LeafId = leaf.Id, Value = examplePw };
+                examplePw = null;
+                _xmlDatacache.AddToUnsecureMemoryDC(fortess);
+                _xmlDatacache.AddToUnsecureMemoryDC(rootBranch);
+                _xmlDatacache.AddToUnsecureMemoryDC(rootBranch2);
+                _xmlDatacache.AddToUnsecureMemoryDC(subBranch);
+                _xmlDatacache.AddToUnsecureMemoryDC(leaf);
+                leafPw = null;
+                // end exampel data
+
+                _xmlDatacache.WriteFortress(fortess);
             }
             catch (Exception ex)
             {
                 _xmlDatacache = null;
                 Logger.log.Error($"Couldn't build fortress: {ex}");
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
+                Communication.InformUserAboutError(ex);
             }
         }
 
@@ -109,7 +174,7 @@ namespace SensFortress.Data.Database
         /// <param name="alsoSaveSecureDC"></param>
         public void SaveFortress(Masterkey masterKey, bool alsoSaveSecureDC)
         {
-            
+            _xmlDatacache.SaveFortress(masterKey);
         }
 
         /// <summary>

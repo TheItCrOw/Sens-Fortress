@@ -79,9 +79,9 @@ namespace SensFortress.View
 
             var aesHelper = new AesHelper();
             var salt = aesHelper.GenerateSalt();
-            var userMasterKey = "diesIstEinTest123";
+            var userMasterKey = "123";
             var hashedKey = aesHelper.CreateKey(userMasterKey, 512, salt);
-            var fullPath = $"{IOPathHelper.GetDefaultFortressDirectory()}\\newFortress1";
+            var fullPath = $"{IOPathHelper.GetDefaultFortressDirectory()}\\aloah";
             var name = "Max";
             var lastName = "Mustermann";
             var userName = "mMuster";
