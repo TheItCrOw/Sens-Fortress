@@ -102,7 +102,7 @@ namespace SensFortress.View.Main.ViewModel
 
             if (saveView.DialogResult == true) // The key is then proven valid.
             {
-                
+
             }
             else
                 return;
@@ -141,15 +141,15 @@ namespace SensFortress.View.Main.ViewModel
 
                             if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel branchVm)
                             {
-                            // If its a root, just delete it.
-                            if (branchVm.ParentBranchId == Guid.Empty)
+                                // If its a root, just delete it.
+                                if (branchVm.ParentBranchId == Guid.Empty)
                                 {
                                     Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem));
                                     return;
                                 }
 
-                            // if its not a root, then delete the item from its parent.
-                            foreach (var node in RootNodes)
+                                // if its not a root, then delete the item from its parent.
+                                foreach (var node in RootNodes)
                                     DeleteItemFromParentChildren(SelectedTreeViewItem, node);
                             }
                         }
@@ -318,7 +318,6 @@ namespace SensFortress.View.Main.ViewModel
         private void LoadTreeView()
         {
             Logger.log.Info("Loading Home TreeView...");
-            var rootNodes = new List<BranchViewModel>();
             var allBranchesVm = DataAccessService.Instance
                 .GetAll<Branch>()
                 .Select(b => new BranchViewModel(b, this));
@@ -327,40 +326,62 @@ namespace SensFortress.View.Main.ViewModel
                 .GetAll<Leaf>()
                 .Select(l => new LeafViewModel(l, this))
                 .ToLookup(l => l.BranchId, l => l);
-            // BIG MISTAKE HERE....FIX LATER
-            var allBranchesVmLookup = allBranchesVm.ToLookup(b => b.ParentBranchId, b => b);
+
+            var branchParentTreeItemLookup = allBranchesVm.ToLookup(b => b.ParentBranchId, b => new TreeItemViewModel(b, TreeDepth.Branch));
+
+            var rootsOnly = allBranchesVm.Where(b => b.ParentBranchId == Guid.Empty).ToList();
 
             RootNodes.Clear();
 
-            foreach (var branch in allBranchesVm)
+            foreach (var root in rootsOnly)
             {
-                var currentItem = new TreeItemViewModel(branch, TreeDepth.Branch);
-
-                // If it's a root branch, just add it
-                if (branch.ParentBranchId == Guid.Empty)
+                var currentTreeItem = new TreeItemViewModel(root, TreeDepth.Root);
+                // Add leafs
+                foreach (var leaf in GetLeafes(allLeafesVmLookup, currentTreeItem.CurrentViewModel.Id))
+                    currentTreeItem.Children.Add(leaf);
+                // Add first children of root
+                if (branchParentTreeItemLookup.Contains(root.Id))
                 {
-                    currentItem.TreeType = TreeDepth.Root;
-                    foreach (var leaf in GetLeafes(allLeafesVmLookup, branch.Id))
-                        currentItem.Children.Add(leaf);
-
-                    RootNodes.Add(currentItem);
-                }
-                // Find the sub branches and add it as a children
-                if (allBranchesVmLookup.Contains(branch.Id))
-                {
-                    var subbranches = allBranchesVmLookup.FirstOrDefault(b => b.Key == branch.Id);
-                    foreach (var subbranch in subbranches)
+                    var children = branchParentTreeItemLookup.FirstOrDefault(b => b.Key == root.Id);
+                    //Recusivly add children of children plus leafes.
+                    foreach (var child in children)
                     {
-                        var currentSubItem = new TreeItemViewModel(subbranch, TreeDepth.Branch);
-                        // Add leafes to the subBranch
-                        foreach (var leaf in GetLeafes(allLeafesVmLookup, subbranch.Id))
-                            currentSubItem.Children.Add(leaf);
-                        // Add the subBranch to the curretn branch.
-                        currentItem.Children.Add(currentSubItem);
+                        RecusivlyAddTreeItems(child, branchParentTreeItemLookup, allLeafesVmLookup);
+                        currentTreeItem.Children.Add(child);
                     }
                 }
+                RootNodes.Add(currentTreeItem);
             }
             Logger.log.Info("TreeView loaded!");
+        }
+
+        /// <summary>
+        /// Recusivly add children of children and leafes.
+        /// </summary>
+        /// <param name="currentItem"></param>
+        /// <param name="branchParentTreeItemLookup"></param>
+        /// <param name="allLeafesVmLookup"></param>
+        private void RecusivlyAddTreeItems(TreeItemViewModel currentItem, ILookup<Guid, TreeItemViewModel> branchParentTreeItemLookup, ILookup<Guid, LeafViewModel> allLeafesVmLookup)
+        {
+            // Add the leafs
+            foreach (var leaf in GetLeafes(allLeafesVmLookup, currentItem.CurrentViewModel.Id))
+            {
+                // check if leafes have already been added. If true, don't add them again.
+                if (!(currentItem.Children.Any(l => l.CurrentViewModel.Id == leaf.CurrentViewModel.Id)))
+                    currentItem.Children.Add(leaf);
+            }
+            // Add branch children.
+            if (branchParentTreeItemLookup.Contains(currentItem.CurrentViewModel.Id))
+            {
+                foreach (var item in branchParentTreeItemLookup.FirstOrDefault(i => i.Key == currentItem.CurrentViewModel.Id).ToList())
+                {
+                    if (!currentItem.Children.Contains(item))
+                        currentItem.Children.Add(item);
+
+                    foreach (var childItem in currentItem.Children)
+                        RecusivlyAddTreeItems(childItem, branchParentTreeItemLookup, allLeafesVmLookup);
+                }
+            }
         }
 
         /// <summary>
