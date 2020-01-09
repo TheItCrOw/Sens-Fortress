@@ -5,6 +5,7 @@ using SensFortress.View.Bases;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Text;
 
 namespace SensFortress.View.Main.ViewModel
@@ -40,6 +41,26 @@ namespace SensFortress.View.Main.ViewModel
             else
                 IsDirty = false;
         }
+
+        /// <summary>
+        /// This informs the model that is being saved in the end about changes made in the UI.
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="change"></param>
+        private void UpdateChangesToModel(string propName, object change)
+        {
+            var type = CurrentViewModel.Model.GetType();
+            var props = new List<PropertyInfo>(type.GetProperties());
+
+            foreach (var prop in props)
+            {
+                if (prop.Name == propName)
+                {
+                    prop.SetValue(CurrentViewModel.Model, change);
+                }
+            }
+        }
+
         public TreeDepth TreeType { get; set; }
         public string Name
         {
@@ -51,6 +72,8 @@ namespace SensFortress.View.Main.ViewModel
             {
                 SetProperty(ref _name, value);
                 IsDirty = true;
+                if(IsDirty)
+                    UpdateChangesToModel(nameof(Name), Name);
             }
         }
         public bool IsSelected

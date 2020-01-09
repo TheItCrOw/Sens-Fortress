@@ -97,15 +97,37 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         private void SaveTreeChanges()
         {
+            // Make sure all changes are being saved.
+            foreach (var node in RootNodes)
+            {
+                RecursivlySaveChanges(node);
+            }
+
             var saveView = new SaveFortressView();
             saveView.ShowDialog();
 
-            if (saveView.DialogResult == true) // The key is then proven valid.
-            {
-
-            }
-            else
+            // Saving was successfull
+            if (saveView.DialogResult == true)
+                ChangesTracker = 0;
+            else // it was canceled.
                 return;
+        }
+
+        /// <summary>
+        /// Replaces the old models in the DC with the dirty models
+        /// </summary>
+        /// <param name="item"></param>
+        private void RecursivlySaveChanges(TreeItemViewModel item)
+        {
+            if (item.IsDirty)
+            {
+                DataAccessService.Instance.DeleteOneFromMemoryDC(item.CurrentViewModel.Model);
+                DataAccessService.Instance.AddOneToMemoryDC(item.CurrentViewModel.Model);
+            }
+
+            if (item.Children.Count > 0)
+                foreach (var child in item.Children)
+                    RecursivlySaveChanges(child);
         }
 
         /// <summary>
