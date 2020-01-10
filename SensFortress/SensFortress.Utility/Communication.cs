@@ -1,4 +1,5 @@
 ﻿using SensFortress.Utility.Exceptions;
+using SensFortress.Utility.Extensions;
 using SensFortress.View.Main.Views;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,15 @@ namespace SensFortress.Utility
                 return false;
 
             return false;
+        }
+
+        /// <summary>
+        /// Takes in encrypted bytes of <see cref="CryptMemoryProtection"/> which is a string and shows them on demand for the user.
+        /// </summary>
+        /// <param name="encryptedData"></param>
+        public static void ShowSensibleData(byte[] encryptedData)
+        {
+            var decryptedData = CryptMemProtection_ForUtilityProject.DecryptInMemoryData(encryptedData);
         }
 
     }

@@ -172,10 +172,7 @@ namespace SensFortress.Data.Database
         /// </summary>
         /// <param name="masterKey"></param>
         /// <param name="alsoSaveSecureDC"></param>
-        public void SaveFortress(Masterkey masterKey, bool alsoSaveSecureDC)
-        {
-            _xmlDatacache.SaveFortress(masterKey);
-        }
+        public void SaveFortress(Masterkey masterKey, bool alsoSaveSecureDC) => _xmlDatacache.SaveFortress(masterKey);        
 
         /// <summary>
         /// Get all models of type T.

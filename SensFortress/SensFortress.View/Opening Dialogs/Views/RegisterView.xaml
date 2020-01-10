@@ -80,7 +80,7 @@
                         <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Choosing a masterkey:" Margin="0 20 0 0"/>
                         <DockPanel LastChildFill="True" Margin="0 12 0 0">
                             <!--Generate random key-->
-                            <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="50" ToolTip="Generate random key" >
+                            <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="50" ToolTip="Generate random key" x:Name="GeneratePassword_Button" Click="GeneratePassword_Button_Click">
                                 <materialDesign:PackIcon Kind="Key" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Button>
                             <!--PasswordBox of masterkey-->
@@ -91,14 +91,21 @@
                             <materialDesign:PackIcon Kind="KeyChange" Height="20" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <PasswordBox x:Name="MasterReentered_PasswordBox" HorizontalAlignment="Stretch" materialDesign:HintAssist.Hint="Re-Enter" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="20 0 0 0"/>
                         </DockPanel>
-                        <TextBox x:Name="FortressName_Textbox" materialDesign:HintAssist.Hint="Name your fortress" materialDesign:HintAssist.IsFloating="True" FontSize="15"/>
+                        <TextBox x:Name="FortressName_Textbox" materialDesign:HintAssist.Hint="Fortress-Name" materialDesign:HintAssist.IsFloating="True" FontSize="15"/>
                         <!--I have read...-->
                         <CheckBox x:Name="Info_Checkbox" IsChecked="False" Margin="0 20 0 0" Content="I have read the informative text on the left and fully understand the functions and properties of a masterkey."/>
+                        <!--Default or seperate path--><!--
+                        <DockPanel Margin="0 20 0 0">
+                            <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" x:Name="Directory_Button" Click="Directory_Button_Click" Width="50" ToolTip="Choose directory" >
+                                <materialDesign:PackIcon Kind="FolderOpen" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Button>
+                            <TextBlock x:Name="Path_Textblock" FontSize="15" Text="Currently the default path is selected." HorizontalAlignment="Left" Margin="15 0 0 0" VerticalAlignment="Bottom"/>
+                        </DockPanel>-->
                         <!--Output area for information-->
                         <TextBlock x:Name="Output_Textblock" Text="" Margin="0 20 0 0"/>
                         <!--Register Button-->
-                        <Button x:Name="Register_Button" Click="Register_Button_Click" Style="{StaticResource MaterialDesignRaisedDarkButton}" HorizontalAlignment="Stretch" ToolTip="Register in Sen's fortress" Margin="0 20 0 0">
-                            <materialDesign:PackIcon Kind="Send" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button x:Name="Register_Button" Click="Register_Button_Click" Height="50" Style="{StaticResource MaterialDesignRaisedDarkButton}" HorizontalAlignment="Stretch" ToolTip="Build your copy of Sen's Fortress." Margin="0 20 0 0">
+                            <materialDesign:PackIcon Kind="Castle" Height="40" Width="40" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Button>
                     </StackPanel>
                 </ScrollViewer>

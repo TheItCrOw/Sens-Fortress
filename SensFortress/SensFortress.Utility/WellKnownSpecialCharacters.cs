@@ -18,5 +18,23 @@ namespace SensFortress.Utility
             "{", "}", "|", "~"
         };
 
+        /// <summary>
+        /// Returns true when string contains special characters.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static bool ContainsSpecialCharacters(string s)
+        {
+            var foundSpecial = false;
+            foreach (var ch in SpecialCharacters)
+            {
+                if (s.Contains(ch))
+                {
+                    foundSpecial = true;
+                }
+            }
+            return foundSpecial;
+        }
+
     }
 }

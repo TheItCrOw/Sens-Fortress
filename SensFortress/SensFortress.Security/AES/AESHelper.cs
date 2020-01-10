@@ -11,7 +11,7 @@ namespace SensFortress.Security.AES
     /// </summary>
     public class AesHelper
     {
-        private static readonly int SaltByteLength = 32;
+        private const int SALTBYTELENGTH= 32;
         private const ushort ITERATIONS = 15000;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace SensFortress.Security.AES
         public byte[] GenerateSalt()
         {            
             RNGCryptoServiceProvider rncCsp = new RNGCryptoServiceProvider();
-            byte[] salt = new byte[SaltByteLength];
+            byte[] salt = new byte[SALTBYTELENGTH];
             rncCsp.GetBytes(salt);
             Logger.log.Info("Generated random salt.");
 

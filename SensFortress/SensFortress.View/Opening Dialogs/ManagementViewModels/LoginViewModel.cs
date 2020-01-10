@@ -84,7 +84,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             try
             {
                 // Open a file dialog
-                OpenFileDialog openFileDialog = new OpenFileDialog();
+                var openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = $"Fortress (*{TermHelper.GetZippedFileEnding()}) | *{TermHelper.GetZippedFileEnding()}";
                 openFileDialog.ShowDialog();
 
