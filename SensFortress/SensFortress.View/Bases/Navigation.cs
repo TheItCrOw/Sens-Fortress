@@ -1,5 +1,7 @@
 ﻿using SensFortress.View.Main.ViewModel;
 using SensFortress.View.Main.Views;
+using SensFortress.View.Opening_Dialogs.ViewModels;
+using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +13,8 @@ namespace SensFortress.View.Helper
     {
         public static Frame MainFrame { get; set; }
 
+        public static LoginViewModel LoginManagementInstance { get; set; }
+
         /// <summary>
         /// Navigates to the given view.
         /// </summary>
@@ -21,7 +25,8 @@ namespace SensFortress.View.Helper
             {
                 case NavigationViews.HomeView:
                     var homeView = new HomeView();
-                    homeView.DataContext = new HomeViewModel();
+                    var homeVm = new HomeViewModel();
+                    homeView.DataContext = homeVm;
                     MainFrame.Content = homeView;
                     return true;
                 default:

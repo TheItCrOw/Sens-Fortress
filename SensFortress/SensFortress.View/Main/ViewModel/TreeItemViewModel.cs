@@ -2,6 +2,7 @@
 using Prism.Mvvm;
 using SensFortress.Models.BaseClasses;
 using SensFortress.View.Bases;
+using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +23,7 @@ namespace SensFortress.View.Main.ViewModel
         private bool _isHighlighted;
         private string _name;
         private bool _isDirty;
+        private bool _setInitialProperties = false;
 
         public ObservableCollection<TreeItemViewModel> Children { get; set; } = new ObservableCollection<TreeItemViewModel>();
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(((HomeViewModel)CurrentViewModel.CurrentBase).EditTreeItemCommand.Execute);
@@ -37,27 +39,13 @@ namespace SensFortress.View.Main.ViewModel
                 Name = leaf.Name;
 
             if (isNew) // If the item has been newly created - then it's saveable.
-                IsDirty = true;
-            else
-                IsDirty = false;
-        }
-
-        /// <summary>
-        /// This informs the model that is being saved in the end about changes made in the UI.
-        /// </summary>
-        /// <param name="propName"></param>
-        /// <param name="change"></param>
-        private void UpdateChangesToModel(string propName, object change)
-        {
-            var type = CurrentViewModel.Model.GetType();
-            var props = new List<PropertyInfo>(type.GetProperties());
-
-            foreach (var prop in props)
             {
-                if (prop.Name == propName)
-                {
-                    prop.SetValue(CurrentViewModel.Model, change);
-                }
+                IsDirty = true;
+                TaskLogger.Instance.Track($"{Name} has been created!");
+            }
+            else
+            {
+                IsDirty = false;
             }
         }
 
@@ -71,9 +59,7 @@ namespace SensFortress.View.Main.ViewModel
             set
             {
                 SetProperty(ref _name, value);
-                IsDirty = true;
-                if(IsDirty)
-                    UpdateChangesToModel(nameof(Name), Name);
+                HandleChangeableProperties(nameof(Name), Name);
             }
         }
         public bool IsSelected
@@ -144,6 +130,45 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
         public ViewModelBase CurrentViewModel { get; }
+
+
+        /// <summary>
+        /// This informs the model that is being saved in the end about changes made in the UI.
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="change"></param>
+        private void UpdateChangesToModel(string propName, object change)
+        {
+            var type = CurrentViewModel.Model.GetType();
+            var props = new List<PropertyInfo>(type.GetProperties());
+
+            foreach (var prop in props)
+            {
+                if (prop.Name == propName)
+                {
+                    var from = prop.GetValue(CurrentViewModel.Model);
+                    TaskLogger.Instance.Track($"{Name}: Changed the {prop.Name} from {from} to {change}.");
+                    prop.SetValue(CurrentViewModel.Model, change);
+                }
+            }
+        }
+        /// <summary>
+        /// Handles flags and updating of the properties to model.
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="change"></param>
+        private void HandleChangeableProperties(string propName, object change)
+        {
+            if (!_setInitialProperties)
+            {
+                _setInitialProperties = true;
+            }
+            else
+            {
+                IsDirty = true;
+                UpdateChangesToModel(propName, change);
+            }
+        }
 
     }
 

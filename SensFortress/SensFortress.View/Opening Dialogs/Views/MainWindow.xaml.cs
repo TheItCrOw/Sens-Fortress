@@ -50,24 +50,8 @@ namespace SensFortress.View
             // Give the NavigationHelper access to the views.
             Navigation.MainFrame = MainFrame;
 
-            Logger.log.Info("Gates have been built!");
+            Logger.log.Info("Gates have been built but remain closed.");
             Testing();
-
-            // Start the factory queue
-            //if (Factory.Instance.StartFactoryQueue(System.IO.Path.Combine(IOPathHelper.GetDesktopPath(), "SensFortress Test Ordner", "testFortress")))
-            //{
-            //    Logger.log.Info("Successfully built!");
-
-            //    
-
-
-            //    Testing();
-            //}
-            //else
-            //{
-            //    this.Close();
-            //}
-
         }
 
         private void Testing()
@@ -77,17 +61,17 @@ namespace SensFortress.View
             //AesTests.TestFileEncryption();
             //AesTests.TestFileDecryption();
 
-            var aesHelper = new AesHelper();
-            var salt = aesHelper.GenerateSalt();
-            var userMasterKey = "123";
-            var hashedKey = aesHelper.CreateKey(userMasterKey, 512, salt);
-            var fullPath = $"{IOPathHelper.GetDefaultFortressDirectory()}\\aloah";
-            var name = "Max";
-            var lastName = "Mustermann";
-            var userName = "mMuster";
-            var eMail = "test@web.de";
+            //var aesHelper = new AesHelper();
+            //var salt = aesHelper.GenerateSalt();
+            //var userMasterKey = "123";
+            //var hashedKey = aesHelper.CreateKey(userMasterKey, 512, salt);
+            //var fullPath = $"{IOPathHelper.GetDefaultFortressDirectory()}\\aloah";
+            //var name = "Max";
+            //var lastName = "Mustermann";
+            //var userName = "mMuster";
+            //var eMail = "test@web.de";
 
-            var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
+            //var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
 
             //DataAccessService.Instance.TestStoreOne(fortress);
             //DataAccessService.Instance.CreateNewFortress(fortress);

@@ -66,6 +66,12 @@ namespace SensFortress.View.Main.Views
 
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Fortress saved successfully.");
 
+                        // Backup the fortress again with the newly saved changes.
+                        File.Copy(DataAccessService.Instance.CurrentFortressGeneralData[0], // source file...
+                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){DataAccessService.Instance.CurrentFortressGeneralData[1]}") // where to..
+                            + TermHelper.GetZippedFileEnding(), // file ending...
+                            true); // overwrite it...
+
                         Thread.Sleep(1000); // Make the user see the result for a second.
 
                         Application.Current.Dispatcher.Invoke(() => DialogResult = true);

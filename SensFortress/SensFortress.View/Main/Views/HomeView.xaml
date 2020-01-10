@@ -51,7 +51,9 @@
         </materialDesign:Card>
 
         <!--Progress Bar-->
-        <ProgressBar x:Name="HomeLoading_ProgressBar" Grid.Row="1" IsIndeterminate="{Binding IsLoading}" Foreground="White" Height="10" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"/>
+        <ProgressBar x:Name="HomeLoading_ProgressBar" Grid.Row="1" IsIndeterminate="{Binding IsLoading}"
+                     Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisConverter}}" 
+                     Foreground="White" Height="10" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"/>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -194,10 +196,34 @@
             <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="DarkGray"/>
 
             <!--Log here-->
-            <materialDesign:Card Grid.Column="4" VerticalAlignment="Stretch">
-                <StackPanel>
-                    <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Task-log:"/>
-                </StackPanel>
+            <materialDesign:Card Grid.Column="4" VerticalAlignment="Stretch" Background="Transparent">
+                <ScrollViewer extensions:AutoScrollBehavior.AutoScroll="{Binding ScrollToBottom}" HorizontalScrollBarVisibility="Hidden">
+                    <StackPanel>
+                        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                            <StackPanel>
+                                <Expander>
+                                    <Expander.Header>
+                                        <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Task-Log"/>
+                                    </Expander.Header>
+                                    <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
+                                        <materialDesign:PackIcon Kind="Search" VerticalAlignment="Top" Height="25" Width="25"/>
+                                        <TextBox FontStyle="Italic" FontSize="16" FontWeight="ExtraLight" HorizontalAlignment="Stretch" Margin="5 -15 0 10" materialDesign:HintAssist.Hint="search..." materialDesign:HintAssist.IsFloating="True"/>
+                                    </DockPanel>
+                                </Expander>
+                            </StackPanel>
+                        </materialDesign:Card>
+                        <ListView ItemsSource="{Binding TaskLogs}" HorizontalContentAlignment="Stretch">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Height="20">
+                                        <materialDesign:PackIcon Kind="ChangeHistory" VerticalAlignment="Center"/>
+                                        <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" Style="{StaticResource SmallTextblockStyle}"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </ScrollViewer>
             </materialDesign:Card>
 
         </Grid>

@@ -8,9 +8,11 @@ using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
 using SensFortress.View.Main.Views;
+using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -24,11 +26,16 @@ namespace SensFortress.View.Main.ViewModel
         private TreeItemViewModel _selectedTreeViewItem;
         private bool _isLoading;
         private int _changesTracker;
+        private bool _scrollToBottom;
 
         /// <summary>
         /// Collection showing in the TreeView
         /// </summary>
         public ObservableCollection<TreeItemViewModel> RootNodes { get; set; } = new ObservableCollection<TreeItemViewModel>();
+        /// <summary>
+        /// List that tracks the actions don ein the TreeView
+        /// </summary>
+        public ObservableCollection<string> TaskLogs { get; set; } = new ObservableCollection<string>();
         public DelegateCommand<string> AddTreeItemCommand => new DelegateCommand<string>(AddTreeItem);
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(EditTreeItem);
         public DelegateCommand DeleteTreeItemCommand => new DelegateCommand(DeleteTreeItem);
@@ -63,6 +70,20 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
         /// <summary>
+        /// Makes the scrollviewer of the TaskLog scroll to the bottom.
+        /// </summary>
+        public bool ScrollToBottom
+        {
+            get
+            {
+                return _scrollToBottom;
+            }
+            set
+            {
+                SetProperty(ref _scrollToBottom, value);
+            }
+        }
+        /// <summary>
         /// Keeps track, of how many changes have been made, that are savable.
         /// </summary>
         public int ChangesTracker
@@ -81,7 +102,10 @@ namespace SensFortress.View.Main.ViewModel
         {
             try
             {
+                TaskLogs.CollectionChanged += TaskLogs_CollectionChanges;
+                TaskLogger.Instance.SetHomeView(this);
                 LoadTreeView();
+                TaskLogger.Instance.Track("Fortress has been built!");
             }
             catch (Exception ex)
             {
@@ -91,26 +115,57 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
 
+        private void TaskLogs_CollectionChanges(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // Go to the bottom once, then set the behaviour to be false again. Otherwise it's a bit buggy with the header...
+            ScrollToBottom = true;
+            ScrollToBottom = false;
+        }
+
         /// <summary>
         /// Saves changes made in the TreeView.
-        /// Mainly Models added, changed or deleted.
+        /// Mainly Models added, changed or deleted. We do it async to stay responsive.
         /// </summary>
-        private void SaveTreeChanges()
+        private async void SaveTreeChanges()
         {
-            // Make sure all changes are being saved.
-            foreach (var node in RootNodes)
+            IsLoading = true;
+            try
             {
-                RecursivlySaveChanges(node);
+                await Task.Run(() =>
+                {
+                    // Make sure all changes are being saved.
+                    foreach (var node in RootNodes)
+                    {
+                        RecursivlySaveChanges(node);
+                    }
+                    // UI stuff has to be called from Dispatcher - WPF is a bit autistic here. 
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        var saveView = new SaveFortressView();
+                        saveView.ShowDialog();
+
+                        // Saving was successfull
+                        if (saveView.DialogResult == true)
+                        {
+                            ChangesTracker = 0;
+                            UpdateRootNodes(false, false, true); // reset isDirty state
+                            TaskLogger.Instance.Track($"Fortress has been saved.");
+                        }
+                        else // it was canceled.
+                            return;
+                    });
+                });
             }
-
-            var saveView = new SaveFortressView();
-            saveView.ShowDialog();
-
-            // Saving was successfull
-            if (saveView.DialogResult == true)
-                ChangesTracker = 0;
-            else // it was canceled.
-                return;
+            catch (Exception ex)
+            {
+                Logger.log.Error(ex);
+                ex.SetUserMessage("An error occured while trying to save the fortress.");
+                Communication.InformUserAboutError(ex);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         /// <summary>
@@ -144,12 +199,10 @@ namespace SensFortress.View.Main.ViewModel
                     if (SelectedTreeViewItem.Children.Count == 0)
                     {
                         DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
+                        TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted.");
 
                         foreach (var node in RootNodes)
                             DeleteItemFromParentChildren(SelectedTreeViewItem, node);
-
-                        // If the deletable object is a root node.
-                        Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem));
 
                         ChangesTracker++;
                     }
@@ -158,6 +211,8 @@ namespace SensFortress.View.Main.ViewModel
                         Application.Current.Dispatcher.Invoke(() => ExpandAndHighlightAllChildren(SelectedTreeViewItem));
                         if (Application.Current.Dispatcher.Invoke(() => Communication.AskForAnswer("All highlighted items will be deleted.")))
                         {
+                            TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted.");
+
                             foreach (var child in SelectedTreeViewItem.Children)
                                 DeleteAllChildren(child);
 
@@ -203,6 +258,7 @@ namespace SensFortress.View.Main.ViewModel
         private void DeleteAllChildren(TreeItemViewModel currentItem)
         {
             DataAccessService.Instance.DeleteOneFromMemoryDC(currentItem.CurrentViewModel.Model);
+            TaskLogger.Instance.Track($"{currentItem.Name} has been deleted.");
             ChangesTracker++;
 
             if (currentItem.Children.Count > 0)
@@ -302,11 +358,11 @@ namespace SensFortress.View.Main.ViewModel
         /// <summary>
         /// Updates Properties of all items in the TreeView
         /// </summary>
-        private void UpdateRootNodes(bool isSelected = false, bool isEditable = false)
+        private void UpdateRootNodes(bool isSelected = false, bool isEditable = false, bool resetIsDirty = false)
         {
             foreach (var item in RootNodes)
             {
-                UpdateRootNodes(item);
+                UpdateRootNodes(item, resetIsDirty);
             }
             if (isSelected)
                 SelectedTreeViewItem.IsSelected = true;
@@ -314,14 +370,18 @@ namespace SensFortress.View.Main.ViewModel
                 SelectedTreeViewItem.IsEditable = true;
             if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel)
                 SelectedTreeViewItem.MayHaveChildren = true;
+            if (resetIsDirty)
+                SelectedTreeViewItem.IsDirty = false;
         }
 
-        private void UpdateRootNodes(TreeItemViewModel currentItem)
+        private void UpdateRootNodes(TreeItemViewModel currentItem, bool resetIsDirty)
         {
             currentItem.IsSelected = false;
             currentItem.IsEditable = false;
             currentItem.MayHaveChildren = false;
             currentItem.IsHighlighted = false;
+            if (resetIsDirty)
+                currentItem.IsDirty = false;
             if (currentItem.Children.Count > 0)
                 foreach (var child in currentItem.Children)
                 {
@@ -329,8 +389,10 @@ namespace SensFortress.View.Main.ViewModel
                     child.IsEditable = false;
                     child.MayHaveChildren = false;
                     child.IsHighlighted = false;
+                    if (resetIsDirty)
+                        child.IsDirty = false;
 
-                    UpdateRootNodes(child);
+                    UpdateRootNodes(child, resetIsDirty);
                 }
         }
 

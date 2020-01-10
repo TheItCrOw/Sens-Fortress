@@ -38,121 +38,66 @@
         <ScrollViewer Grid.Row="1" Margin="20" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="500"/>
-                    <ColumnDefinition Width="500"/>
-                    <ColumnDefinition Width="850"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <!--Left side explanation text-->
-                <ScrollViewer Margin="10 10 40 10" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Margin="10 10 0 10" VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="0 0 20 0">
                         <TextBlock Margin="0 0 0 15" Style="{StaticResource InformationTextblockStyle}" Text="How Sen's Fortress implements it's security:"/>
                         <materialDesign:ColorZone BorderBrush="White" BorderThickness="1">
-                            <TextBlock Style="{StaticResource SmallTextblockStyle}" TextWrapping="Wrap" Margin="15" TextAlignment="Center">
-                            Sen's Fortress is a tool that encrypts the data that it's given (normally passwords) and stores them for you. <LineBreak/>
-                            The data is encrypted with the help of a cryptographic hash function: SHA-512. This method was designed by the National Security Agency (NSA).
-                            Just so you can understand the level of security this fortress has to offer. <LineBreak/>                           
-                            "512" represents the amount of Bits, that the function ends up producing. Everything that is being encrypted will be compromised into 512 Bits. <LineBreak/>
-                            As an example: A password such as "password123" (which is a very, very bad password) will look like this after the encryption: <LineBreak/>
-                            <LineBreak/>
-                            BED4EFA1D4FDBD954BD3705D6A2A78270EC9A52ECFBFB010C61862AF5C76AF1761FFEB1AEF6ACA1BF5D02B3781AA854FABD2B69C790DE74E17ECFEC3CB6AC4BF <LineBreak/>
-                            <LineBreak/>
-                            However, it is very important to understand that such encryption is a one-way compression. Once it's encrypted, there is no going back.
-                            There is no way to reproduce the data out of the hash.
-                            If you think about it - that does sound very logical. How could I leak such "dangerous" insights about the way this tool works, when it could be used 
-                            against us. The only way to crack the encrypted passwords is by brute forcing - which means guessing. <LineBreak/>
-                            The best way to avoid that is by choosing a strong password. A strong password has the minimum requierements of: <LineBreak/>
-                            At least 8 characters. <LineBreak/>
-                            At least one upper case character <LineBreak/>
-                            At least one number <LineBreak/>
-                            Sen's fortress offers a random password generator which makes sure, that you are picking a strong password. <LineBreak/>
-                            <LineBreak/>
-                            This tool also uses multi-factor authentication. This means that in order to enter the fortress, you have to at least enter your E-Mail adress
-                            or phone number. You then receive a message containing a code that you have to submit before the gates are opened.
+                            <TextBlock Style="{StaticResource SmallTextblockStyle}" TextWrapping="Wrap" Margin="15" TextAlignment="Left">
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr nonumy eirmod tempor invidunt ut labo <LineBreak/>
                             </TextBlock>
 
                         </materialDesign:ColorZone>
                     </StackPanel>
                 </ScrollViewer>
                 
-                <!--Middle Text-->
-                <ScrollViewer Grid.Column="1" Margin="40 10 10 10" VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="0 0 20 0">
-                        <TextBlock Margin="0 0 0 15" Style="{StaticResource InformationTextblockStyle}" Text="The importance of the masterkey you are about to create:"/>
-                        <materialDesign:ColorZone BorderBrush="White" BorderThickness="1">
-                            <TextBlock Style="{StaticResource SmallTextblockStyle}" TextWrapping="Wrap" Margin="15" TextAlignment="Center">
-                            Sen's Fortress is a tool that encrypts the data that it's given (normally passwords) and stores them for you. <LineBreak/>
-                            The data is encrypted with the help of a cryptographic hash function: SHA-512. This method was designed by the National Security Agency (NSA).
-                            Just so you can understand the level of security this fortress has to offer. <LineBreak/>                           
-                            "512" represents the amount of Bits, that the function ends up producing. Everything that is being encrypted will be compromised into 512 Bits. <LineBreak/>
-                            As an example: A password such as "password123" (which is a very, very bad password) will look like this after the encryption: <LineBreak/>
-                            <LineBreak/>
-                            BED4EFA1D4FDBD954BD3705D6A2A78270EC9A52ECFBFB010C61862AF5C76AF1761FFEB1AEF6ACA1BF5D02B3781AA854FABD2B69C790DE74E17ECFEC3CB6AC4BF <LineBreak/>
-                            <LineBreak/>
-                            However, it is very important to understand that such encryption is a one-way compression. Once it's encrypted, there is no going back.
-                            There is no way to reproduce the data out of the hash.
-                            If you think about it - that does sound very logical. How could I leak such "dangerous" insights about the way this tool works, when it could be used 
-                            against us. The only way to crack the encrypted passwords is by brute forcing - which means guessing. <LineBreak/>
-                            The best way to avoid that is by choosing a strong password. A strong password has the minimum requierements of: <LineBreak/>
-                            At least 8 characters. <LineBreak/>
-                            At least one upper case character <LineBreak/>
-                            At least one number <LineBreak/>
-                            Sen's fortress offers a random password generator which makes sure, that you are picking a strong password. <LineBreak/>
-                            <LineBreak/>
-                            This tool also uses multi-factor authentication. This means that in order to enter the fortress, you have to at least enter your E-Mail adress
-                            or phone number. You then receive a message containing a code that you have to submit before the gates are opened.
-                            </TextBlock>
-
-                        </materialDesign:ColorZone>
-                    </StackPanel>
-                </ScrollViewer>
-
                 <!--Right side enter user input-->
-                <ScrollViewer Grid.Column="2" Margin="10 10 40 10" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Column="1" Margin="10 10 0 10" VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="0 0 20 0">
-                        <TextBlock Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 20" Text="Fill in your personal information."/>
-                        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Style="{StaticResource SmallTextblockStyle}">
-                            You do not need to worry: Sen's fortress does NOT save or collect any data. We do not act like your data could 'improve usability' which in the end 
-                            'benefits' you as we can then proceed to make the software the most fitting for your 'very own preferences'. Also, Sen's fortress does not need a running
-                            internet connection for it's usage. Only when multi-factor authentication is needed, for example for your registration now, an internet connection is requiered.
-                        </TextBlock>
-                        <!--Input user-->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <!--left side-->
-                            <StackPanel>
-                                <TextBox materialDesign:HintAssist.Hint="First name" materialDesign:HintAssist.IsFloating="True" Margin="0 12 0 0" Text="" FontSize="15"/>
-                                <TextBox materialDesign:HintAssist.Hint="Last name" materialDesign:HintAssist.IsFloating="True" Margin="0 12 0 0" Text="" FontSize="15"/>
-                                <TextBox materialDesign:HintAssist.Hint="E-Mail" materialDesign:HintAssist.IsFloating="True" Margin="0 12 0 0" Text="" FontSize="15"/>
-                                <TextBox materialDesign:HintAssist.Hint="Username" materialDesign:HintAssist.IsFloating="True" Margin="0 12 0 0" Text="" FontSize="15"/>
-                            </StackPanel>
-                            <!--right side-->
-                            <StackPanel Grid.Column="1" Margin="20 0 0 0" HorizontalAlignment="Left">
-                                <TextBlock Margin="0 30 0 0" Text="We do not need this information indispensably." HorizontalAlignment="Left" Style="{StaticResource SmallTextblockStyle}"/>
-                                <TextBlock Margin="0 33 0 0" Text="We do not need this information indispensably." HorizontalAlignment="Left" Style="{StaticResource SmallTextblockStyle}"/>
-                                <TextBlock Margin="0 33 0 0" Text="This is needed for multi-factor authentication." HorizontalAlignment="Left" Style="{StaticResource SmallTextblockStyle}"/>
-                                <TextBlock Margin="0 33 0 0" Text="The name you put in when entering the fortress." HorizontalAlignment="Left" Style="{StaticResource SmallTextblockStyle}"/>
-                            </StackPanel>
-                        </Grid>
                         <!--Creating the masterkey-->
                         <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Choosing a masterkey:" Margin="0 20 0 0"/>
-                        <DockPanel LastChildFill="False" Margin="0 12 0 0">
-                            <!--PasswordBox of masterkey-->
-                            <PasswordBox x:Name="Master_PasswordBox" materialDesign:HintAssist.Hint="Masterkey" Width="700" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="0 0 20 0"/>
+                        <DockPanel LastChildFill="True" Margin="0 12 0 0">
                             <!--Generate random key-->
                             <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="50" ToolTip="Generate random key" >
                                 <materialDesign:PackIcon Kind="Key" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Button>
+                            <!--PasswordBox of masterkey-->
+                            <PasswordBox x:Name="Master_PasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="20 0 0 0"/>
                         </DockPanel>
                         <!--Re-Enter masterkey-->
-                        <PasswordBox x:Name="MasterReentered_PasswordBox" HorizontalAlignment="Left" materialDesign:HintAssist.Hint="Re-Enter" Width="700" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="0 12 20 0"/>
+                        <DockPanel>
+                            <materialDesign:PackIcon Kind="KeyChange" Height="20" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <PasswordBox x:Name="MasterReentered_PasswordBox" HorizontalAlignment="Stretch" materialDesign:HintAssist.Hint="Re-Enter" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="20 0 0 0"/>
+                        </DockPanel>
+                        <TextBox x:Name="FortressName_Textbox" materialDesign:HintAssist.Hint="Name your fortress" materialDesign:HintAssist.IsFloating="True" FontSize="15"/>
                         <!--I have read...-->
-                        <CheckBox IsChecked="False" Margin="0 20 0 0" Content="I have read both of the informative texts on the left and fully understand the functions and properties of a masterkey."/>
+                        <CheckBox x:Name="Info_Checkbox" IsChecked="False" Margin="0 20 0 0" Content="I have read the informative text on the left and fully understand the functions and properties of a masterkey."/>
+                        <!--Output area for information-->
+                        <TextBlock x:Name="Output_Textblock" Text="" Margin="0 20 0 0"/>
                         <!--Register Button-->
-                        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" ToolTip="Register in Sen's fortress" Margin="0 40 0 0">
+                        <Button x:Name="Register_Button" Click="Register_Button_Click" Style="{StaticResource MaterialDesignRaisedDarkButton}" HorizontalAlignment="Stretch" ToolTip="Register in Sen's fortress" Margin="0 20 0 0">
                             <materialDesign:PackIcon Kind="Send" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Button>
                     </StackPanel>

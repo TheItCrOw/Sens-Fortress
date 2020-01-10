@@ -4,6 +4,7 @@ using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
+using SensFortress.View.Helper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,6 +43,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
 
         public LoginViewModel()
         {
+            Navigation.LoginManagementInstance = this;
             LoadFortresses();
         }
 
@@ -125,7 +127,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
         /// <summary>
         /// Loads all fortresses: Default and linked.
         /// </summary>
-        private void LoadFortresses()
+        public void LoadFortresses()
         {
             try
             {
