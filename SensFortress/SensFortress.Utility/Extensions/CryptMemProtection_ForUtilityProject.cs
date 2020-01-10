@@ -8,6 +8,10 @@ namespace SensFortress.Utility.Extensions
 {
     /// <summary>
     /// This is only for the utility project. The real class is in the SensFortress.Security Project.
+    /// 
+    /// This is not well done - copying a class to another project for it's usability. Don't do this at home.
+    /// 
+    /// 
     /// </summary>
     internal class CryptMemProtection_ForUtilityProject
     {

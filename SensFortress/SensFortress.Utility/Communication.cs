@@ -42,21 +42,17 @@ namespace SensFortress.Utility
             var askForAnswerView = new AskForAnswerView(message);
             askForAnswerView.ShowDialog();
 
-            if (askForAnswerView.DialogResult == true)
-                return true;
-            else if(askForAnswerView.DialogResult == false)
-                return false;
-
-            return false;
+            return askForAnswerView.DialogResult.Value;
         }
 
         /// <summary>
-        /// Takes in encrypted bytes of <see cref="CryptMemoryProtection"/> which is a string and shows them on demand for the user.
+        /// Takes in a string shows them safely on demand for the user.
         /// </summary>
         /// <param name="encryptedData"></param>
-        public static void ShowSensibleData(byte[] encryptedData)
+        public static void ShowSensibleData(string data)
         {
-            var decryptedData = CryptMemProtection_ForUtilityProject.DecryptInMemoryData(encryptedData);
+            // Implement this.
+            var decryptedData = CryptMemProtection_ForUtilityProject.DecryptInMemoryData(new byte[21]);
         }
 
     }
