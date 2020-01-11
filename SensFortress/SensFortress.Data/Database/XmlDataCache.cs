@@ -32,7 +32,7 @@ namespace SensFortress.Data.Database
         /// <summary>
         /// Represents the save Datacache stored in the RAM encryptedly.
         /// </summary>
-        private List<byte[]> _secureDatacache;
+        private Dictionary<Guid, byte[]> _secureDatacache;
 
         /// <summary>
         /// Represents the unencrypted Datacache in the RAM
@@ -50,7 +50,7 @@ namespace SensFortress.Data.Database
             _isInitialized = true;
             // Get a list of all modeltypes in the assembly for creating them again
             _modelTypes = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes());
-            _secureDatacache = new List<byte[]>();
+            _secureDatacache = new Dictionary<Guid, byte[]>();
             _unsecureDatacache = new Dictionary<Type, List<ModelBase>>();
         }
         /// <summary>
@@ -67,18 +67,26 @@ namespace SensFortress.Data.Database
         /// Builds models out of one byte array.
         /// </summary>
         /// <param name="arr"></param>
-        internal T BuildModelsOutOfBytes<T>(byte[] arr) where T : ModelBase
+        internal T BuildModelsOutOfBytes<T>(byte[] arr, bool isByteModel = false) where T : Models.Interfaces.ISerializable, IDeletable
         {
-            XmlDocument doc = new XmlDocument();
-            using (var ms = new MemoryStream(arr))
+            if(!isByteModel)
             {
-                // doc holds the current xml File
-                doc.Load(ms);
-                var type = _modelTypes.First(t => t.Name == doc.DocumentElement.Name);
-                // Deserialize model
-                var reader = XmlDictionaryReader.CreateTextReader(arr, new XmlDictionaryReaderQuotas());
-                var dcs = new DataContractSerializer(type);
-                var model = dcs.ReadObject(reader);
+                XmlDocument doc = new XmlDocument();
+                using (var ms = new MemoryStream(arr))
+                {
+                    // doc holds the current xml File
+                    doc.Load(ms);
+                    var type = _modelTypes.First(t => t.Name == doc.DocumentElement.Name);
+                    // Deserialize model
+                    var reader = XmlDictionaryReader.CreateTextReader(arr, new XmlDictionaryReaderQuotas());
+                    var dcs = new DataContractSerializer(type);
+                    var model = dcs.ReadObject(reader);
+                    return (T)model;
+                }
+            }
+            else
+            {
+                var model = ByteHelper.ByteArrayToObject(arr);
                 return (T)model;
             }
         }
@@ -89,34 +97,53 @@ namespace SensFortress.Data.Database
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="model"></param>
-        internal void StoreOne(ModelBase model)
+        internal void StoreOne(ModelBase model, bool isByteModel = false, ByteModel byteModel = null)
         {
             CheckDatacache();
-            var ds = new DataContractSerializer(model.GetType());
-            var settings = new XmlWriterSettings { Indent = true };
-            var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), model.GetType().Name);
-
-            // Always check if a directory exists. If not, create it.
-            IOPathHelper.CreateDirectory(currentSaveLocation);
-
-            using (var sww = new StringWriter())
+            // If its a normal ModelBase storing.
+            if (!isByteModel)
             {
-                using (var w = XmlWriter.Create(Path.Combine(currentSaveLocation, $"{model.Id}.xml"), settings))
+                var ds = new DataContractSerializer(model.GetType());
+                var settings = new XmlWriterSettings { Indent = true };
+                var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), model.GetType().Name);
+
+                // Always check if a directory exists. If not, create it.
+                IOPathHelper.CreateDirectory(currentSaveLocation);
+
+                using (var sww = new StringWriter())
                 {
-                    ds.WriteObject(w, model);
+                    using (var w = XmlWriter.Create(Path.Combine(currentSaveLocation, $"{model.Id}.xml"), settings))
+                    {
+                        ds.WriteObject(w, model);
+                    }
                 }
             }
+            else if(isByteModel) // If it's a byteModel
+            {
+                var currentSaveLocation = Path.Combine(_databasePath, TermHelper.GetDatabaseTerm(), byteModel.GetType().Name);
+
+                // It's important to write the bytes decrypted since MemProtection works with the localUser. So the data would be bound to this pc and user.
+                var decryptedValue = CryptMemoryProtection.DecryptInMemoryData(byteModel.EncryptedValue);
+
+                // Always check if a directory exists. If not, create it.
+                IOPathHelper.CreateDirectory(currentSaveLocation);
+
+                // Write the Value of byteModels into a file with the foreignKey as the name.
+                File.WriteAllBytes($"{currentSaveLocation}\\{byteModel.ForeignKey}", decryptedValue);
+                decryptedValue = null;
+            }
+
         }
 
         /// <summary>
         /// Takes a byte array and stores it savely in the <see cref="_secureDatacache"/>
         /// </summary>
-        internal void AddToSecureMemoryDC(byte[] modelBytes)
-        {
+        internal void AddToSecureMemoryDC(Guid foreignKey, byte[] modelBytes)
+        {            
             CheckDatacache();
             var encrpytedBytes = CryptMemoryProtection.EncryptInMemoryData(modelBytes);
             modelBytes = null;
-            _secureDatacache.Add(encrpytedBytes);
+            _secureDatacache.Add(foreignKey, encrpytedBytes);
         }
 
         /// <summary>
@@ -195,10 +222,34 @@ namespace SensFortress.Data.Database
             }
             else
             {
-                var emptyList = new List<T>();
-                return emptyList;
+                var ex = new XmlDataCacheException($"Could not get the model {typeof(T).Name} from unsecureDC");
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
+                throw ex;
             }
         }
+
+        /// <summary>
+        /// Returns the model with the given foreignKey from the secureDatacache
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="foreignKey"></param>
+        /// <returns></returns>
+        internal T GetSensible<T>(Guid foreignKey)
+        {
+            CheckDatacache();
+            if(_secureDatacache.TryGetValue(foreignKey, out var encryptedBytes))
+            {
+                var decryptedBytes = CryptMemoryProtection.DecryptInMemoryData(encryptedBytes);
+                return (T)ByteHelper.ByteArrayToObject(decryptedBytes);
+            }
+            else
+            {
+                var ex = new XmlDataCacheException($"Could not get the model {typeof(T).Name} with given key {foreignKey} from secureDC");
+                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// Throws an exception if the DC has not bene initialzed.
         /// </summary>
@@ -240,11 +291,17 @@ namespace SensFortress.Data.Database
 
                 // =========================================================== Store the user Input and initial data in the database
 
-                foreach (var modelList in _unsecureDatacache.Values)
+                foreach (var modelList in _unsecureDatacache.Values) // UnsecureDatacache
                     foreach (var model in modelList)
                     {
                         StoreOne(model);
                     }
+
+                foreach(var pair in _secureDatacache)
+                {
+                    var byteModel = new ByteModel(pair.Key, pair.Value);
+                    StoreOne(null, true, byteModel);
+                }
 
                 Logger.log.Debug("Stored fortress information.");
 
@@ -344,9 +401,10 @@ namespace SensFortress.Data.Database
                         // We distinguish between sensible data and normal data. We put the sensible data into the secureDatacache.
                         var unzippedByteEntriesOfDb = ZipHelper.GetEntriesFromZipArchive(decryptedDb); // These are the entries in byte arrays
                         decryptedDb = null;
-                        foreach (var sensibleBytes in unzippedByteEntriesOfDb.Item2.ToList()) // ToList() otherwise the iterations throws exception
+                        // Add to secureDC.
+                        foreach (var sensibleBytes in unzippedByteEntriesOfDb.Item2.Item2.ToList()) // ToList() otherwise the iterations throws exception
                         {
-                            AddToSecureMemoryDC(unzippedByteEntriesOfDb.Item2.Pop()); // Add sensible data to secure DC
+                            AddToSecureMemoryDC(unzippedByteEntriesOfDb.Item2.Item1.Pop(), unzippedByteEntriesOfDb.Item2.Item2.Pop());
                         }
                         foreach (var bytes in unzippedByteEntriesOfDb.Item1.ToList()) // Add not sensible data to the "unsecure" DC.
                         {

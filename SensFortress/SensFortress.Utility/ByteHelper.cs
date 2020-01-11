@@ -62,19 +62,29 @@ namespace SensFortress.Utility
             }
         }
 
-        // Convert an object to a byte array
+        /// <summary>
+        ///  Convert an object to a byte array
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static byte[] ObjectToByteArray(object obj)
         {
             BinaryFormatter bf = new BinaryFormatter();
+            byte[] bytes;
             using (var ms = new MemoryStream())
             {
                 bf.Serialize(ms, obj);
-                return ms.ToArray();
+                bytes = ms.ToArray();
             }
+            return bytes;
         }
 
-        // Convert a byte array to an Object
-        public static Object ByteArrayToObject(byte[] arrBytes)
+        /// <summary>
+        /// Convert a byte array to an Object
+        /// </summary>
+        /// <param name="arrBytes"></param>
+        /// <returns></returns>
+        public static object ByteArrayToObject(byte[] arrBytes)
         {
             using (var memStream = new MemoryStream())
             {

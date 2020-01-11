@@ -40,21 +40,25 @@ namespace SensFortress.Utility
         /// Decompresses a zipped <see cref="byte"/> array.
         /// </summary>
         /// <param name="data"></param>
-        /// <returns></returns>
-        public static Tuple<Stack<byte[]>, Stack<byte[]>> GetEntriesFromZipArchive(byte[] data, bool protectedMemory = false)
+        /// <returns>item1: List of unsecurebytes, item2: Tuple with Guids and bytes as Stacks</returns>
+        public static Tuple<Stack<byte[]>, Tuple<Stack<Guid>, Stack<byte[]>>> GetEntriesFromZipArchive(byte[] data, bool protectedMemory = false)
         {
             using (var zippedStream = new MemoryStream(data))
             {
                 using (var archive = new ZipArchive(zippedStream))
                 {
+                    // unsecure data
                     var openData = new Stack<byte[]>();
-                    var secureData = new Stack<byte[]>();
-                    var entries = Tuple.Create(openData, secureData);
+                    // sensible data
+                    var guids = new Stack<Guid>();
+                    var sensibleBytes = new Stack<byte[]>();
+                    var sensibleData = Tuple.Create(guids, sensibleBytes);
+                    var entries = Tuple.Create(openData, sensibleData);
                     foreach(var entry in archive.Entries)
                     {
                         bool sensible = false;
 
-                        if(entry.FullName.StartsWith($"{TermHelper.GetDatabaseTerm()}/LeafPassword"))
+                        if(entry.FullName.StartsWith($"{TermHelper.GetDatabaseTerm()}/ByteModel"))
                             sensible = true;
 
                         if (entry != null)
@@ -66,7 +70,10 @@ namespace SensFortress.Utility
                                     unzippedEntryStream.CopyTo(ms);
                                     var unzippedArray = ms.ToArray();
                                     if (sensible)
-                                        entries.Item2.Push(unzippedArray);
+                                    {
+                                        entries.Item2.Item1.Push(new Guid(entry.Name));
+                                        entries.Item2.Item2.Push(unzippedArray);
+                                    }
                                     else
                                         entries.Item1.Push(unzippedArray);
                                 }

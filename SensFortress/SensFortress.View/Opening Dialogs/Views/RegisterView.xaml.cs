@@ -103,7 +103,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
                 // If the user has entered a custom path -> Disabled for now
                 if(_fullPath != string.Empty)
                     fullPath = $"{_fullPath}\\{FortressName_Textbox.Text}";
-                else // élse use the default.
+                else // else use the default.
                     fullPath = $"{IOPathHelper.GetDefaultFortressDirectory()}\\{FortressName_Textbox.Text}";
 
                 var name = "NOT GIVEN";

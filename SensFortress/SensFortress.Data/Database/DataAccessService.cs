@@ -36,7 +36,7 @@ namespace SensFortress.Data.Database
         /// <summary>
         /// Gets the params of the current fortress: Fullpath, Fortressname.
         /// </summary>
-        public string[] CurrentFortressGeneralData { get; set;}
+        public string[] CurrentFortressGeneralData { get; set; }
 
         /// <summary>
         /// Gets or sets the salt of the current fortress.
@@ -88,7 +88,7 @@ namespace SensFortress.Data.Database
         {
             try
             {
-                if(useDefaultValues)
+                if (useDefaultValues)
                 {
                     fortressFullPath = CurrentFortressGeneralData[0];
                     fortressName = CurrentFortressGeneralData[1];
@@ -111,48 +111,40 @@ namespace SensFortress.Data.Database
         /// <param name="fortess"></param>
         public void CreateNewFortress(Fortress fortess)
         {
-            try
-            {
-                _xmlDatacache = new XmlDataCache(fortess.FullPath);
+            _xmlDatacache = new XmlDataCache(fortess.FullPath);
 
-                // Store the example data:
-                var rootBranch = new Branch { Name = "Example: Projects", ParentBranchId = Guid.Empty };
-                var rootBranch2 = new Branch { Name = "Example: Projects2", ParentBranchId = Guid.Empty };
-                var subBranch = new Branch { Name = "Example: Passwords", ParentBranchId = rootBranch.Id };
-                var examplePw = ByteHelper.StringToByteArray("thisIsAnExamplePassword");
-                var leaf = new Leaf { Name = "Password1", Description = "Here you can describe this entry.", BranchId = subBranch.Id };
-                var leafPw = new LeafPassword { LeafId = leaf.Id, Value = examplePw };
-                examplePw = null;
-                _xmlDatacache.AddToUnsecureMemoryDC(fortess);
-                _xmlDatacache.AddToUnsecureMemoryDC(rootBranch);
-                _xmlDatacache.AddToUnsecureMemoryDC(rootBranch2);
-                _xmlDatacache.AddToUnsecureMemoryDC(subBranch);
-                _xmlDatacache.AddToUnsecureMemoryDC(leaf);
-                leafPw = null;
-                // end exampel data
+            // Store the example data:
+            var rootBranch = new Branch { Name = "Example: Projects", ParentBranchId = Guid.Empty };
+            var rootBranch2 = new Branch { Name = "Example: Projects2", ParentBranchId = Guid.Empty };
+            var subBranch = new Branch { Name = "Example: Passwords", ParentBranchId = rootBranch.Id };
+            var examplePw = ByteHelper.StringToByteArray("thisIsAnExamplePassword");
+            var leaf = new Leaf { Name = "Password1", Description = "Here you can describe this entry.", BranchId = subBranch.Id };
+            var leafPw = new LeafPassword { ForeignId = leaf.Id, Value = examplePw };
+            examplePw = null;
+            _xmlDatacache.AddToUnsecureMemoryDC(fortess);
+            _xmlDatacache.AddToUnsecureMemoryDC(rootBranch);
+            _xmlDatacache.AddToUnsecureMemoryDC(rootBranch2);
+            _xmlDatacache.AddToUnsecureMemoryDC(subBranch);
+            _xmlDatacache.AddToUnsecureMemoryDC(leaf);
+            var leafPwAsBytes = ByteHelper.ObjectToByteArray(leafPw);
+            _xmlDatacache.AddToSecureMemoryDC(leafPw.ForeignId,leafPwAsBytes);
+            leafPw = null;
+            // end exampel data
 
-                _xmlDatacache.WriteFortress(fortess);
-            }
-            catch (Exception ex)
-            {
-                _xmlDatacache = null;
-                Logger.log.Error($"Couldn't build fortress: {ex}");
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                Communication.InformUserAboutError(ex);
-            }
+            _xmlDatacache.WriteFortress(fortess);
         }
 
         /// <summary>
-        /// Adds a ModelBase to the MemoryDC
+        /// Adds a Model to the MemoryDC
         /// </summary>
         /// <param name="model"></param>
         /// <param name="isSensibleData"></param>
-        public void AddOneToMemoryDC(ModelBase model, bool isSensibleData = false)
+        public void AddOneToMemoryDC(ModelBase model, bool isSensibleData = false, SensibleModelBase sensibleModel = null)
         {
             if (!isSensibleData)
                 _xmlDatacache.AddToUnsecureMemoryDC(model);
-            else { }
-            //Implement later
+            else
+                _xmlDatacache.AddToSecureMemoryDC(sensibleModel.ForeignId, ByteHelper.ObjectToByteArray(sensibleModel));
         }
 
         /// <summary>
@@ -172,20 +164,22 @@ namespace SensFortress.Data.Database
         /// </summary>
         /// <param name="masterKey"></param>
         /// <param name="alsoSaveSecureDC"></param>
-        public void SaveFortress(Masterkey masterKey, bool alsoSaveSecureDC) => _xmlDatacache.SaveFortress(masterKey);        
+        public void SaveFortress(Masterkey masterKey, bool alsoSaveSecureDC) => _xmlDatacache.SaveFortress(masterKey);
 
         /// <summary>
-        /// Get all models of type T.
+        /// Get all non sensible models of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IEnumerable<T> GetAll<T>(bool isSensibleData = false)
-        {
-            if (!isSensibleData)
-                return _xmlDatacache.GetAllFromUnsecure<T>();
-            else // Implement later
-                return _xmlDatacache.GetAllFromUnsecure<T>();
-        }
+        public IEnumerable<T> GetAll<T>() => _xmlDatacache.GetAllFromUnsecure<T>();
+
+        /// <summary>
+        /// Returns the sensible model with the given foreignKey from the secureMemoryDC
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="foreignKey"></param>
+        /// <returns></returns>
+        public T GetSensible<T>(Guid foreignKey) => _xmlDatacache.GetSensible<T>(foreignKey);
 
 
     }
