@@ -84,12 +84,17 @@
                                 <materialDesign:PackIcon Kind="Key" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Button>
                             <!--PasswordBox of masterkey-->
-                            <PasswordBox x:Name="Master_PasswordBox" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="20 0 0 0"/>
+                            <PasswordBox x:Name="Master_PasswordBox" Width="900" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="20 0 0 0"/>
+                            <TextBox FontSize="15" Width="900" Margin="20 0 0 0" x:Name="Master_VisibleTextbox" Visibility="Collapsed" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True"/>
                         </DockPanel>
                         <!--Re-Enter masterkey-->
                         <DockPanel>
-                            <materialDesign:PackIcon Kind="KeyChange" Height="20" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <PasswordBox x:Name="MasterReentered_PasswordBox" HorizontalAlignment="Stretch" materialDesign:HintAssist.Hint="Re-Enter" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="20 0 0 0"/>
+                            <!--Show/Hide passwords-->
+                            <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="50" ToolTip="Show/Hide password" x:Name="ShowHide_Button" Click="ShowHide_Button_Click">
+                                <materialDesign:PackIcon Kind="Show" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Button>
+                            <PasswordBox x:Name="MasterReentered_PasswordBox" Width="900" materialDesign:HintAssist.Hint="Re-Enter" materialDesign:HintAssist.IsFloating="True" FontSize="15" Margin="20 0 0 0"/>
+                            <TextBox FontSize="15" Width="900" Margin="20 0 0 0" x:Name="MasterReentered_Textbox" Visibility="Collapsed" materialDesign:HintAssist.Hint="Re-Enter" materialDesign:HintAssist.IsFloating="True"/>
                         </DockPanel>
                         <TextBox x:Name="FortressName_Textbox" materialDesign:HintAssist.Hint="Fortress-Name" materialDesign:HintAssist.IsFloating="True" FontSize="15"/>
                         <!--I have read...-->

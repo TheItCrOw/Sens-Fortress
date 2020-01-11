@@ -33,7 +33,7 @@ namespace SensFortress.Security
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static string GenerateSecurePassword(int length = 16)
+        public static string GenerateSecurePassword(int length = 20)
         {
             var result = string.Empty;
 

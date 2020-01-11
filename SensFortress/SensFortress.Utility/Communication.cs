@@ -49,10 +49,13 @@ namespace SensFortress.Utility
         /// Takes in a string shows them safely on demand for the user.
         /// </summary>
         /// <param name="encryptedData"></param>
-        public static void ShowSensibleData(string data)
+        public static void ShowSensibleData(string data, string infoText, string title = "Info:")
         {
-            // Implement this.
-            var decryptedData = CryptMemProtection_ForUtilityProject.DecryptInMemoryData(new byte[21]);
+            // Implement this.            
+            var encryptedData = CryptMemProtection_ForUtilityProject.EncryptInMemoryData(ByteHelper.StringToByteArray(data));
+            data = string.Empty;
+            var sensibleDataView = new SensibleDataView(encryptedData, infoText, title);
+            sensibleDataView.Show();            
         }
 
     }

@@ -29,6 +29,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
     public partial class RegisterView : UserControl
     {
         private string _fullPath = string.Empty;
+        private bool _pwIsVisible;
 
         public RegisterView()
         {
@@ -40,6 +41,19 @@ namespace SensFortress.View.Opening_Dialogs.Views
             try
             {
                 Reset();
+                var currentPw = string.Empty;
+                var currentReenteredPw = string.Empty;
+                if(_pwIsVisible)
+                {
+                    currentPw = Master_VisibleTextbox.Text;
+                    currentReenteredPw = MasterReentered_Textbox.Text;
+                }
+                else
+                {
+                    currentPw = Master_PasswordBox.Password;
+                    currentReenteredPw = MasterReentered_PasswordBox.Password;
+                }
+
                 // Check if all criteria are correct
                 if (Info_Checkbox.IsChecked == false)
                 {
@@ -62,20 +76,21 @@ namespace SensFortress.View.Opening_Dialogs.Views
                     return;
                 }
 
-                if (Master_PasswordBox.Password.Length < 8 ||
-                    !(Master_PasswordBox.Password.Any(char.IsUpper)) ||
-                    !(Master_PasswordBox.Password.Any(char.IsDigit)))
+                if (currentPw.Length < 8 ||
+                    !(currentPw.Any(char.IsUpper)) ||
+                    !(currentPw.Any(char.IsDigit)))
                 {
                     Output_Textblock.Text = "The masterkey has to match the following criteria: Minumum 8 characters long; Contain at least one upper case character and one digit.";
                     Master_PasswordBox.Foreground = Brushes.Red;
+                    Master_VisibleTextbox.Foreground = Brushes.Red;
                     return;
                 }
 
-                if (MasterReentered_PasswordBox.Password != Master_PasswordBox.Password)
+                if (currentReenteredPw != currentPw)
                 {
                     Output_Textblock.Text = "Masterkey doesn't match the reentered one.";
-                    Master_PasswordBox.Foreground = Brushes.Red;
                     MasterReentered_PasswordBox.Foreground = Brushes.Red;
+                    MasterReentered_Textbox.Foreground = Brushes.Red;
                     return;
                 }
 
@@ -99,21 +114,62 @@ namespace SensFortress.View.Opening_Dialogs.Views
 
                 DataAccessService.Instance.CreateNewFortress(fortress); // Create the new fortress.
 
+                ClearPasswords();
+
                 Navigation.LoginManagementInstance.LoadFortresses(); // Refresh the list.
 
-                Communication.InformUser($"{FortressName_Textbox.Name} has been successfully built.");
+                Communication.InformUser($"{FortressName_Textbox.Text} has been successfully built.");
             }
             catch (Exception ex)
             {
+                ClearPasswords();
                 Logger.log.Error($"Error while trying to register a new fortress: {ex}");
                 ex.SetUserMessage("There was a problem creating the fortress. The given passwords have been flushed out of memory.");
                 Communication.InformUserAboutError(ex);
             }
-            finally
+        }
+
+        private void GeneratePassword_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var randomPw = PasswordHelper.GenerateSecurePassword();
+            //var infoText = "If you are satisfied with the generated masterkey and wish to use it as your own: REMEMBER and ARCHIVE this password now. If not: Generate a new one by closing this window and clicking the button again.";
+            //Communication.ShowSensibleData(randomPw, infoText, "Your masterkey:");
+
+            if (_pwIsVisible)
+                Master_VisibleTextbox.Text = randomPw;
+            else
+                Master_PasswordBox.Password = randomPw;
+
+            randomPw = string.Empty;
+        }
+
+        /// <summary>
+        /// Show/Hide password. PasswordBox is very sensitive in that regard. It has not method for this and it doesn't allow password binding.
+        /// So this is a bit hacky..
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowHide_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if(_pwIsVisible)
             {
-                Master_PasswordBox.Password = string.Empty;
-                MasterReentered_PasswordBox.Password = string.Empty;
-                FortressName_Textbox.Text = string.Empty;
+                Master_PasswordBox.Visibility = Visibility.Visible;
+                Master_VisibleTextbox.Visibility = Visibility.Collapsed;
+                MasterReentered_PasswordBox.Visibility = Visibility.Visible;
+                MasterReentered_Textbox.Visibility = Visibility.Collapsed;
+                Master_PasswordBox.Password = Master_VisibleTextbox.Text;
+                MasterReentered_PasswordBox.Password = MasterReentered_Textbox.Text;
+                _pwIsVisible = false;
+            }
+            else
+            {
+                Master_PasswordBox.Visibility = Visibility.Collapsed;
+                Master_VisibleTextbox.Visibility = Visibility.Visible;
+                MasterReentered_PasswordBox.Visibility = Visibility.Collapsed;
+                MasterReentered_Textbox.Visibility = Visibility.Visible;
+                Master_VisibleTextbox.Text = Master_PasswordBox.Password;
+                MasterReentered_Textbox.Text = MasterReentered_PasswordBox.Password;
+                _pwIsVisible = true;
             }
         }
 
@@ -123,10 +179,16 @@ namespace SensFortress.View.Opening_Dialogs.Views
             Master_PasswordBox.Foreground = Brushes.White;
             MasterReentered_PasswordBox.Foreground = Brushes.White;
             FortressName_Textbox.BorderBrush = Brushes.White;
+            MasterReentered_Textbox.Foreground = Brushes.White;
+            Master_VisibleTextbox.Foreground = Brushes.White;
         }
 
-        private void GeneratePassword_Button_Click(object sender, RoutedEventArgs e)
+        private void ClearPasswords()
         {
+            Master_PasswordBox.Password = string.Empty;
+            MasterReentered_PasswordBox.Password = string.Empty;
+            MasterReentered_Textbox.Text = string.Empty;
+            Master_VisibleTextbox.Text = string.Empty;
         }
     }
 }
