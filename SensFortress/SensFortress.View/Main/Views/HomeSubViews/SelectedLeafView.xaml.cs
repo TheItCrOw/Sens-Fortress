@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SensFortress.Data.Database;
+using SensFortress.View.Main.ViewModel.HomeSubVms;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -21,6 +23,12 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         public SelectedLeafView()
         {
             InitializeComponent();
+        }
+
+        private void FrontContent_Button_Click(object sender, RoutedEventArgs e)
+        {
+            ((SelectedLeafViewModel)this.DataContext).ShowContent = true;
+            ((SelectedLeafViewModel)this.DataContext).IsLocked = false;
         }
     }
 }

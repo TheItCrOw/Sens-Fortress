@@ -131,7 +131,6 @@ namespace SensFortress.Data.Database
                 File.WriteAllBytes($"{currentSaveLocation}\\{byteModel.ForeignKey}", decryptedValue);
                 decryptedValue = null;
             }
-
         }
 
         /// <summary>

@@ -44,6 +44,11 @@ namespace SensFortress.Data.Database
         public byte[] CurrentFortressSalt { get; set; }
 
         /// <summary>
+        /// Determines whether the fortress is currently locked.
+        /// </summary>
+        public static bool FortressIsLocked { get; set; }
+
+        /// <summary>
         /// Current xmlDataCache Instance.
         /// </summary>
         private XmlDataCache _xmlDatacache;

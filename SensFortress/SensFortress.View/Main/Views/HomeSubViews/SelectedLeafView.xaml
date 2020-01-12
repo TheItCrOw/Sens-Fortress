@@ -27,11 +27,28 @@
             <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="{Binding CurrentItem.Name}" Margin="10 10 10 15"/>
         </materialDesign:Card>
 
+        <!--if the fortress is locked -> show this content-->
+        <Grid Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <materialDesign:PackIcon Kind="ShieldKey" Height="300" Width="300" Foreground="White" HorizontalAlignment="Center"/>
+            <StackPanel Grid.Row="1">
+                <TextBlock Text="The fortress is currently locked up." Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
+                <Button x:Name="FrontContent_Button" Click="FrontContent_Button_Click" Style="{StaticResource MaterialDesignRaisedLightButton}" MaxWidth="400" Height="40"
+                                        BorderBrush="Black" BorderThickness="1" FontSize="20" Foreground="Black" FontFamily="Microsoft YaHei Light">
+                    <materialDesign:PackIcon Kind="Key" Height="30" Width="30" HorizontalAlignment="Center"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <!--if the fortress is not locked - show this content-->
         <!--Drawer area-->
-        <materialDesign:DrawerHost Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            
+        <materialDesign:DrawerHost Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" 
+                                   Visibility="{Binding ShowContent, Converter={StaticResource BoolToVisConverter}}">
+
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <StackPanel>s
+                <StackPanel>
                     <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Left menu" Style="{StaticResource InformationTextblockStyle}"/>
                     <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Left}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}">
                         <materialDesign:PackIcon Kind="ArrowRightBold" Height="30" Width="30"/>
@@ -39,14 +56,14 @@
                     <!--<Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>-->
                 </StackPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
-            
+
             <!--Shows password-->
             <materialDesign:DrawerHost.TopDrawerContent>
                 <StackPanel>
                     <DockPanel Margin="10 0 10 0" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Key" Width="25" Height="25" Margin="0 0 10 0"/>
-                        <TextBlock Margin="0 0 10 0" Style="{StaticResource CategoryTextblockStyle}" Text="**************************"/>
-                        <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" Margin="0 0 10 0">
+                        <TextBlock Margin="0 0 10 0" Style="{StaticResource CategoryTextblockStyle}" Text="{Binding Password}"/>
+                        <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}">
                             <materialDesign:PackIcon Kind="Show"/>
                         </Button>
                         <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit">
@@ -60,7 +77,7 @@
                     <!--<Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>-->
                 </StackPanel>
             </materialDesign:DrawerHost.TopDrawerContent>
-            
+
             <materialDesign:DrawerHost.RightDrawerContent>
                 <StackPanel>
                     <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Title Right" Style="{StaticResource InformationTextblockStyle}"/>
@@ -68,7 +85,7 @@
                     <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>
                 </StackPanel>
             </materialDesign:DrawerHost.RightDrawerContent>
-            
+
             <materialDesign:DrawerHost.BottomDrawerContent>
                 <StackPanel>
                     <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Title Bottom" Style="{StaticResource InformationTextblockStyle}"/>
