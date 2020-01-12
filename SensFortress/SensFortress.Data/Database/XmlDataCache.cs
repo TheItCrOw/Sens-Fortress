@@ -91,7 +91,6 @@ namespace SensFortress.Data.Database
             }
         }
 
-
         /// <summary>
         /// Stores a serializible model into the datacache
         /// </summary>
@@ -234,20 +233,18 @@ namespace SensFortress.Data.Database
         /// <typeparam name="T"></typeparam>
         /// <param name="foreignKey"></param>
         /// <returns></returns>
-        internal T GetSensible<T>(Guid foreignKey)
+        internal bool TryGetSensible<T>(Guid foreignKey, out T model)
         {
             CheckDatacache();
             if(_secureDatacache.TryGetValue(foreignKey, out var encryptedBytes))
             {
                 var decryptedBytes = CryptMemoryProtection.DecryptInMemoryData(encryptedBytes);
-                return (T)ByteHelper.ByteArrayToObject(decryptedBytes);
+                model = (T)ByteHelper.ByteArrayToObject(decryptedBytes);
+                return true;
             }
-            else
-            {
-                var ex = new XmlDataCacheException($"Could not get the model {typeof(T).Name} with given key {foreignKey} from secureDC");
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                throw ex;
-            }
+
+            model = (T)new object();
+            return false;
         }
 
         /// <summary>

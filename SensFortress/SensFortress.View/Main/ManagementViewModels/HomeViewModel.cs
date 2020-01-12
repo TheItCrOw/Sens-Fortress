@@ -8,6 +8,7 @@ using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
 using SensFortress.View.Main.Views;
+using SensFortress.View.Main.Views.HomeSubViews;
 using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace SensFortress.View.Main.ViewModel
         private bool _isLoading;
         private int _changesTracker;
         private bool _scrollToBottom;
+        private object _selectedContent;
 
         /// <summary>
         /// Collection showing in the TreeView
@@ -53,6 +55,7 @@ namespace SensFortress.View.Main.ViewModel
             {
                 SetProperty(ref _selectedTreeViewItem, value);
                 UpdateRootNodes(true, false);
+                UpdateContent();
             }
         }
         /// <summary>
@@ -84,6 +87,20 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
         /// <summary>
+        /// Holds the view that is being shown in the middle menu.
+        /// </summary>
+        public object SelectedContent
+        {
+            get
+            {
+                return _selectedContent;
+            }
+            set
+            {
+                SetProperty(ref _selectedContent, value);
+            }
+        }
+        /// <summary>
         /// Keeps track, of how many changes have been made, that are savable.
         /// </summary>
         public int ChangesTracker
@@ -112,6 +129,22 @@ namespace SensFortress.View.Main.ViewModel
                 Logger.log.Error($"Error while loading HomeView: {ex}");
                 ex.SetUserMessage("An error occured while trying to load data.");
                 Communication.InformUserAboutError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Handles switching of content assigned to the selected model.
+        /// </summary>
+        private void UpdateContent()
+        {
+            if(SelectedTreeViewItem.TreeType == TreeDepth.Root || SelectedTreeViewItem.TreeType == TreeDepth.Branch)
+            {
+
+            }
+            else if(SelectedTreeViewItem.TreeType == TreeDepth.Leaf)
+            {
+                var leafView = new SelectedLeafView();
+                SelectedContent = leafView;
             }
         }
 

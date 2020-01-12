@@ -179,7 +179,7 @@ namespace SensFortress.Data.Database
         /// <typeparam name="T"></typeparam>
         /// <param name="foreignKey"></param>
         /// <returns></returns>
-        public T GetSensible<T>(Guid foreignKey) => _xmlDatacache.GetSensible<T>(foreignKey);
+        public bool TryGetSensible<T>(Guid foreignKey, out T model) => _xmlDatacache.TryGetSensible<T>(foreignKey, out model);
 
 
     }
