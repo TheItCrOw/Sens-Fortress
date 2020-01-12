@@ -21,20 +21,96 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-                
+
         <!--Title-->
-        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
-            <StackPanel>
-                <Expander>
-                    <Expander.Header>
-                        <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Name Here"/>
-                    </Expander.Header>
-                </Expander>
-            </StackPanel>
+        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="Transparent">
+            <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="{Binding CurrentItem.Name}" Margin="10 10 10 15"/>
         </materialDesign:Card>
-        
-        <!--Password section-->
-        
+
+        <!--Drawer area-->
+        <materialDesign:DrawerHost Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <StackPanel>s
+                    <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Left menu" Style="{StaticResource InformationTextblockStyle}"/>
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Left}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}">
+                        <materialDesign:PackIcon Kind="ArrowRightBold" Height="30" Width="30"/>
+                    </Button>
+                    <!--<Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>-->
+                </StackPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+            
+            <!--Shows password-->
+            <materialDesign:DrawerHost.TopDrawerContent>
+                <StackPanel>
+                    <DockPanel Margin="10 0 10 0" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Key" Width="25" Height="25" Margin="0 0 10 0"/>
+                        <TextBlock Margin="0 0 10 0" Style="{StaticResource CategoryTextblockStyle}" Text="**************************"/>
+                        <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" Margin="0 0 10 0">
+                            <materialDesign:PackIcon Kind="Show"/>
+                        </Button>
+                        <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit">
+                            <materialDesign:PackIcon Kind="Edit"/>
+                        </Button>
+                    </DockPanel>
+                    <!--Should be last-->
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" Margin="0 10 0 10" CommandParameter="{x:Static Dock.Top}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}">
+                        <materialDesign:PackIcon Kind="ArrowDownBold" Height="30" Width="30" />
+                    </Button>
+                    <!--<Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>-->
+                </StackPanel>
+            </materialDesign:DrawerHost.TopDrawerContent>
+            
+            <materialDesign:DrawerHost.RightDrawerContent>
+                <StackPanel>
+                    <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Title Right" Style="{StaticResource InformationTextblockStyle}"/>
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Right}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close this"/>
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>
+                </StackPanel>
+            </materialDesign:DrawerHost.RightDrawerContent>
+            
+            <materialDesign:DrawerHost.BottomDrawerContent>
+                <StackPanel>
+                    <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Title Bottom" Style="{StaticResource InformationTextblockStyle}"/>
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Bottom}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close this"/>
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>
+                </StackPanel>
+            </materialDesign:DrawerHost.BottomDrawerContent>
+            <Grid >
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Left}" 
+                            Grid.Row="1" Grid.Column="0" Height="150" Width="60" Background="Black">
+                        <materialDesign:PackIcon Kind="ArrowLeftBold" Foreground="White" Height="30" Width="30"/>
+                    </Button>
+                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Top}"
+                            Grid.Row="0" Grid.Column="1" Width="150" Height="60" Background="Black">
+                        <materialDesign:PackIcon Kind="Key" Foreground="White" Height="30" Width="30"/>
+                    </Button>
+                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Right}"
+                            Grid.Row="1" Grid.Column="2" Height="150" Width="60" Background="Black">
+                        <materialDesign:PackIcon Kind="ArrowRightBold" Foreground="White" Height="30" Width="30"/>
+                    </Button>
+                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Bottom}"
+                            Grid.Row="2" Grid.Column="1" Width="150" Height="60" Background="Black">
+                        <materialDesign:PackIcon Kind="ArrowDownBold" Foreground="White" Width="30" Height="30"/>
+                    </Button>
+                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Style="{DynamicResource MaterialDesignIconButton}"
+                            Height="100" Width="100" Grid.Row="1" Grid.Column="1">
+                        <materialDesign:PackIcon Kind="ArrowAll" Foreground="White" Height="60" Width="60"/>
+                    </Button>
+                </Grid>
+            </Grid>
+        </materialDesign:DrawerHost>
 
     </Grid>
 </UserControl>

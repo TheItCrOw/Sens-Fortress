@@ -7,6 +7,7 @@ using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
+using SensFortress.View.Main.ViewModel.HomeSubVms;
 using SensFortress.View.Main.Views;
 using SensFortress.View.Main.Views.HomeSubViews;
 using SensFortress.View.TaskLog;
@@ -144,6 +145,7 @@ namespace SensFortress.View.Main.ViewModel
             else if(SelectedTreeViewItem.TreeType == TreeDepth.Leaf)
             {
                 var leafView = new SelectedLeafView();
+                leafView.DataContext = new SelectedLeafViewModel(SelectedTreeViewItem);
                 SelectedContent = leafView;
             }
         }
