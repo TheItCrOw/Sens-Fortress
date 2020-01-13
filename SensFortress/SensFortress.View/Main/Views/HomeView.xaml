@@ -39,10 +39,71 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--lock button-->
+        <DockPanel Panel.ZIndex="1"  Grid.RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" >
+            <Button Background="Black" Height="70" Width="70" 
+                Margin="10 10 5 10" Command="{Binding LockUnlockFortressCommand}">
+                <Button.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignFloatingActionLightButton}" TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                <Setter Property="ToolTip" Value="Unlock the fortress"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsLocked}" Value="False">
+                                <Setter Property="ToolTip" Value="Lock the fortress"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <materialDesign:PackIcon Height="50" Width="50" VerticalAlignment="Center" Foreground="White">
+                    <materialDesign:PackIcon.Style>
+                        <Style TargetType="materialDesign:PackIcon">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                    <Setter Property="Kind" Value="Lock"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsLocked}" Value="False">
+                                    <Setter Property="Kind" Value="LockOpen"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </materialDesign:PackIcon.Style>
+                </materialDesign:PackIcon>
+            </Button>
+            <!--enter masterkey for locking-->
+            <materialDesign:Card x:Name="Unlock_Card" materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="WhiteSmoke" VerticalAlignment="Center" Panel.ZIndex="1"
+                                 Visibility="{Binding ShowLockCard, Converter={StaticResource BoolToVisConverter}}">
+                <DockPanel LastChildFill="False" VerticalAlignment="Center" Margin="10 2 10 10">
+                    <materialDesign:PackIcon Kind="Key" Foreground="Black" VerticalAlignment="Center" Margin="0 10 0 0" Height="20" Width="20"/>
+                    <!--masterkey texbox-->
+                    <TextBox x:Name="MasterLock_Textbox" materialDesign:HintAssist.Hint="Enter Masterkey" materialDesign:HintAssist.IsFloating="True" Width="330" BorderBrush="Black" Visibility="Collapsed"
+                                 Foreground="Black" BorderThickness="0 0 0 1" FontSize="17" Margin="10 0 10 0"/>
+                    <!--masterkey passwordbox-->
+                    <PasswordBox x:Name="MasterLock_PasswordBox" materialDesign:HintAssist.Hint="Enter Masterkey" materialDesign:HintAssist.IsFloating="True" Width="330" BorderBrush="Black"
+                                 Foreground="Black" BorderThickness="0 0 0 1" FontSize="17" Margin="10 0 10 0"/>
+                    <!--show/Hide buttoln-->
+                    <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide masterkey" Height="30" Width="30" VerticalAlignment="Center" Margin="0 10 0 0" Background="Black">
+                        <materialDesign:PackIcon Kind="Show" Height="20" Width="20" Foreground="White"/>
+                    </Button>
+                    <!--Lock button-->
+                    <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Lock fortress" Height="30" Width="30" VerticalAlignment="Center" Margin="4 10 4 0" Background="Black">
+                        <materialDesign:PackIcon Kind="Lock" Height="20" Width="20" Foreground="White"/>
+                    </Button>
+                    <!--close button-->
+                    <Button x:Name="CloseLockCard_Button" Click="CloseLockCard_Button_Click" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Close" Height="30" Width="30" 
+                            VerticalAlignment="Center" Margin="0 10 0 0" Background="Black">
+                        <materialDesign:PackIcon Kind="Close" Height="20" Width="20" Foreground="White"/>
+                    </Button>
+                </DockPanel>
+            </materialDesign:Card>
+        </DockPanel>
+
+
         <!--Header Title-->
-        <materialDesign:Card Height="60">
-            <DockPanel HorizontalAlignment="Left" Margin="10 0 0 0" VerticalAlignment="Center">
-                <materialDesign:Badged Badge="{Binding ChangesTracker}" BadgeColorZoneMode="Dark" ToolTip="Saveable changes">
+        <materialDesign:Card Height="50">
+            <DockPanel HorizontalAlignment="Left" Margin="80 0 0 0" VerticalAlignment="Center">
+                <!--Save button-->
+                <materialDesign:Badged Badge="{Binding ChangesTracker}" BadgeColorZoneMode="Dark" ToolTip="Saveable changes" Margin="10 0 0 0" VerticalAlignment="Center">
                     <Button Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Save" Command="{Binding SaveTreeChangesCommand}">
                         <materialDesign:PackIcon Kind="Gate" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>

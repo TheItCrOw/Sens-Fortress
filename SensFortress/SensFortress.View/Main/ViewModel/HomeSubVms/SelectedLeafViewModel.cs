@@ -66,7 +66,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public SelectedLeafViewModel(TreeItemViewModel selectedLeaf)
         {
             CurrentItem = selectedLeaf;
-            IsLocked = true;
             if (!IsLocked)
             {
                 Initialize();

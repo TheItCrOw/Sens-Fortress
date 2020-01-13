@@ -31,6 +31,7 @@ namespace SensFortress.View.Main.ViewModel
         private bool _scrollToBottom;
         private object _selectedContent;
         private bool _isLocked;
+        private bool _showLockCard;
 
         /// <summary>
         /// Collection showing in the TreeView
@@ -44,6 +45,8 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(EditTreeItem);
         public DelegateCommand DeleteTreeItemCommand => new DelegateCommand(DeleteTreeItem);
         public DelegateCommand SaveTreeChangesCommand => new DelegateCommand(SaveTreeChanges);
+        public DelegateCommand LockUnlockFortressCommand => new DelegateCommand(LockUnlockFortress);
+
         /// <summary>
         /// Holds the currently selected item in the TreeView UI.
         /// </summary>
@@ -101,6 +104,18 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _changesTracker, value);
             }
         }
+        /// <summary>
+        /// Determines whether to show or not show the lock card.
+        /// </summary>
+        public bool ShowLockCard
+        {
+            get => _showLockCard;
+            set
+            {
+                SetProperty(ref _showLockCard, value);
+            }
+        }
+
         public override bool IsLocked
         {
             get => _isLocked;
@@ -125,6 +140,17 @@ namespace SensFortress.View.Main.ViewModel
                 ex.SetUserMessage("An error occured while trying to load data.");
                 Communication.InformUserAboutError(ex);
             }
+        }
+
+        /// <summary>
+        /// Shows the dialog card to lock the fortress
+        /// </summary>
+        private void LockUnlockFortress()
+        {
+            if (CurrentFortressData.IsLocked)
+                ShowLockCard = true;
+            else
+                CurrentFortressData.IsLocked = true;
         }
 
         /// <summary>

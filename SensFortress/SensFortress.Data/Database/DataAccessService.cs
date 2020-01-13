@@ -54,7 +54,7 @@ namespace SensFortress.Data.Database
                 password = string.Empty;
                 CurrentFortressData.FullPath = fullPath;
                 CurrentFortressData.FortressName = fortressName;
-                CurrentFortressData.IsLocked = true;
+                CurrentFortressData.IsLocked = false;
 
                 return true;
             }

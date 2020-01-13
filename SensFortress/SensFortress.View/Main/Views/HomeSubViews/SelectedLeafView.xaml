@@ -36,7 +36,7 @@
             <materialDesign:PackIcon Kind="ShieldKey" Height="300" Width="300" Foreground="White" HorizontalAlignment="Center"/>
             <StackPanel Grid.Row="1">
                 <TextBlock Text="The fortress is currently locked up." Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                <Button x:Name="FrontContent_Button" Click="FrontContent_Button_Click" Style="{StaticResource MaterialDesignRaisedLightButton}" MaxWidth="400" Height="40"
+                <Button x:Name="FrontContent_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" MaxWidth="400" Height="40" Click="FrontContent_Button_Click"
                                         BorderBrush="Black" BorderThickness="1" FontSize="20" Foreground="Black" FontFamily="Microsoft YaHei Light">
                     <materialDesign:PackIcon Kind="Key" Height="30" Width="30" HorizontalAlignment="Center"/>
                 </Button>

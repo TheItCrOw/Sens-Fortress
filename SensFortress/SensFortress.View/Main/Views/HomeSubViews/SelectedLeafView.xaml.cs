@@ -1,5 +1,6 @@
 ﻿using SensFortress.Data.Database;
 using SensFortress.Utility;
+using SensFortress.View.Helper;
 using SensFortress.View.Main.ViewModel.HomeSubVms;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,14 @@ namespace SensFortress.View.Main.Views.HomeSubViews
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Give the user the possibilty to unlock the fortress.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FrontContent_Button_Click(object sender, RoutedEventArgs e)
         {
-            CurrentFortressData.IsLocked = false;
+            Navigation.HomeManagementInstance.LockUnlockFortressCommand.Execute();
         }
     }
 }

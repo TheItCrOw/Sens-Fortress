@@ -14,9 +14,13 @@ namespace SensFortress.View.Bases
         /// </summary>
         public abstract bool IsLocked { get; set; }
 
-        public ViewModelManagementBase() => CurrentFortressData.FortressLockedStatusChanged += IsLocked_Changed;        
+        public ViewModelManagementBase()
+        {
+            CurrentFortressData.FortressLockedStatusChanged += IsLocked_Changed;
+            IsLocked = CurrentFortressData.IsLocked;
+        }
 
-        private void IsLocked_Changed() => IsLocked = CurrentFortressData.IsLocked;        
+        public void IsLocked_Changed() => IsLocked = CurrentFortressData.IsLocked;
 
     }
 }
