@@ -30,6 +30,7 @@ namespace SensFortress.View.Main.ViewModel
         private int _changesTracker;
         private bool _scrollToBottom;
         private object _selectedContent;
+        private bool _isLocked;
 
         /// <summary>
         /// Collection showing in the TreeView
@@ -48,10 +49,7 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         public TreeItemViewModel SelectedTreeViewItem
         {
-            get
-            {
-                return _selectedTreeViewItem;
-            }
+            get => _selectedTreeViewItem;
             set
             {
                 SetProperty(ref _selectedTreeViewItem, value);
@@ -64,10 +62,7 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         public bool IsLoading
         {
-            get
-            {
-                return _isLoading;
-            }
+            get => _isLoading;
             set
             {
                 SetProperty(ref _isLoading, value);
@@ -78,10 +73,7 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         public bool ScrollToBottom
         {
-            get
-            {
-                return _scrollToBottom;
-            }
+            get => _scrollToBottom;
             set
             {
                 SetProperty(ref _scrollToBottom, value);
@@ -92,10 +84,7 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         public object SelectedContent
         {
-            get
-            {
-                return _selectedContent;
-            }
+            get => _selectedContent;
             set
             {
                 SetProperty(ref _selectedContent, value);
@@ -106,13 +95,18 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         public int ChangesTracker
         {
-            get
-            {
-                return _changesTracker;
-            }
+            get => _changesTracker;
             set
             {
                 SetProperty(ref _changesTracker, value);
+            }
+        }
+        public override bool IsLocked
+        {
+            get => _isLocked;
+            set
+            {
+                SetProperty(ref _isLocked, value);
             }
         }
 
@@ -138,11 +132,11 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         private void UpdateContent()
         {
-            if(SelectedTreeViewItem.TreeType == TreeDepth.Root || SelectedTreeViewItem.TreeType == TreeDepth.Branch)
+            if (SelectedTreeViewItem.TreeType == TreeDepth.Root || SelectedTreeViewItem.TreeType == TreeDepth.Branch)
             {
 
             }
-            else if(SelectedTreeViewItem.TreeType == TreeDepth.Leaf)
+            else if (SelectedTreeViewItem.TreeType == TreeDepth.Leaf)
             {
                 var leafView = new SelectedLeafView();
                 leafView.DataContext = new SelectedLeafViewModel(SelectedTreeViewItem);

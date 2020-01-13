@@ -17,6 +17,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
     {
         #region fields
         private FortressViewModel _selectedFortess;
+        private bool _isLocked;
         #endregion
 
         /// <summary>
@@ -38,6 +39,15 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             set
             {
                 SetProperty(ref _selectedFortess, value);
+            }
+        }
+
+        public override bool IsLocked
+        {
+            get { return _isLocked; }
+            set
+            {
+                SetProperty(ref _isLocked, value);
             }
         }
 

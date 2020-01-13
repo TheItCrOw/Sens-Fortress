@@ -7,6 +7,7 @@ using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 
 namespace SensFortress.View.Main.ViewModel.HomeSubVms
@@ -22,10 +23,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
         public TreeItemViewModel CurrentItem
         {
-            get
-            {
-                return _currentIten;
-            }
+            get => _currentIten;
             set
             {
                 SetProperty(ref _currentIten, value);
@@ -33,10 +31,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         }
         public string Password
         {
-            get
-            {
-                return _password;
-            }
+            get => _password;
             set
             {
                 SetProperty(ref _password, value);
@@ -45,15 +40,13 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// <summary>
         /// Determines whether the fortress is currently locked.
         /// </summary>
-        public bool IsLocked
+        public override bool IsLocked
         {
-            get
-            {
-                return _isLocked;
-            }
+            get => _isLocked;
             set
             {
                 SetProperty(ref _isLocked, value);
+                ShowContent = !IsLocked;
             }
         }
         /// <summary>
@@ -61,10 +54,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// </summary>
         public bool ShowContent
         {
-            get
-            {
-                return _showContent;
-            }
+            get => _showContent;
             set
             {
                 SetProperty(ref _showContent, value);
@@ -75,11 +65,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         public SelectedLeafViewModel(TreeItemViewModel selectedLeaf)
         {
-            //IsLocked = DataAccessService.FortressIsLocked;
             CurrentItem = selectedLeaf;
             IsLocked = true;
-            ShowContent = false;
-            if(!IsLocked)
+            if (!IsLocked)
             {
                 Initialize();
             }

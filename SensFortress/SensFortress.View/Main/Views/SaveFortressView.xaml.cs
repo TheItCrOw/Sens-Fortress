@@ -46,7 +46,7 @@ namespace SensFortress.View.Main.Views
                     if (DataAccessService.Instance.ValidateMasterkey(masterPasswordBox.Password))
                     {
                         var aesHelper = new AesHelper();
-                        var hashedKey = aesHelper.CreateKey(masterPasswordBox.Password, 512, DataAccessService.Instance.CurrentFortressSalt);
+                        var hashedKey = aesHelper.CreateKey(masterPasswordBox.Password, 512, CurrentFortressData.Salt);
                         var secureMasterkey = new Masterkey(hashedKey);
                         hashedKey = null;
 
@@ -55,8 +55,8 @@ namespace SensFortress.View.Main.Views
                         IOPathHelper.CreateDirectory(IOPathHelper.GetBackedUpFortressDirectory()); // Make sure the directory exists.
                                                                                                    // Backup the fortress next:
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Backup-ing your fortress...");
-                        File.Copy(DataAccessService.Instance.CurrentFortressGeneralData[0], // source file...
-                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){DataAccessService.Instance.CurrentFortressGeneralData[1]}") // where to..
+                        File.Copy(CurrentFortressData.FullPath, // source file...
+                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){CurrentFortressData.FortressName}") // where to..
                             + TermHelper.GetZippedFileEnding(), // file ending...
                             true); // overwrite it...
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Fortress backed up. Proceeding to save the fortress...");
@@ -67,8 +67,8 @@ namespace SensFortress.View.Main.Views
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Fortress saved successfully.");
 
                         // Backup the fortress again with the newly saved changes.
-                        File.Copy(DataAccessService.Instance.CurrentFortressGeneralData[0], // source file...
-                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){DataAccessService.Instance.CurrentFortressGeneralData[1]}") // where to..
+                        File.Copy(CurrentFortressData.FullPath, // source file...
+                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){CurrentFortressData.FortressName}") // where to..
                             + TermHelper.GetZippedFileEnding(), // file ending...
                             true); // overwrite it...
 

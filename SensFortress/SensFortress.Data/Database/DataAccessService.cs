@@ -34,21 +34,6 @@ namespace SensFortress.Data.Database
         #endregion
 
         /// <summary>
-        /// Gets the params of the current fortress: Fullpath, Fortressname.
-        /// </summary>
-        public string[] CurrentFortressGeneralData { get; set; }
-
-        /// <summary>
-        /// Gets or sets the salt of the current fortress.
-        /// </summary>
-        public byte[] CurrentFortressSalt { get; set; }
-
-        /// <summary>
-        /// Determines whether the fortress is currently locked.
-        /// </summary>
-        public static bool FortressIsLocked { get; set; }
-
-        /// <summary>
         /// Current xmlDataCache Instance.
         /// </summary>
         private XmlDataCache _xmlDatacache;
@@ -67,9 +52,9 @@ namespace SensFortress.Data.Database
                 _xmlDatacache = new XmlDataCache(fullPath);
                 _xmlDatacache.BuildFortress(fullPath, fortressName, password);
                 password = string.Empty;
-                CurrentFortressGeneralData = new string[2];
-                CurrentFortressGeneralData[0] = fullPath;
-                CurrentFortressGeneralData[1] = fortressName;
+                CurrentFortressData.FullPath = fullPath;
+                CurrentFortressData.FortressName = fortressName;
+                CurrentFortressData.IsLocked = true;
 
                 return true;
             }
@@ -95,8 +80,8 @@ namespace SensFortress.Data.Database
             {
                 if (useDefaultValues)
                 {
-                    fortressFullPath = CurrentFortressGeneralData[0];
-                    fortressName = CurrentFortressGeneralData[1];
+                    fortressFullPath = CurrentFortressData.FullPath;
+                    fortressName = CurrentFortressData.FortressName;
                 }
                 _xmlDatacache.ValidateMasterKey(fortressFullPath, fortressName, password);
                 password = string.Empty;

@@ -201,7 +201,7 @@ namespace SensFortress.Data.Database
             var currentFortress = GetAllFromUnsecure<Fortress>().FirstOrDefault();
             currentFortress.FullPath = _databasePath;
             currentFortress.MasterKey = masterkey;
-            currentFortress.Salt = DataAccessService.Instance.CurrentFortressSalt;
+            currentFortress.Salt = CurrentFortressData.Salt;
             WriteFortress(currentFortress, true);
             masterkey = null;
         }
@@ -370,7 +370,7 @@ namespace SensFortress.Data.Database
                     {
                         saltBytes = ByteHelper.ReadBytesOfStream(stream);
                     }
-                    DataAccessService.Instance.CurrentFortressSalt = saltBytes;
+                    CurrentFortressData.Salt = saltBytes;
                     Logger.log.Debug("Unzipped fortress - Salt bytes read.");
 
                     // =========================================================== Create masterkey
