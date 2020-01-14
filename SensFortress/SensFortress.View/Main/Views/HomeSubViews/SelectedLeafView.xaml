@@ -105,26 +105,64 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Left}" 
-                            Grid.Row="1" Grid.Column="0" Height="150" Width="60" Background="Black">
+                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Left}" BorderThickness="1 1 0 1"
+                            Grid.Row="1" Grid.Column="0" Height="200" Width="61" Margin="0 0 -0.8 0" Panel.ZIndex="1" Background="Black">
                         <materialDesign:PackIcon Kind="ArrowLeftBold" Foreground="White" Height="30" Width="30"/>
                     </Button>
-                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Top}"
-                            Grid.Row="0" Grid.Column="1" Width="150" Height="60" Background="Black">
+                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Margin="0 0 0 -0.8" Panel.ZIndex="1" BorderThickness="1 1 1 0" 
+                            CommandParameter="{x:Static Dock.Top}" Grid.Row="0" Grid.Column="1" Width="200" Height="60" Background="Black">
                         <materialDesign:PackIcon Kind="Key" Foreground="White" Height="30" Width="30"/>
                     </Button>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Right}"
-                            Grid.Row="1" Grid.Column="2" Height="150" Width="60" Background="Black">
+                            Grid.Row="1" Grid.Column="2" Height="200" Width="60" Background="Black">
                         <materialDesign:PackIcon Kind="ArrowRightBold" Foreground="White" Height="30" Width="30"/>
                     </Button>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Bottom}"
-                            Grid.Row="2" Grid.Column="1" Width="150" Height="60" Background="Black">
+                            Grid.Row="2" Grid.Column="1" Width="200" Height="60" Background="Black" Margin="0 0 0 -0.5" Panel.ZIndex="1" BorderThickness="1 0 1 1">
                         <materialDesign:PackIcon Kind="ArrowDownBold" Foreground="White" Width="30" Height="30"/>
                     </Button>
-                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Style="{DynamicResource MaterialDesignIconButton}"
-                            Height="100" Width="100" Grid.Row="1" Grid.Column="1">
-                        <materialDesign:PackIcon Kind="ArrowAll" Foreground="White" Height="60" Width="60"/>
-                    </Button>
+                    <!--Core of Drawer with quickbuttons-->
+                    <!--<Grid Grid.Row="1" Grid.Column="1" Height="197" Width="197" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        --><!--copy password button--><!--
+                        <Button Width="90" Background="Black" Height="90" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionDarkButton}" ToolTip="Copy password">
+                            <materialDesign:PackIcon Kind="ContentCopy" Height="53" Width="53" Foreground="White"/>
+                        </Button>
+                        --><!--open link button--><!--
+                        <Button Grid.Column="1" Width="90" Background="Black" Height="90" BorderBrush="White" ToolTip="Open url"
+                                Style="{DynamicResource MaterialDesignFloatingActionDarkButton}">
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Height="53" Width="53" Foreground="White" HorizontalAlignment="Center"/>
+                        </Button>
+                        --><!--...--><!--
+                        <Button Grid.Row="1" Width="90" Background="Black" Height="90" BorderBrush="White" ToolTip="..."
+                                Style="{DynamicResource MaterialDesignFloatingActionDarkButton}">
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Height="53" Width="53" Foreground="White" HorizontalAlignment="Center"/>
+                        </Button>
+                        --><!--...--><!--
+                        <Button Grid.Column="1" Grid.Row="1" Width="90" Background="Black" Height="90" BorderBrush="White" ToolTip="..."
+                                Style="{DynamicResource MaterialDesignFloatingActionDarkButton}">
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Height="53" Width="53" Foreground="White" HorizontalAlignment="Center"/>
+                        </Button>
+                    </Grid>-->
+                    
+                    
+                    <!--left polygon-->
+                    <Polygon Points="0 0 100 100 0 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
+                    <!--left icon-->
+                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 125 0" Foreground="White" 
+                                             Kind="OpenInBrowser" Height="50" Width="50"/>
+                    <!--top poly-->
+                    <Polygon Points="0 0 200 0 100 100" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
+
+                    <!--down poly-->
+                    <Polygon Points="100 100 0 200 200 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
                 </Grid>
             </Grid>
         </materialDesign:DrawerHost>

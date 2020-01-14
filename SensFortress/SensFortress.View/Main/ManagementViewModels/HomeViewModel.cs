@@ -170,6 +170,11 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
 
+        /// <summary>
+        /// Event gets triggered when taskLog gets a new entry
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TaskLogs_CollectionChanges(object sender, NotifyCollectionChangedEventArgs e)
         {
             // Go to the bottom once, then set the behaviour to be false again. Otherwise it's a bit buggy with the header...
@@ -399,9 +404,12 @@ namespace SensFortress.View.Main.ViewModel
                 else if (buttonName == "AddLeafButton")
                 {
                     var newLeaf = new Leaf { Name = "(new)", BranchId = SelectedTreeViewItem.CurrentViewModel.Id, Description = "This is a new password!" };
+                    var exPw = ByteHelper.StringToByteArray("(new password)");
+                    var newLeafPw = new LeafPassword{ForeignId=newLeaf.Id, Value = exPw};
                     var newLeafVm = new LeafViewModel(newLeaf, this);
                     var newTreeItem = new TreeItemViewModel(newLeafVm, TreeDepth.Leaf, true);
                     DataAccessService.Instance.AddOneToMemoryDC(newLeaf);
+                    DataAccessService.Instance.AddOneToMemoryDC(null, true, newLeafPw);
                     SelectedTreeViewItem.Children.Add(newTreeItem);
                     SelectedTreeViewItem.IsExpanded = true;
                 }

@@ -92,15 +92,30 @@
                 <Setter Property="Width" Value="20"/>
             </Style>
 
-            
-            
+            <!--A triangle button-->
+            <Style x:Key="PolygonButtonStyle" TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="Black"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid>
+                                <Path Fill="{TemplateBinding Background}"
+                            Data="M 0,0 A 100,100 100 0 0 100,100 L 100,100 100,0" />
+                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <!--Converters-->
             
             <!--Bool to vis converter-->
             <converters:BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
             <!--Specific converter for Leaf/Branch in TreeVIew-->
             <converters:SpecificMultiBooleanToVisibilityConverter x:Key="MultiSpecificBoolToMultiCoverter"/>
-
 
         </ResourceDictionary>
     </Application.Resources>

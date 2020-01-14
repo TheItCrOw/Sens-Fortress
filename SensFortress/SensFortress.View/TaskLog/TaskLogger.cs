@@ -31,11 +31,27 @@ namespace SensFortress.View.TaskLog
         /// </summary>
         private HomeViewModel _currentHome;
 
-        public void SetHomeView(HomeViewModel homeVm) => _currentHome = homeVm;
+        public void SetHomeView(HomeViewModel homeVm)
+        {
+            _currentHome = homeVm;
+            // Subscribe to locked event
+            CurrentFortressData.FortressLockedStatusChanged += IsLocked_Changed;
+        }
+
+        /// <summary>
+        /// Track when the locked status changes.
+        /// </summary>
+        public void IsLocked_Changed()
+        {
+            if (CurrentFortressData.IsLocked)
+                Track("The fortress has been locked.");
+            else
+                Track("The fortress has been unlocked.");
+        }
 
         public void Track(string message)
         {
-            if(_currentHome == null)
+            if (_currentHome == null)
             {
                 Logger.log.Error("CurrentHome of TaskLogger hasn't been set.");
                 Communication.InformUser("An irregularity appeared while trying to work with the Task-Logger. Chances are that some actions may be missing.");

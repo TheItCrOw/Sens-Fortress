@@ -1,4 +1,8 @@
-﻿using SensFortress.View.Main.ViewModel;
+﻿using SensFortress.Data.Database;
+using SensFortress.Utility;
+using SensFortress.Utility.Exceptions;
+using SensFortress.Utility.Log;
+using SensFortress.View.Main.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,9 +23,11 @@ namespace SensFortress.View.Main.Views
     /// </summary>
     public partial class HomeView : UserControl
     {
+        private bool _pwIsHidden;
         public HomeView()
         {
             InitializeComponent();
+            _pwIsHidden = true;
         }
 
         public void ShowUnlockCard()
@@ -34,6 +40,58 @@ namespace SensFortress.View.Main.Views
             MasterLock_PasswordBox.Password = string.Empty;
             MasterLock_Textbox.Text = string.Empty;
             ((HomeViewModel)DataContext).ShowLockCard = false;
+        }
+
+        private void UnlockFortress_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var currentPw = string.Empty;
+
+                if (_pwIsHidden)
+                    currentPw = MasterLock_PasswordBox.Password;
+                else
+                    currentPw = MasterLock_Textbox.Text;
+
+                if(DataAccessService.Instance.ValidateMasterkey(currentPw))
+                {
+                    CurrentFortressData.IsLocked = false;
+                    MasterLock_PasswordBox.Password = string.Empty;
+                    MasterLock_Textbox.Text = string.Empty;
+                    ((HomeViewModel)DataContext).ShowLockCard = false;
+                }
+                else
+                {
+                    Communication.InformUser("You didn't say the magic words my friend.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Error while trying to unlock fortress: {ex}");
+                MasterLock_PasswordBox.Password = string.Empty;
+                MasterLock_Textbox.Text = string.Empty;
+                ex.SetUserMessage("An error occured while trying to unlock the fortress. The fortress will stay locked for now.");
+                CurrentFortressData.IsLocked = true;
+                Communication.InformUserAboutError(ex);
+            }
+        }
+
+        private void ShowHide_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (_pwIsHidden)
+            {
+                MasterLock_Textbox.Text = MasterLock_PasswordBox.Password;
+                MasterLock_PasswordBox.Visibility = Visibility.Collapsed;
+                MasterLock_Textbox.Visibility = Visibility.Visible;
+                _pwIsHidden = !_pwIsHidden;
+            }
+            else
+            {
+                MasterLock_PasswordBox.Password = MasterLock_Textbox.Text;
+                MasterLock_Textbox.Visibility = Visibility.Collapsed;
+                MasterLock_PasswordBox.Visibility = Visibility.Visible;
+                _pwIsHidden = !_pwIsHidden;
+            }
         }
     }
 }
