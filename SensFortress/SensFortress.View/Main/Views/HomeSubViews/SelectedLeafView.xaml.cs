@@ -27,14 +27,16 @@ namespace SensFortress.View.Main.Views.HomeSubViews
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Give the user the possibilty to unlock the fortress.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FrontContent_Button_Click(object sender, RoutedEventArgs e)
+        private void Edit_Button_Click(object sender, RoutedEventArgs e)
         {
-            Navigation.HomeManagementInstance.LockUnlockFortressCommand.Execute();
+            Password_Textblock.Visibility = Visibility.Collapsed;
+            Password_Textbox.Visibility = Visibility.Visible;
+        }
+
+        private void Password_Textbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Password_Textblock.Visibility = Visibility.Visible;
+            Password_Textbox.Visibility = Visibility.Collapsed;
         }
     }
 }

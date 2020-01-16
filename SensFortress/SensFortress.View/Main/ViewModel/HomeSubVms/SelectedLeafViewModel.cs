@@ -1,10 +1,13 @@
 ﻿using Prism.Commands;
 using SensFortress.Data.Database;
 using SensFortress.Models.Fortress;
+using SensFortress.Security;
 using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
+using SensFortress.View.Helper;
+using SensFortress.View.Main.Views.HomeSubViews;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -19,8 +22,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private string _password;
         private bool _isLocked;
         private bool _showContent;
+        private byte[] _encryptedPassword;
 
         public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
+        public DelegateCommand ShowUnlockCardCommand => new DelegateCommand(ShowUnlockCard);
+        public DelegateCommand EditPasswordCommand => new DelegateCommand(EditPassword);
         public TreeItemViewModel CurrentItem
         {
             get => _currentIten;
@@ -59,7 +65,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             {
                 SetProperty(ref _showContent, value);
                 _pwIsHidden = false;
-                Initialize();
+                ShowHidePassword();
             }
         }
 
@@ -72,7 +78,36 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         private void Initialize()
         {
+            LoadPassword();
             ShowHidePassword();
+        }
+
+        private void ShowUnlockCard() => Navigation.HomeManagementInstance.LockUnlockFortressCommand.Execute();
+
+        private void EditPassword()
+        {
+            var changePassordView = new ChangePasswordView(_encryptedPassword);
+            changePassordView.ShowDialog();
+            if (changePassordView.DialogResult == true)
+            {
+                _encryptedPassword = changePassordView.ChangedPasswordEncrypted;
+                _pwIsHidden = !_pwIsHidden;
+                CurrentItem.IsDirty = true;
+                ShowHidePassword();
+            }
+        }
+
+        private void LoadPassword()
+        {
+            if (DataAccessService.Instance.TryGetSensible<LeafPassword>(CurrentItem.CurrentViewModel.Id, out var leafPw))
+            {
+                _encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
+                leafPw = null;
+            }
+            else
+            {
+                Communication.InformUser($"There was a problem finding the password in the {TermHelper.GetDatabaseTerm()}.");
+            }
         }
 
         /// <summary>
@@ -84,11 +119,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             {
                 if (_pwIsHidden)
                 {
-                    if (DataAccessService.Instance.TryGetSensible<LeafPassword>(CurrentItem.CurrentViewModel.Id, out var leafPw))
-                    {
-                        Password = ByteHelper.ByteArrayToString(leafPw.Value);
-                        leafPw = null;
-                    }
+                    Password = ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword));
                     _pwIsHidden = false;
                 }
                 else

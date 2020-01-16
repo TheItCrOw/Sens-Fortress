@@ -36,7 +36,7 @@
             <materialDesign:PackIcon Kind="ShieldKey" Height="300" Width="300" Foreground="White" HorizontalAlignment="Center"/>
             <StackPanel Grid.Row="1">
                 <TextBlock Text="The fortress is currently locked up." Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                <Button x:Name="FrontContent_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" MaxWidth="400" Height="40" Click="FrontContent_Button_Click"
+                <Button x:Name="FrontContent_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" MaxWidth="400" Height="40" Command="{Binding ShowUnlockCardCommand}"
                                         BorderBrush="Black" BorderThickness="1" FontSize="20" Foreground="Black" FontFamily="Microsoft YaHei Light">
                     <materialDesign:PackIcon Kind="Key" Height="30" Width="30" HorizontalAlignment="Center"/>
                 </Button>
@@ -62,11 +62,12 @@
                 <StackPanel>
                     <DockPanel Margin="10 0 10 0" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Key" Width="25" Height="25" Margin="0 0 10 0"/>
-                        <TextBlock Margin="0 0 10 0" Style="{StaticResource CategoryTextblockStyle}" Text="{Binding Password}"/>
+                        <TextBlock x:Name="Password_Textblock" Margin="0 0 10 0" Text="{Binding Password}" Visibility="Visible" FontSize="20"/>
+                        <TextBox x:Name="Password_Textbox" Margin="0 0 10 0" LostFocus="Password_Textbox_LostFocus" Text="{Binding Password}" FontSize="20" Visibility="Collapsed"/>
                         <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}">
                             <materialDesign:PackIcon Kind="Show"/>
                         </Button>
-                        <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit">
+                        <Button x:Name="Edit_Button" Click="Edit_Button_Click" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" Command="{Binding EditPasswordCommand}">
                             <materialDesign:PackIcon Kind="Edit"/>
                         </Button>
                     </DockPanel>
@@ -93,6 +94,7 @@
                     <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>
                 </StackPanel>
             </materialDesign:DrawerHost.BottomDrawerContent>
+            
             <Grid >
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
@@ -106,63 +108,66 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Left}" BorderThickness="1 1 0 1"
-                            Grid.Row="1" Grid.Column="0" Height="200" Width="61" Margin="0 0 -0.8 0" Panel.ZIndex="1" Background="Black">
+                            Grid.Row="1" Grid.Column="0" Height="200" Width="61" Margin="0 0 -1 0" Panel.ZIndex="1" Background="Black">
                         <materialDesign:PackIcon Kind="ArrowLeftBold" Foreground="White" Height="30" Width="30"/>
                     </Button>
-                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Margin="0 0 0 -0.8" Panel.ZIndex="1" BorderThickness="1 1 1 0" 
-                            CommandParameter="{x:Static Dock.Top}" Grid.Row="0" Grid.Column="1" Width="200" Height="60" Background="Black">
-                        <materialDesign:PackIcon Kind="Key" Foreground="White" Height="30" Width="30"/>
+                    <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Margin="0 0 0 -1" Panel.ZIndex="1" BorderThickness="1 1 1 0" 
+                            CommandParameter="{x:Static Dock.Top}" Grid.Row="0" Grid.Column="1" Width="200" Height="61" Background="Black">
+                        <materialDesign:PackIcon Kind="ArrowUpBold" Foreground="White" Height="30" Width="30"/>
                     </Button>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Right}"
-                            Grid.Row="1" Grid.Column="2" Height="200" Width="60" Background="Black">
+                            Grid.Row="1" Grid.Column="2" Height="200" Width="61"  Margin="-1 0 0 0" BorderThickness="0 1 1 1" Panel.ZIndex="1" Background="Black">
                         <materialDesign:PackIcon Kind="ArrowRightBold" Foreground="White" Height="30" Width="30"/>
                     </Button>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Bottom}"
-                            Grid.Row="2" Grid.Column="1" Width="200" Height="60" Background="Black" Margin="0 0 0 -0.5" Panel.ZIndex="1" BorderThickness="1 0 1 1">
+                            Grid.Row="2" Grid.Column="1" Width="200" Height="61" Background="Black" Margin="0 0 0 -1" Panel.ZIndex="1" BorderThickness="1 0 1 1">
                         <materialDesign:PackIcon Kind="ArrowDownBold" Foreground="White" Width="30" Height="30"/>
                     </Button>
-                    <!--Core of Drawer with quickbuttons-->
-                    <!--<Grid Grid.Row="1" Grid.Column="1" Height="197" Width="197" VerticalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        --><!--copy password button--><!--
-                        <Button Width="90" Background="Black" Height="90" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionDarkButton}" ToolTip="Copy password">
-                            <materialDesign:PackIcon Kind="ContentCopy" Height="53" Width="53" Foreground="White"/>
-                        </Button>
-                        --><!--open link button--><!--
-                        <Button Grid.Column="1" Width="90" Background="Black" Height="90" BorderBrush="White" ToolTip="Open url"
-                                Style="{DynamicResource MaterialDesignFloatingActionDarkButton}">
-                            <materialDesign:PackIcon Kind="OpenInBrowser" Height="53" Width="53" Foreground="White" HorizontalAlignment="Center"/>
-                        </Button>
-                        --><!--...--><!--
-                        <Button Grid.Row="1" Width="90" Background="Black" Height="90" BorderBrush="White" ToolTip="..."
-                                Style="{DynamicResource MaterialDesignFloatingActionDarkButton}">
-                            <materialDesign:PackIcon Kind="OpenInBrowser" Height="53" Width="53" Foreground="White" HorizontalAlignment="Center"/>
-                        </Button>
-                        --><!--...--><!--
-                        <Button Grid.Column="1" Grid.Row="1" Width="90" Background="Black" Height="90" BorderBrush="White" ToolTip="..."
-                                Style="{DynamicResource MaterialDesignFloatingActionDarkButton}">
-                            <materialDesign:PackIcon Kind="OpenInBrowser" Height="53" Width="53" Foreground="White" HorizontalAlignment="Center"/>
-                        </Button>
-                    </Grid>-->
-                    
+                    <!--Core of drawer-->
+                    <!--This is a bit of a messy area since it's all cramped into the grid 1,1 with margins etc. But since we work with polygons, there is no other way around it.-->
                     
                     <!--left polygon-->
                     <Polygon Points="0 0 100 100 0 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
-                    <!--left icon-->
-                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 125 0" Foreground="White" 
-                                             Kind="OpenInBrowser" Height="50" Width="50"/>
+                    <!--left button-->
+                    <Button  ToolTip="Open url" Margin="0 0 125 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                             Background="White" BorderBrush="Black">
+                        <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
+                                             Kind="OpenInBrowser" />
+                    </Button>
+
                     <!--top poly-->
                     <Polygon Points="0 0 200 0 100 100" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
+                    <!--top button-->
+                    <Button ToolTip="Copy password" Margin="0 0 0 125" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                             Background="White" BorderBrush="Black">
+                        <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
+                                             Kind="ContentCopy" />
+                    </Button>
 
                     <!--down poly-->
                     <Polygon Points="100 100 0 200 200 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
+                    <!--down button-->
+                    <Button ToolTip="Dont know yet" Margin="0 125 0 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                             Background="White" BorderBrush="Black">
+                        <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
+                                             Kind="QuestionMark" />
+                    </Button>
+
+                    <!--right poly-->
+                    <Polygon Points="200 0 100 100 200 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
+                    <!--right button-->
+                    <Button ToolTip="Dont know yet" Margin="125 0 0 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                             Background="White" BorderBrush="Black">
+                        <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
+                                             Kind="QuestionMark" />
+                    </Button>
+                    
+                    <!--Open all drawer-->
+                    <Button ToolTip="Expand all" Grid.Row="1" Grid.Column="1" Height="30" Width="30" Style="{StaticResource TreeViewButtonStyle}" 
+                            Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Background="White" BorderBrush="Black">
+                        <materialDesign:PackIcon  VerticalAlignment="Center" Height="20" Width="20" HorizontalAlignment="Center" Foreground="Black" 
+                                             Kind="ArrowAll" />
+                    </Button>
                 </Grid>
             </Grid>
         </materialDesign:DrawerHost>
