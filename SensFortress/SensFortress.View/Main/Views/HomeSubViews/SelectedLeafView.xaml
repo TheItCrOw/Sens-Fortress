@@ -63,15 +63,11 @@
                     <DockPanel Margin="25 0 10 0" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Key" Width="25" Height="25" Margin="0 0 10 0"/>
                         <!--password textblock-->
-                        <TextBlock x:Name="Password_Textblock" Width="350" TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Password}" 
-                                   Visibility="Visible" FontSize="20"/>
-                        <!--password box-->
-                        <TextBox x:Name="Password_Textbox" Width="350" TextAlignment="Center" Margin="0 0 10 0" LostFocus="Password_Textbox_LostFocus" 
-                                 Text="{Binding Password}" FontSize="20" Visibility="Collapsed"/>
+                        <TextBlock x:Name="Password_Textblock" Width="350" TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Password}" FontSize="20"/>
                         <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}">
                             <materialDesign:PackIcon Kind="Show"/>
                         </Button>
-                        <Button x:Name="Edit_Button" Click="Edit_Button_Click" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" Command="{Binding EditPasswordCommand}">
+                        <Button x:Name="Edit_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" Command="{Binding EditPasswordCommand}">
                             <materialDesign:PackIcon Kind="Edit"/>
                         </Button>
                     </DockPanel>
@@ -85,17 +81,21 @@
 
             <materialDesign:DrawerHost.RightDrawerContent>
                 <StackPanel>
-                    <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Title Right" Style="{StaticResource InformationTextblockStyle}"/>
-                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Right}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close this"/>
-                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>
+                    <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Username" Style="{StaticResource InformationTextblockStyle}"/>
+                    <TextBlock x:Name="Username_Textblock" TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Username}" Style="{StaticResource CategoryTextblockStyle}"/>
+                    <!--Should be last-->
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Right}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}">
+                        <materialDesign:PackIcon Kind="ArrowLeftBold" Height="30" Width="30" />
+                    </Button>
                 </StackPanel>
             </materialDesign:DrawerHost.RightDrawerContent>
 
             <materialDesign:DrawerHost.BottomDrawerContent>
                 <StackPanel>
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Bottom}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}">
+                        <materialDesign:PackIcon Kind="ArrowUpBold" Height="30" Width="30"/>
+                    </Button>
                     <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Title Bottom" Style="{StaticResource InformationTextblockStyle}"/>
-                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Bottom}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close this"/>
-                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>
                 </StackPanel>
             </materialDesign:DrawerHost.BottomDrawerContent>
             
@@ -151,10 +151,10 @@
                     <!--down poly-->
                     <Polygon Points="100 100 0 200 200 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
                     <!--down button-->
-                    <Button ToolTip="Dont know yet" Margin="0 125 0 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                    <Button ToolTip="Maybe get file?" Margin="0 125 0 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
                              Background="White" BorderBrush="Black">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
-                                             Kind="QuestionMark" />
+                                             Kind="File" />
                     </Button>
 
                     <!--right poly-->

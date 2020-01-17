@@ -25,6 +25,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private bool _showContent;
         private byte[] _encryptedPassword;
         private HomeViewModel _currentBase;
+        private string _userName;
 
         public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
         public DelegateCommand ShowUnlockCardCommand => new DelegateCommand(ShowUnlockCard);
@@ -43,6 +44,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             set
             {
                 SetProperty(ref _password, value);
+            }
+        }
+        public string Username
+        {
+            get => _userName;
+            set
+            {
+                SetProperty(ref _userName, value);
             }
         }
         /// <summary>
@@ -73,10 +82,19 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         public SelectedLeafViewModel(TreeItemViewModel selectedLeaf, ViewModelManagementBase currentBase)
         {
-            CurrentItem = selectedLeaf;
-            _pwIsHidden = false;
-            _currentBase = (HomeViewModel)currentBase;
-            Initialize();
+            if(selectedLeaf.CurrentViewModel is LeafViewModel leafVm)
+            {
+                CurrentItem = selectedLeaf;
+                _pwIsHidden = false;
+                _currentBase = (HomeViewModel)currentBase;
+                Username = leafVm.Username;
+                Initialize();
+            }
+            else
+            {
+                Logger.log.Error("A non LeafViewModel has been found in the SelectedLeafViewModel. Aborting task.");
+                Communication.InformUser("There was a problem executing the logic of the selected item.");
+            }
         }
 
         private void Initialize()

@@ -26,17 +26,5 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         {
             InitializeComponent();
         }
-
-        private void Edit_Button_Click(object sender, RoutedEventArgs e)
-        {
-            Password_Textblock.Visibility = Visibility.Collapsed;
-            Password_Textbox.Visibility = Visibility.Visible;
-        }
-
-        private void Password_Textbox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Password_Textblock.Visibility = Visibility.Visible;
-            Password_Textbox.Visibility = Visibility.Collapsed;
-        }
     }
 }
