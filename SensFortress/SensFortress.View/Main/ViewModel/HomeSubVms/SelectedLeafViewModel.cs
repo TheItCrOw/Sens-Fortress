@@ -18,7 +18,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 {
     public class SelectedLeafViewModel : ViewModelManagementBase
     {
-        private TreeItemViewModel _currentIten;
+        private TreeItemViewModel _currentItem;
         private bool _pwIsHidden;
         private string _password;
         private bool _isLocked;
@@ -32,10 +32,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand EditPasswordCommand => new DelegateCommand(EditPassword);
         public TreeItemViewModel CurrentItem
         {
-            get => _currentIten;
+            get => _currentItem;
             set
             {
-                SetProperty(ref _currentIten, value);
+                SetProperty(ref _currentItem, value);
             }
         }
         public string Password
@@ -52,8 +52,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             set
             {
                 SetProperty(ref _userName, value);
+                CurrentItem.HandleChangeableProperties(nameof(Username), Username);
             }
         }
+
         /// <summary>
         /// Determines whether the fortress is currently locked.
         /// </summary>
@@ -89,6 +91,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 _currentBase = (HomeViewModel)currentBase;
                 Username = leafVm.Username;
                 Initialize();
+                CurrentItem.IsDirty = false;
             }
             else
             {
@@ -103,8 +106,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             ShowHidePassword();
         }
 
+        /// <summary>
+        /// Give user oppurtunity to unlock fortress
+        /// </summary>
         private void ShowUnlockCard() => Navigation.HomeManagementInstance.LockUnlockFortressCommand.Execute();
 
+        /// <summary>
+        /// When user wants to edit the password. We handle that explicitly.
+        /// </summary>
         private void EditPassword()
         {
             try
@@ -123,8 +132,8 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                         leafVm.LeafPasswordCopy = leafPw;
                     }
                     CurrentItem.IsDirty = true;
-                    TaskLogger.Instance.Track($"Changed password of {CurrentItem.Name}");
                     _currentBase.ChangesTracker++;
+                    TaskLogger.Instance.Track($"{CurrentItem.Name}: Changed password.");
                     ShowHidePassword();
                 }
             }
@@ -137,6 +146,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         }
 
+        /// <summary>
+        /// Initially load the password
+        /// </summary>
         private void LoadPassword()
         {
             if (DataAccessService.Instance.TryGetSensible<LeafPassword>(CurrentItem.CurrentViewModel.Id, out var leafPw))

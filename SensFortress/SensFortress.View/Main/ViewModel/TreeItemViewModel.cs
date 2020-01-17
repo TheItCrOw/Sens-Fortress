@@ -47,8 +47,7 @@ namespace SensFortress.View.Main.ViewModel
             {
                 IsDirty = false;
             }
-        }
-
+        
         public TreeDepth TreeType { get; set; }
         public string Name
         {
@@ -131,7 +130,6 @@ namespace SensFortress.View.Main.ViewModel
         }
         public ViewModelBase CurrentViewModel { get; }
 
-
         /// <summary>
         /// This informs the model that is being saved in the end about changes made in the UI.
         /// </summary>
@@ -147,17 +145,24 @@ namespace SensFortress.View.Main.ViewModel
                 if (prop.Name == propName)
                 {
                     var from = prop.GetValue(CurrentViewModel.Model);
+                    // When no change happened return.
+                    if (from == change)
+                        return;
+
+                    IsDirty = true;
+                    ((HomeViewModel)CurrentViewModel.CurrentBase).ChangesTracker++;
                     TaskLogger.Instance.Track($"{Name}: Changed the {prop.Name} from {from} to {change}.");
                     prop.SetValue(CurrentViewModel.Model, change);
                 }
             }
         }
+
         /// <summary>
         /// Handles flags and updating of the properties to model.
         /// </summary>
         /// <param name="propName"></param>
         /// <param name="change"></param>
-        private void HandleChangeableProperties(string propName, object change)
+        public void HandleChangeableProperties(string propName, object change)
         {
             if (!_setInitialProperties)
             {
@@ -165,7 +170,6 @@ namespace SensFortress.View.Main.ViewModel
             }
             else
             {
-                IsDirty = true;
                 UpdateChangesToModel(propName, change);
             }
         }

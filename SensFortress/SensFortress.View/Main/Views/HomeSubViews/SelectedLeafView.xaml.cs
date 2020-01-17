@@ -22,9 +22,45 @@ namespace SensFortress.View.Main.Views.HomeSubViews
     /// </summary>
     public partial class SelectedLeafView : UserControl
     {
+        private string _usernameSnapshot;
+        private bool _hasAlreadyInformedDataContext;
+
         public SelectedLeafView()
         {
             InitializeComponent();
+        }
+
+        private void EditUsername_Button_Click(object sender, RoutedEventArgs e)
+        {
+            _usernameSnapshot = Username_Textblock.Text;
+            _hasAlreadyInformedDataContext = false;
+            Username_Textbox.Visibility = Visibility.Visible;
+            Username_Textblock.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// For handling edit username
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Username_Textbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Username_Textbox.Visibility = Visibility.Collapsed;
+            Username_Textblock.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// For handling edit username
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Username_Textbox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                Username_Textbox.Visibility = Visibility.Collapsed;
+                Username_Textblock.Visibility = Visibility.Visible;
+            }
         }
     }
 }
