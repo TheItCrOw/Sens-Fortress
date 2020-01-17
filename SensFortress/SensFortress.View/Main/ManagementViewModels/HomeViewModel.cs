@@ -404,7 +404,11 @@ namespace SensFortress.View.Main.ViewModel
             {
                 if (buttonName == "AddBranchButton")
                 {
-                    var newBranch = new Branch { Name = "(new)", ParentBranchId = SelectedTreeViewItem.CurrentViewModel.Id };
+                    var newBranch = new Branch 
+                    { 
+                        Name = "(new)", 
+                        ParentBranchId = SelectedTreeViewItem.CurrentViewModel.Id 
+                    };
                     var newBranchVm = new BranchViewModel(newBranch, this);
                     var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Branch, true);
                     DataAccessService.Instance.AddOneToMemoryDC(newBranch); // Store the newly created model into the MemoryDc.
@@ -413,7 +417,13 @@ namespace SensFortress.View.Main.ViewModel
                 }
                 else if (buttonName == "AddLeafButton")
                 {
-                    var newLeaf = new Leaf { Name = "(new)", BranchId = SelectedTreeViewItem.CurrentViewModel.Id, Description = "This is a new password!" };
+                    var newLeaf = new Leaf
+                    {
+                        Name = "(new)",
+                        BranchId = SelectedTreeViewItem.CurrentViewModel.Id,
+                        Description = "This is a new password!",
+                        Username = "username123"
+                    };
                     var exPw = ByteHelper.StringToByteArray("(new password)");
                     var newLeafPw = new LeafPassword{ForeignId=newLeaf.Id, Value = exPw};
                     var newLeafVm = new LeafViewModel(newLeaf, this);

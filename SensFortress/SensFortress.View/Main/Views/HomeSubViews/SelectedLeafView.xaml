@@ -113,19 +113,19 @@
                     </Grid.ColumnDefinitions>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Left}" BorderThickness="1 1 0 1"
                             Grid.Row="1" Grid.Column="0" Height="200" Width="61" Margin="0 0 -1 0" Panel.ZIndex="1" Background="Black">
-                        <materialDesign:PackIcon Kind="ArrowLeftBold" Foreground="White" Height="30" Width="30"/>
+                        <materialDesign:PackIcon Kind="Edit" Foreground="White" Height="30" Width="30"/>
                     </Button>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Margin="0 0 0 -1" Panel.ZIndex="1" BorderThickness="1 1 1 0" 
                             CommandParameter="{x:Static Dock.Top}" Grid.Row="0" Grid.Column="1" Width="200" Height="61" Background="Black">
-                        <materialDesign:PackIcon Kind="ArrowUpBold" Foreground="White" Height="30" Width="30"/>
+                        <materialDesign:PackIcon Kind="Edit" Foreground="White" Height="30" Width="30"/>
                     </Button>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Right}"
                             Grid.Row="1" Grid.Column="2" Height="200" Width="61"  Margin="-1 0 0 0" BorderThickness="0 1 1 1" Panel.ZIndex="1" Background="Black">
-                        <materialDesign:PackIcon Kind="ArrowRightBold" Foreground="White" Height="30" Width="30"/>
+                        <materialDesign:PackIcon Kind="Edit" Foreground="White" Height="30" Width="30"/>
                     </Button>
                     <Button Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Bottom}"
-                            Grid.Row="2" Grid.Column="1" Width="200" Height="61" Background="Black" Margin="0 0 0 -1" Panel.ZIndex="1" BorderThickness="1 0 1 1">
-                        <materialDesign:PackIcon Kind="ArrowDownBold" Foreground="White" Width="30" Height="30"/>
+                            Grid.Row="2" Grid.Column="1" Width="200" Height="61" Margin="0 -1 0 0" Background="Black" Panel.ZIndex="1" BorderThickness="1 0 1 1">
+                        <materialDesign:PackIcon Kind="Edit" Foreground="White" Width="30" Height="30"/>
                     </Button>
                     <!--Core of drawer-->
                     <!--This is a bit of a messy area since it's all cramped into the grid 1,1 with margins etc. But since we work with polygons, there is no other way around it.-->
@@ -133,19 +133,19 @@
                     <!--left polygon-->
                     <Polygon Points="0 0 100 100 0 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
                     <!--left button-->
-                    <Button  ToolTip="Open url" Margin="0 0 125 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                    <Button  ToolTip="Log into page" Margin="0 0 125 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
                              Background="White" BorderBrush="Black">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
-                                             Kind="OpenInBrowser" />
+                                             Kind="Login" />
                     </Button>
 
                     <!--top poly-->
                     <Polygon Points="0 0 200 0 100 100" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
                     <!--top button-->
-                    <Button ToolTip="Copy password" Margin="0 0 0 125" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                    <Button ToolTip="Get password" Margin="0 0 0 125" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
                              Background="White" BorderBrush="Black">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
-                                             Kind="ContentCopy" />
+                                             Kind="Key" />
                     </Button>
 
                     <!--down poly-->
@@ -160,10 +160,10 @@
                     <!--right poly-->
                     <Polygon Points="200 0 100 100 200 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
                     <!--right button-->
-                    <Button ToolTip="Dont know yet" Margin="125 0 0 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                    <Button ToolTip="Get Username" Margin="125 0 0 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
                              Background="White" BorderBrush="Black">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
-                                             Kind="QuestionMark" />
+                                             Kind="User" />
                     </Button>
                     
                     <!--Open all drawer-->

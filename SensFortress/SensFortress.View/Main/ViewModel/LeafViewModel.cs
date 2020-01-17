@@ -11,6 +11,7 @@ namespace SensFortress.View.Main.ViewModel
     {
         private string _name;
         private string _description;
+        private string _userName;
 
         public LeafViewModel(Leaf model, ViewModelManagementBase currentBase)
         {
@@ -20,26 +21,29 @@ namespace SensFortress.View.Main.ViewModel
             Name = model.Name;
             Description = model.Description;
             CurrentBase = currentBase;
+            Username = model.Username;
         }
         public Guid BranchId { get; set; }
         public LeafPassword LeafPasswordCopy { get; set; }
         public string Name
         {
-            get
-            {
-                return _name;
-            }
+            get => _name;
             set
             {
                 SetProperty(ref _name, value);
             }
         }
+        public string Username
+        {
+            get => _userName;            
+            set
+            {
+                SetProperty(ref _userName, value);
+            }
+        }
         public string Description
         {
-            get
-            {
-                return _description;
-            }
+            get => _description;
             set
             {
                 SetProperty(ref _description, value);

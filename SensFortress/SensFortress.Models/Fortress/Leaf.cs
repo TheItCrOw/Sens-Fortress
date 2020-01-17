@@ -27,5 +27,8 @@ namespace SensFortress.Models.Fortress
         [DataMember]
         public string Description { get; set; }
 
+        [DataMember]
+        public string Username { get; set; }
+
     }
 }
