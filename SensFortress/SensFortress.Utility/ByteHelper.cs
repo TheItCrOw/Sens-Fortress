@@ -96,5 +96,23 @@ namespace SensFortress.Utility
             }
         }
 
+        /// <summary>
+        /// Compares 2 byte arrays and returns false if they are different.
+        /// </summary>
+        /// <param name="a1"></param>
+        /// <param name="a2"></param>
+        /// <returns></returns>
+        public static bool ByteArrayCompare(byte[] a1, byte[] a2)
+        {
+            if (a1.Length != a2.Length)
+                return false;
+
+            for (int i = 0; i < a1.Length; i++)
+                if (a1[i] != a2[i])
+                    return false;
+
+            return true;
+        }
+
     }
 }

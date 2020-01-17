@@ -145,6 +145,17 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
+        /// Delets a sensible Model from the secureDC
+        /// </summary>
+        /// <param name="foreignKey"></param>
+        /// <param name="modelBytes"></param>
+        internal void DeleteOneFromSecureMemoryDC(Guid foreignKey)
+        {
+            CheckDatacache();
+            _secureDatacache.Remove(foreignKey);
+        }
+
+        /// <summary>
         /// Add a <see cref="ModelBase"/> to the unsecureMemoryDc
         /// </summary>
         /// <param name="modelBytes"></param>
@@ -267,7 +278,7 @@ namespace SensFortress.Data.Database
         {
             try
             {
-                Logger.log.Info("Starting to build a new fortress...");
+                Logger.log.Info("Starting to write a fortress...");
                 var databasePath = Path.Combine(fortress.FullPath, TermHelper.GetDatabaseTerm());
 
                 // =========================================================== Create the root directory
@@ -329,7 +340,7 @@ namespace SensFortress.Data.Database
                 Directory.Delete(fortress.FullPath, true);
                 Logger.log.Debug("Fortress has been zipped.");
 
-                Logger.log.Info("Fortress has been sucessfully built!");
+                Logger.log.Info("Fortress has been sucessfully written!");
             }
             catch (Exception ex)
             {

@@ -8,6 +8,7 @@ using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
 using SensFortress.View.Helper;
 using SensFortress.View.Main.Views.HomeSubViews;
+using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -23,6 +24,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private bool _isLocked;
         private bool _showContent;
         private byte[] _encryptedPassword;
+        private HomeViewModel _currentBase;
 
         public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
         public DelegateCommand ShowUnlockCardCommand => new DelegateCommand(ShowUnlockCard);
@@ -69,10 +71,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             }
         }
 
-        public SelectedLeafViewModel(TreeItemViewModel selectedLeaf)
+        public SelectedLeafViewModel(TreeItemViewModel selectedLeaf, ViewModelManagementBase currentBase)
         {
             CurrentItem = selectedLeaf;
             _pwIsHidden = false;
+            _currentBase = (HomeViewModel)currentBase;
             Initialize();
         }
 
@@ -86,15 +89,34 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         private void EditPassword()
         {
-            var changePassordView = new ChangePasswordView(_encryptedPassword);
-            changePassordView.ShowDialog();
-            if (changePassordView.DialogResult == true)
+            try
             {
-                _encryptedPassword = changePassordView.ChangedPasswordEncrypted;
-                _pwIsHidden = !_pwIsHidden;
-                CurrentItem.IsDirty = true;
-                ShowHidePassword();
+                var changePassordView = new ChangePasswordView(_encryptedPassword);
+                changePassordView.ShowDialog();
+                if (changePassordView.DialogResult == true)
+                {
+                    // Encrypt pw again
+                    _encryptedPassword = changePassordView.ChangedPasswordEncrypted;
+                    _pwIsHidden = !_pwIsHidden;
+                    // For saving's sake: Fill the LeafPassword of the current leafViewModel with the new pw. But encrypted!
+                    if(CurrentItem.CurrentViewModel is LeafViewModel leafVm)
+                    {
+                        var leafPw = new LeafPassword { ForeignId = CurrentItem.CurrentViewModel.Id, EncryptedValue = _encryptedPassword };
+                        leafVm.LeafPasswordCopy = leafPw;
+                    }
+                    CurrentItem.IsDirty = true;
+                    TaskLogger.Instance.Track($"Changed password of {CurrentItem.Name}");
+                    _currentBase.ChangesTracker++;
+                    ShowHidePassword();
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Error while editing password: {ex}");
+                ex.SetUserMessage("An error occured while trying to edit the password. The memory is being flushed to prevent any leaks.");
+                Communication.InformUserAboutError(ex);
+            }
+
         }
 
         private void LoadPassword()

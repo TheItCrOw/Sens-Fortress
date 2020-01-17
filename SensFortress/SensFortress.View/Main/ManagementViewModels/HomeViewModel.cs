@@ -1,8 +1,10 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using SensFortress.Data.Database;
+using SensFortress.Models.BaseClasses;
 using SensFortress.Models.Fortress;
 using SensFortress.Models.ViewModels;
+using SensFortress.Security;
 using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
@@ -165,7 +167,7 @@ namespace SensFortress.View.Main.ViewModel
             else if (SelectedTreeViewItem.TreeType == TreeDepth.Leaf)
             {
                 var leafView = new SelectedLeafView();
-                leafView.DataContext = new SelectedLeafViewModel(SelectedTreeViewItem);
+                leafView.DataContext = new SelectedLeafViewModel(SelectedTreeViewItem, this);
                 SelectedContent = leafView;
             }
         }
@@ -236,6 +238,17 @@ namespace SensFortress.View.Main.ViewModel
         {
             if (item.IsDirty)
             {
+                // If the dirty item is a leaf and the LeafPasswordCopy isnt null => password has been changed.
+                // So save the sensible part in the secureDC
+                if(item.CurrentViewModel is LeafViewModel leafVm && leafVm.LeafPasswordCopy != null)
+                {
+                    // For transporting sake, we encrypt the value of the leafPwCopy beforehand. When adding to secureDC tho => decrypt it. It gets encrypted again anyways.
+                    if (leafVm.LeafPasswordCopy.EncryptedValue != null)
+                        leafVm.LeafPasswordCopy.Value = CryptMemoryProtection.DecryptInMemoryData(leafVm.LeafPasswordCopy.EncryptedValue);
+
+                    DataAccessService.Instance.DeleteOneFromMemoryDC(null, true, leafVm.LeafPasswordCopy);
+                    DataAccessService.Instance.AddOneToMemoryDC(null, true, leafVm.LeafPasswordCopy);
+                }
                 DataAccessService.Instance.DeleteOneFromMemoryDC(item.CurrentViewModel.Model);
                 DataAccessService.Instance.AddOneToMemoryDC(item.CurrentViewModel.Model);
             }
@@ -377,10 +390,7 @@ namespace SensFortress.View.Main.ViewModel
         /// <summary>
         /// Marks the TreeItem as editable
         /// </summary>
-        private void EditTreeItem()
-        {
-            UpdateRootNodes(true, true);
-        }
+        private void EditTreeItem() => UpdateRootNodes(true, true);        
 
         /// <summary>
         /// Adds a new object to the currently selected treeItem

@@ -142,11 +142,12 @@ namespace SensFortress.Data.Database
         /// </summary>
         /// <param name="model"></param>
         /// <param name="isSensibleData"></param>
-        public void DeleteOneFromMemoryDC(ModelBase model, bool isSensibleData = false)
+        public void DeleteOneFromMemoryDC(ModelBase model, bool isSensibleData = false, SensibleModelBase sensibleModel = null)
         {
             if (!isSensibleData)
                 _xmlDatacache.DeleteOneFromUnsecureMemoryDC(model);
-            else { } // Implement sensible part later
+            else
+                _xmlDatacache.DeleteOneFromSecureMemoryDC(sensibleModel.ForeignId);
         }
 
         /// <summary>

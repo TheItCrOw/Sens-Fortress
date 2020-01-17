@@ -16,5 +16,7 @@ namespace SensFortress.Models.Fortress
         }
         public byte[] Value { get; set; }
 
+        public byte[] EncryptedValue { get; set; }
+
     }
 }

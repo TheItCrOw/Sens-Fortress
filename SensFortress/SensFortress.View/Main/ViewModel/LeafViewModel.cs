@@ -22,6 +22,7 @@ namespace SensFortress.View.Main.ViewModel
             CurrentBase = currentBase;
         }
         public Guid BranchId { get; set; }
+        public LeafPassword LeafPasswordCopy { get; set; }
         public string Name
         {
             get
@@ -44,6 +45,5 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _description, value);
             }
         }
-        public string Password { get; set; }
     }
 }

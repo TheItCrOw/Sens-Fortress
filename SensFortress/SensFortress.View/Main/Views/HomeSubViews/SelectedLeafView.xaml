@@ -60,10 +60,14 @@
             <!--Shows password-->
             <materialDesign:DrawerHost.TopDrawerContent>
                 <StackPanel>
-                    <DockPanel Margin="10 0 10 0" HorizontalAlignment="Center">
+                    <DockPanel Margin="25 0 10 0" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Key" Width="25" Height="25" Margin="0 0 10 0"/>
-                        <TextBlock x:Name="Password_Textblock" Margin="0 0 10 0" Text="{Binding Password}" Visibility="Visible" FontSize="20"/>
-                        <TextBox x:Name="Password_Textbox" Margin="0 0 10 0" LostFocus="Password_Textbox_LostFocus" Text="{Binding Password}" FontSize="20" Visibility="Collapsed"/>
+                        <!--password textblock-->
+                        <TextBlock x:Name="Password_Textblock" Width="350" TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Password}" 
+                                   Visibility="Visible" FontSize="20"/>
+                        <!--password box-->
+                        <TextBox x:Name="Password_Textbox" Width="350" TextAlignment="Center" Margin="0 0 10 0" LostFocus="Password_Textbox_LostFocus" 
+                                 Text="{Binding Password}" FontSize="20" Visibility="Collapsed"/>
                         <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}">
                             <materialDesign:PackIcon Kind="Show"/>
                         </Button>
