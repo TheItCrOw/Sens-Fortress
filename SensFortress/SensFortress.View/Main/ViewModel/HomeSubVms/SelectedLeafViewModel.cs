@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SensFortress.View.Main.ViewModel.HomeSubVms
 {
@@ -34,6 +35,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand EditPasswordCommand => new DelegateCommand(EditPassword);
         public DelegateCommand CopyPasswordToClipboardCommand => new DelegateCommand(CopyPasswordToClipboard);
         public DelegateCommand CopyUsernameToClipboardCommand => new DelegateCommand(CopyUsernameToClipboard);
+        public DelegateCommand OpenUrlWithLoginCommand => new DelegateCommand(OpenUrlWithLogin);
         public TreeItemViewModel CurrentItem
         {
             get => _currentItem;
@@ -119,6 +121,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             LoadPassword();
             ShowHidePassword();
+        }
+
+        private void OpenUrlWithLogin()
+        {
+
         }
 
         /// <summary>

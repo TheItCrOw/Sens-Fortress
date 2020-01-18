@@ -15,6 +15,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <COMReference Include="MSHTML.dll">
+      <Guid>3050f1c5-98b5-11cf-bb82-00aa00bdce0b</Guid>
+      <VersionMajor>4</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
     <PackageReference Include="Prism.Core" Version="7.2.0.1422" />
   </ItemGroup>

@@ -26,6 +26,9 @@
         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="Transparent">
             <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="{Binding CurrentItem.Name}" Margin="10 10 10 15"/>
         </materialDesign:Card>
+        
+        <!--TESTING-->
+        <WebBrowser x:Name="Webbrowser" Source="https://server.nitrado.net/deu/gameserver-mieten" LoadCompleted="Webbrowser_LoadCompleted" Grid.Row="1" />
 
         <!--if the fortress is locked -> show this content-->
         <Grid Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -169,8 +172,8 @@
                     <!--left polygon-->
                     <Polygon Points="0 0 100 100 0 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
                     <!--left button-->
-                    <Button  ToolTip="Log into page" Margin="0 0 125 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
-                             Background="White" BorderBrush="Black">
+                    <Button  x:Name="LogintoBrowser_Button" ToolTip="Log into page" Margin="0 0 125 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
+                             Background="White" BorderBrush="Black" Command="{Binding OpenUrlWithLoginCommand}" Click="LogintoBrowser_Button_Click">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
                                              Kind="Login" />
                     </Button>
