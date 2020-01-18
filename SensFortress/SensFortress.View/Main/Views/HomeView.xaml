@@ -244,16 +244,7 @@
             <!--Gridsplitter 1-->
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="Black"/>
 
-            <!--middle menu-->
-            <!--<ListView ItemsSource="{Binding Items1}" Grid.Column="2">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Code}" Header="Name"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Created"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Password" />
-                    </GridView>
-                </ListView.View>
-            </ListView>-->
+            <!--Middle menu content-->
             <Frame x:Name="SelectedView_Frame" Grid.Column="2" Content="{Binding SelectedContent}"/>
 
             <!--Gridsplitter 2-->

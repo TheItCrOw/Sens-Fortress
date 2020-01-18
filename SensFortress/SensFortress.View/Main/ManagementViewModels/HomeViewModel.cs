@@ -286,6 +286,7 @@ namespace SensFortress.View.Main.ViewModel
                         {
                             TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted.");
 
+                            // Delete all children first
                             foreach (var child in SelectedTreeViewItem.Children)
                                 DeleteAllChildren(child);
 
@@ -384,7 +385,10 @@ namespace SensFortress.View.Main.ViewModel
             }
 
             if (foundItem)
+            {
                 Application.Current.Dispatcher.Invoke(() => currentNode.Children.Remove(deletableItem));
+                DataAccessService.Instance.DeleteOneFromMemoryDC(deletableItem.CurrentViewModel.Model);
+            }
         }
 
         /// <summary>

@@ -306,8 +306,13 @@ namespace SensFortress.Data.Database
 
                 foreach(var pair in _secureDatacache)
                 {
-                    var byteModel = new ByteModel(pair.Key, pair.Value);
-                    StoreOne(null, true, byteModel);
+                    // We filter: Only if the sensible data has a parent we want to save it. Otherwise the parent has been deleted,
+                    // which makes the sensible counterpart useless.
+                    if (_unsecureDatacache.Values.Any(l => l.Any(m => m.Id == pair.Key)))
+                    {
+                        var byteModel = new ByteModel(pair.Key, pair.Value);
+                        StoreOne(null, true, byteModel);
+                    }
                 }
 
                 Logger.log.Debug("Stored fortress information.");

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
+using System.Windows;
 
 namespace SensFortress.View.Main.ViewModel.HomeSubVms
 {
@@ -31,6 +32,8 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
         public DelegateCommand ShowUnlockCardCommand => new DelegateCommand(ShowUnlockCard);
         public DelegateCommand EditPasswordCommand => new DelegateCommand(EditPassword);
+        public DelegateCommand CopyPasswordToClipboardCommand => new DelegateCommand(CopyPasswordToClipboard);
+        public DelegateCommand CopyUsernameToClipboardCommand => new DelegateCommand(CopyUsernameToClipboard);
         public TreeItemViewModel CurrentItem
         {
             get => _currentItem;
@@ -94,15 +97,16 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         public SelectedLeafViewModel(TreeItemViewModel selectedLeaf, ViewModelManagementBase currentBase)
         {
-            if(selectedLeaf.CurrentViewModel is LeafViewModel leafVm)
+            if (selectedLeaf.CurrentViewModel is LeafViewModel leafVm)
             {
                 CurrentItem = selectedLeaf;
+                var storeIsDirty = CurrentItem.IsDirty;
                 _pwIsHidden = false;
                 _currentBase = (HomeViewModel)currentBase;
                 Username = leafVm.Username;
                 Description = leafVm.Description;
                 Initialize();
-                CurrentItem.IsDirty = false;
+                CurrentItem.IsDirty = storeIsDirty;
             }
             else
             {
@@ -117,6 +121,22 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             ShowHidePassword();
         }
 
+        /// <summary>
+        /// Copies the password to the clipboard.
+        /// </summary>
+        private void CopyPasswordToClipboard()
+        {
+            Clipboard.SetText(ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword)));
+            TaskLogger.Instance.Track($"{CurrentItem.Name}: Password has been copied.");
+        }
+        /// <summary>
+        /// Copies the username to the clipboard.
+        /// </summary>
+        private void CopyUsernameToClipboard()
+        {
+            Clipboard.SetText(Username);
+            TaskLogger.Instance.Track($"{CurrentItem.Name}: Username has been copied.");
+        }
         /// <summary>
         /// Give user oppurtunity to unlock fortress
         /// </summary>
@@ -137,7 +157,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                     _encryptedPassword = changePassordView.ChangedPasswordEncrypted;
                     _pwIsHidden = !_pwIsHidden;
                     // For saving's sake: Fill the LeafPassword of the current leafViewModel with the new pw. But encrypted!
-                    if(CurrentItem.CurrentViewModel is LeafViewModel leafVm)
+                    if (CurrentItem.CurrentViewModel is LeafViewModel leafVm)
                     {
                         var leafPw = new LeafPassword { ForeignId = CurrentItem.CurrentViewModel.Id, EncryptedValue = _encryptedPassword };
                         leafVm.LeafPasswordCopy = leafPw;

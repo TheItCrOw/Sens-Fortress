@@ -57,14 +57,6 @@ namespace SensFortress.View.Opening_Dialogs.Views
         {
             var result = false;
 
-            // => This can be deleted later, it's only for testing.
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            while (stopwatch.Elapsed < TimeSpan.FromSeconds(2))
-                ;
-            // <= Testing
-
             result = DataAccessService.Instance.BuildFortress(fortressVm.FullName, fortressVm.Name, pw);
 
             if (result)
