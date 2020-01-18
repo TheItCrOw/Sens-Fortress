@@ -47,7 +47,7 @@ namespace SensFortress.View.Main.ViewModel
             {
                 IsDirty = false;
             }
-        
+        }
         public TreeDepth TreeType { get; set; }
         public string Name
         {

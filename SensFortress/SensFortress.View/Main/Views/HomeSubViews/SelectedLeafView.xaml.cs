@@ -22,18 +22,14 @@ namespace SensFortress.View.Main.Views.HomeSubViews
     /// </summary>
     public partial class SelectedLeafView : UserControl
     {
-        private string _usernameSnapshot;
-        private bool _hasAlreadyInformedDataContext;
-
         public SelectedLeafView()
         {
             InitializeComponent();
         }
 
+        #region Edit Username
         private void EditUsername_Button_Click(object sender, RoutedEventArgs e)
         {
-            _usernameSnapshot = Username_Textblock.Text;
-            _hasAlreadyInformedDataContext = false;
             Username_Textbox.Visibility = Visibility.Visible;
             Username_Textblock.Visibility = Visibility.Collapsed;
         }
@@ -62,5 +58,39 @@ namespace SensFortress.View.Main.Views.HomeSubViews
                 Username_Textblock.Visibility = Visibility.Visible;
             }
         }
+        #endregion
+
+        #region Edit Description
+        private void EditDescription_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Description_Textbox.Visibility = Visibility.Visible;
+            Description_Textblock.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// For handling edit description
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Description_Textbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Description_Textbox.Visibility = Visibility.Collapsed;
+            Description_Textblock.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// For handling edit description
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Description_Textbox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Description_Textbox.Visibility = Visibility.Collapsed;
+                Description_Textblock.Visibility = Visibility.Visible;
+            }
+        }
+        #endregion
     }
 }

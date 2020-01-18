@@ -26,6 +26,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private byte[] _encryptedPassword;
         private HomeViewModel _currentBase;
         private string _userName;
+        private string _description;
 
         public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
         public DelegateCommand ShowUnlockCardCommand => new DelegateCommand(ShowUnlockCard);
@@ -53,6 +54,15 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             {
                 SetProperty(ref _userName, value);
                 CurrentItem.HandleChangeableProperties(nameof(Username), Username);
+            }
+        }
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                SetProperty(ref _description, value);
+                CurrentItem.HandleChangeableProperties(nameof(Description), Description);
             }
         }
 
@@ -90,6 +100,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 _pwIsHidden = false;
                 _currentBase = (HomeViewModel)currentBase;
                 Username = leafVm.Username;
+                Description = leafVm.Description;
                 Initialize();
                 CurrentItem.IsDirty = false;
             }

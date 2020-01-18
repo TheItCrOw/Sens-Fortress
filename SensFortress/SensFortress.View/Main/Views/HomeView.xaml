@@ -281,7 +281,7 @@
                                 <DataTemplate>
                                     <DockPanel Height="20">
                                         <materialDesign:PackIcon Kind="ChangeHistory" VerticalAlignment="Center"/>
-                                        <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" Style="{StaticResource SmallTextblockStyle}"/>
+                                        <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" AllowDrop="True" Style="{StaticResource SmallTextblockStyle}"/>
                                     </DockPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
