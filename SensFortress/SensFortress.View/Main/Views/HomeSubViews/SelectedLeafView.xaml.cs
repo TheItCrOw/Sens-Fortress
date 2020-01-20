@@ -1,10 +1,13 @@
-﻿using MSHTML;
+﻿using mshtml;
 using SensFortress.Data.Database;
 using SensFortress.Utility;
+using SensFortress.Utility.Exceptions;
 using SensFortress.View.Helper;
 using SensFortress.View.Main.ViewModel.HomeSubVms;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -53,7 +56,7 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         /// <param name="e"></param>
         private void Username_Textbox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 Username_Textbox.Visibility = Visibility.Collapsed;
                 Username_Textblock.Visibility = Visibility.Visible;
@@ -94,53 +97,97 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         }
         #endregion
 
+        private bool _isRun;
+
         private void LogintoBrowser_Button_Click(object sender, RoutedEventArgs e)
         {
-            // Part 1: Use WebBrowser control to load web page
-            Webbrowser.Navigate(new Uri("https://server.nitrado.net/deu/gameserver-mieten"));
-
-            System.Threading.Thread.Sleep(2000);
-            // Delay 2 seconds to render login page
-            // Part 2: Automatically input username and password
-            var theElementCollection = ((MSHTML.HTMLDocument)Webbrowser.Document).getElementsByTagName("input");
-            foreach (var curElement in theElementCollection)
-            {
-                var castedCurElement = (HTMLDTElement)curElement;
-                string controlName = (string)castedCurElement.getAttribute("name");
-                if ((controlName == "UserNameTextBox"))
-                {
-                    castedCurElement.setAttribute("Value", "Username text here");
-                }
-                else if ((controlName == "PasswordTextBox"))
-                {
-                    castedCurElement.setAttribute("Value", "Password text here");
-                    // In addition,you can get element value like this:
-                    // MessageBox.Show(curElement.GetAttribute("Value"))
-                }
-            }
-            //// Part 3: Automatically click that Login button
-            //theElementCollection = Webbrowser.Document.GetElementsByTagName("input");
-            //foreach (HtmlElement curElementin theElementCollection)
-            //{
-            //    if (curElement.GetAttribute("value").Equals("Login"))
-            //    {
-            //        curElement.InvokeMember("click");
-            //        // javascript has a click method for you need to invoke on button and hyperlink elements.
-            //    }
-            //}
+            // Load the page
+            var adress = new Uri("https://www.amazon.de/ap/signin?showRememberMe=false&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&pageId=deflex&ignoreAuthState=1&openid.return_to=https%3A%2F%2Fwww.amazon.de%2F%3Fref_%3Dnav_signin&prevRID=T028TS6C1NMGVZ4Y8B9B&openid.assoc_handle=deflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJ0d1VzTS9wRTQrcGM4WFY1NzQrdFp3PT0iLCJ2ZXJzaW9uIjoxLCJJViI6Ims3Sm9GMWJncVFjS29kaWIyQk1RK2c9PSJ9&failedSignInCount=0&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&timestamp=1579545861000");
+            Webbrowser.Navigate(adress);
+            _isRun = false;
         }
-    
-        private bool _isRun;
+
         private void Webbrowser_LoadCompleted(object sender, NavigationEventArgs e)
         {
-            if (!_isRun)
+
+            try
             {
-                MSHTML.HTMLDocument document = (MSHTML.HTMLDocument)Webbrowser.Document;
-                document.getElementById("login_name").innerText = "test";
-                document.getElementById("passwd").innerText = "password";
-                document.getElementById("buttonid_login").click();
-                _isRun = true;
+                if (!_isRun)
+                {
+                //    ((SHDocVw.DWebBrowserEvents2_Event)webBrowser.ActiveXInstance).NewWindow3 +=
+                //webBrowser_NewWindow3;
+
+                    // Get the website document first
+                    mshtml.HTMLDocument document = (mshtml.HTMLDocument)Webbrowser.Document;
+
+                    // Set the username
+                    var username = document.getElementById("ap_email");
+                    if (username != null)
+                        username.innerText = "keboen@web.de";
+                    // Now for amazon we need to click first
+                    var theElementCollection = document.getElementsByTagName("input");
+                    if (theElementCollection != null)
+                    {
+                        foreach (var el in theElementCollection)
+                        {
+                            if (((HTMLDTElement)el).id == "continue")
+                                ((HTMLDTElement)el).click();
+                        }
+                    }
+
+                    // Let the page load
+                    System.Threading.Thread.Sleep(2000);
+
+                    // Get the newly loaded document
+                    document = (mshtml.HTMLDocument)Webbrowser.Document;
+
+                    // Fill in password
+                    var pw = document.getElementById("ap_password");
+                    if (pw != null)
+                        pw.innerText = "Tonyhawk1998";
+
+                    theElementCollection = document.getElementsByTagName("input");
+                    if(theElementCollection != null)
+                    {
+                        // Click login button
+                        foreach (var el in theElementCollection)
+                        {
+                            if (((HTMLDTElement)el).id == "signInSubmit")
+                                ((HTMLDTElement)el).click();
+                        }
+                    }
+                    Process.Start(Webbrowser.Source.AbsoluteUri);
+                    _isRun = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Communication.InformUser("Page couldn't be loaded.");
             }
         }
+
+        private void Webbrowser_Navigated(object sender, NavigationEventArgs e)
+        {
+            HideScriptErrors(Webbrowser, true);
+        }
+
+        /// <summary>
+        /// WPF shows tons of script errors - we want to surpress them since they spam the screen.
+        /// </summary>
+        /// <param name="wb"></param>
+        /// <param name="hide"></param>
+        private void HideScriptErrors(WebBrowser wb, bool hide)
+        {
+            var fiComWebBrowser = typeof(WebBrowser).GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (fiComWebBrowser == null) return;
+            var objComWebBrowser = fiComWebBrowser.GetValue(wb);
+            if (objComWebBrowser == null)
+            {
+                wb.Loaded += (o, s) => HideScriptErrors(wb, hide); //In case we are to early
+                return;
+            }
+            objComWebBrowser.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, objComWebBrowser, new object[] { hide });
+        }
+
     }
 }

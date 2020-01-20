@@ -28,7 +28,7 @@
         </materialDesign:Card>
         
         <!--TESTING-->
-        <WebBrowser x:Name="Webbrowser" Source="https://server.nitrado.net/deu/gameserver-mieten" LoadCompleted="Webbrowser_LoadCompleted" Grid.Row="1" />
+        <WebBrowser x:Name="Webbrowser" LoadCompleted="Webbrowser_LoadCompleted" Grid.Row="1" Navigated="Webbrowser_Navigated" Height="300" VerticalAlignment="Top"/>
 
         <!--if the fortress is locked -> show this content-->
         <Grid Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center">

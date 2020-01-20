@@ -15,10 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="MSHTML.dll">
-      <Guid>3050f1c5-98b5-11cf-bb82-00aa00bdce0b</Guid>
-      <VersionMajor>4</VersionMajor>
-      <VersionMinor>0</VersionMinor>
+    <COMReference Include="SHDocVw.dll">
+      <Guid>eab22ac0-30c1-11cf-a7eb-0000c05bae0b</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>1</VersionMinor>
       <WrapperTool>tlbimp</WrapperTool>
       <Lcid>0</Lcid>
       <Isolated>false</Isolated>
@@ -35,6 +35,14 @@
     <ProjectReference Include="..\SensFortress.Models\SensFortress.Models.csproj" />
     <ProjectReference Include="..\SensFortress.Security\SensFortress.Security.csproj" />
     <ProjectReference Include="..\SensFortress.Utility\SensFortress.Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.mshtml">
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies\Microsoft.mshtml.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
