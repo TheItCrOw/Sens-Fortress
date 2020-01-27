@@ -35,6 +35,7 @@
     <ProjectReference Include="..\SensFortress.Models\SensFortress.Models.csproj" />
     <ProjectReference Include="..\SensFortress.Security\SensFortress.Security.csproj" />
     <ProjectReference Include="..\SensFortress.Utility\SensFortress.Utility.csproj" />
+    <ProjectReference Include="..\SensFortress.Web\SensFortress.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

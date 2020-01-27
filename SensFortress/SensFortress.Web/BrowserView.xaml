@@ -1,0 +1,13 @@
+﻿<Window x:Class="SensFortress.Web.BrowserView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SensFortress.Web"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        Title="BrowserView">
+    <Grid x:Name="MainGrid">
+        <WebBrowser x:Name="Webbrowser" LoadCompleted="Webbrowser_LoadCompleted" Grid.Row="1" Navigated="Webbrowser_Navigated"/>
+    </Grid>
+</Window>
