@@ -117,7 +117,6 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _showLockCard, value);
             }
         }
-
         public override bool IsLocked
         {
             get => _isLocked;
@@ -126,7 +125,6 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _isLocked, value);
             }
         }
-
         public HomeViewModel()
         {
             try

@@ -9,8 +9,10 @@ using SensFortress.View.Bases;
 using SensFortress.View.Helper;
 using SensFortress.View.Main.Views.HomeSubViews;
 using SensFortress.View.TaskLog;
+using SensFortress.Web;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Text;
 using System.Windows;
@@ -29,7 +31,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private HomeViewModel _currentBase;
         private string _userName;
         private string _description;
-
+        public ObservableCollection<WebsiteViewModel> Websites { get; set; } = new ObservableCollection<WebsiteViewModel>();
         public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
         public DelegateCommand ShowUnlockCardCommand => new DelegateCommand(ShowUnlockCard);
         public DelegateCommand EditPasswordCommand => new DelegateCommand(EditPassword);
@@ -121,11 +123,17 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             LoadPassword();
             ShowHidePassword();
+            LoadWebsites();
         }
 
+        /// <summary>
+        /// This is currently not finished. It always opens amazon for now.
+        /// </summary>
         private void OpenUrlWithLogin()
         {
-
+            var adress = new Uri("https://www.amazon.de/ap/signin?showRememberMe=false&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&pageId=deflex&ignoreAuthState=1&openid.return_to=https%3A%2F%2Fwww.amazon.de%2F%3Fref_%3Dnav_signin&prevRID=T028TS6C1NMGVZ4Y8B9B&openid.assoc_handle=deflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJ0d1VzTS9wRTQrcGM4WFY1NzQrdFp3PT0iLCJ2ZXJzaW9uIjoxLCJJViI6Ims3Sm9GMWJncVFjS29kaWIyQk1RK2c9PSJ9&failedSignInCount=0&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&timestamp=1579545861000");
+            var browser = new BrowserView(adress, Username, _encryptedPassword);
+            browser.Show();
         }
 
         /// <summary>
@@ -198,6 +206,27 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             {
                 Communication.InformUser($"There was a problem finding the password in the {TermHelper.GetDatabaseTerm()}.");
             }
+        }
+        /// <summary>
+        /// Not finished - later the website models should be saved in the DC
+        /// </summary>
+        private void LoadWebsites()
+        {
+            var amazon = new Website("https://www.amazon.de/ap/signin?showRememberMe=false&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&pageId=deflex&ignoreAuthState=1&openid.return_to=https%3A%2F%2Fwww.amazon.de%2F%3Fref_%3Dnav_signin&prevRID=T028TS6C1NMGVZ4Y8B9B&openid.assoc_handle=deflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJ0d1VzTS9wRTQrcGM4WFY1NzQrdFp3PT0iLCJ2ZXJzaW9uIjoxLCJJViI6Ims3Sm9GMWJncVFjS29kaWIyQk1RK2c9PSJ9&failedSignInCount=0&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&timestamp=1579545861000");
+            amazon.Name = "Amazon.com";
+            amazon.LogoSource = "pack://application:,,,/Logos/Amazon-Logo.jpg";
+
+            var amazonVm = new WebsiteViewModel(amazon, this);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
         }
 
         /// <summary>

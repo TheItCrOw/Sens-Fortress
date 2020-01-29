@@ -1,6 +1,8 @@
 ﻿using Microsoft.Toolkit.Wpf.UI.Controls;
 using mshtml;
+using SensFortress.Security;
 using SensFortress.Utility;
+using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -27,10 +29,14 @@ namespace SensFortress.Web
     public partial class BrowserView : Window
     {
         private bool _isRun;
+        private string _username;
+        private byte[] _encryptedPassword;
 
-        public BrowserView(Uri adress)
+        public BrowserView(Uri adress, string username, byte[] encryptedPassword)
         {
             InitializeComponent();
+            _username = username;
+            _encryptedPassword = encryptedPassword;
             Webbrowser.Navigate(adress.AbsoluteUri);
         }
 
@@ -46,13 +52,14 @@ namespace SensFortress.Web
                     // Set the username
                     var username = document.getElementById("ap_email");
                     if (username != null)
-                        username.innerText = "test@web.de";
+                        username.innerText = _username;
                     // Now for amazon we need to click first
                     var theElementCollection = document.getElementsByTagName("input");
                     if (theElementCollection != null)
                     {
                         foreach (var el in theElementCollection)
                         {
+
                             if (((HTMLDTElement)el).id == "continue")
                                 ((HTMLDTElement)el).click();
                         }
@@ -67,7 +74,7 @@ namespace SensFortress.Web
                     // Fill in password
                     var pw = document.getElementById("ap_password");
                     if (pw != null)
-                        pw.innerText = "test";
+                        pw.innerText = ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword));
 
                     theElementCollection = document.getElementsByTagName("input");
                     if (theElementCollection != null)
@@ -84,7 +91,9 @@ namespace SensFortress.Web
             }
             catch (Exception ex)
             {
-                Communication.InformUser("Page couldn't be loaded.");
+                Communication.InformUser("Couldn't log into page.");
+                Logger.log.Error($"Couldn't login to page: {ex}");
+                Close();
             }
         }
 

@@ -12,6 +12,7 @@
     <None Remove="Images\Home-Bonfire.jpg" />
     <None Remove="Images\Opening-Gate.jpg" />
     <None Remove="Images\Worldmap.jpg" />
+    <None Remove="Logos\Amazon-Logo.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +53,7 @@
     <Resource Include="Images\Home-Bonfire.jpg" />
     <Resource Include="Images\Opening-Gate.jpg" />
     <Resource Include="Images\Worldmap.jpg" />
+    <Resource Include="Logos\Amazon-Logo.jpg" />
   </ItemGroup>
 
 </Project>

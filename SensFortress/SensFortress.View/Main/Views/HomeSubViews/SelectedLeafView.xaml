@@ -26,7 +26,7 @@
         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="Transparent">
             <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="{Binding CurrentItem.Name}" Margin="10 10 10 15"/>
         </materialDesign:Card>
-        
+
         <!--if the fortress is locked -> show this content-->
         <Grid Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid.RowDefinitions>
@@ -61,15 +61,38 @@
         <!--Drawer area-->
         <materialDesign:DrawerHost Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" 
                                    Visibility="{Binding ShowContent, Converter={StaticResource BoolToVisConverter}}">
+            <!--Loginto page cards-->
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Margin="0 10 0 10" MinWidth="200" Text="Left menu" Style="{StaticResource InformationTextblockStyle}"/>
-                    </StackPanel>
-                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Left}" Style="{DynamicResource MaterialDesignFlatButton}">
+                <Grid Margin="0 10 0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="240"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Link a website" Style="{StaticResource InformationTextblockStyle}" HorizontalAlignment="Center"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+                        <extensions:ExtendedTreeView x:Name="Fortress_TreeView" Background="Transparent" Margin="-10 0 0 0" BorderThickness="0" Foreground="White" 
+                                                                     ItemsSource="{Binding Websites}">
+                            <extensions:ExtendedTreeView.ItemTemplate>
+                                <HierarchicalDataTemplate DataType="{x:Type vms:WebsiteViewModel}">
+                                    <materialDesign:Card HorizontalAlignment="Center" Background="GhostWhite">
+                                        <StackPanel Margin="10 20 10 20" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" Foreground="Black" Style="{StaticResource InformationTextblockStyle}"/>
+                                            <!--This has to be changed later - for now the logo is always amazon-->
+                                            <Image Source="{Binding LogoSource}" Height="100" Width="150"/>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                </HierarchicalDataTemplate>
+                            </extensions:ExtendedTreeView.ItemTemplate>
+                        </extensions:ExtendedTreeView>
+                    </ScrollViewer>
+                    <Button Grid.Column="1" Grid.RowSpan="2" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Left}" Style="{DynamicResource MaterialDesignFlatButton}">
                         <materialDesign:PackIcon Kind="ArrowRightBold" Height="30" Width="30"/>
                     </Button>
-                </DockPanel>
+                </Grid>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
             <!--Shows password-->
@@ -134,7 +157,7 @@
                     <TextBlock Margin="40 10 40 10" HorizontalAlignment="Center" Text="Title Bottom" Style="{StaticResource InformationTextblockStyle}"/>
                 </StackPanel>
             </materialDesign:DrawerHost.BottomDrawerContent>
-            
+
             <Grid >
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
@@ -165,12 +188,12 @@
                     </Button>
                     <!--Core of drawer-->
                     <!--This is a bit of a messy area since it's all cramped into the grid 1,1 with margins etc. But since we work with polygons, there is no other way around it.-->
-                    
+
                     <!--left polygon-->
                     <Polygon Points="0 0 100 100 0 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
                     <!--left button-->
                     <Button  x:Name="LogintoBrowser_Button" ToolTip="Log into page" Margin="0 0 125 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
-                             Background="White" BorderBrush="Black" Command="{Binding OpenUrlWithLoginCommand}" Click="LogintoBrowser_Button_Click">
+                             Background="White" BorderBrush="Black" Command="{Binding OpenUrlWithLoginCommand}">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
                                              Kind="Login" />
                     </Button>
@@ -201,7 +224,7 @@
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
                                              Kind="User" />
                     </Button>
-                    
+
                     <!--Open all drawer-->
                     <Button ToolTip="Expand all" Grid.Row="1" Grid.Column="1" Height="30" Width="30" Style="{StaticResource TreeViewButtonStyle}" 
                             Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Background="White" BorderBrush="Black">
