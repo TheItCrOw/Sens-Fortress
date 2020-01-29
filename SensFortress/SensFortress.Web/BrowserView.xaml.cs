@@ -46,7 +46,7 @@ namespace SensFortress.Web
                     // Set the username
                     var username = document.getElementById("ap_email");
                     if (username != null)
-                        username.innerText = "keboen@web.de";
+                        username.innerText = "test@web.de";
                     // Now for amazon we need to click first
                     var theElementCollection = document.getElementsByTagName("input");
                     if (theElementCollection != null)
@@ -67,7 +67,7 @@ namespace SensFortress.Web
                     // Fill in password
                     var pw = document.getElementById("ap_password");
                     if (pw != null)
-                        pw.innerText = "Tonyhawk1998";
+                        pw.innerText = "test";
 
                     theElementCollection = document.getElementsByTagName("input");
                     if (theElementCollection != null)
