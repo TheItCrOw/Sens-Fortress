@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SensFortress.Security", "Se
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SensFortress.C++Extensions", "SensFortress.C++Extensions\SensFortress.C++Extensions.vcxproj", "{0C77D8A6-50C2-40AE-99E7-C4BE462AA0F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensFortress.Web", "SensFortress.Web\SensFortress.Web.csproj", "{264E9600-6912-4F1F-936E-D1C09A3DD313}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SensFortress.Web", "SensFortress.Web\SensFortress.Web.csproj", "{264E9600-6912-4F1F-936E-D1C09A3DD313}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
