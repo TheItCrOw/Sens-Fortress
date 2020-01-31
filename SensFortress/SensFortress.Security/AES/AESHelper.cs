@@ -15,10 +15,10 @@ namespace SensFortress.Security.AES
         private const ushort ITERATIONS = 15000;
 
         /// <summary>
-        /// Creates a hashed key out of the user input
+        /// Creates a hashed key out of the user input - the key must be 32 bytes.
         /// </summary>
         /// <param name="password"></param>
-        /// <param name="keySize"> Typically it's 512 long. </param>
+        /// <param name="keySize"> For AES it must be 256 long. </param>
         /// <returns></returns>
         public byte[] CreateKey(string password, int keySize, byte[] salt)
         {

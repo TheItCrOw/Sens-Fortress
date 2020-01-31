@@ -46,7 +46,7 @@ namespace SensFortress.View.Main.Views
                     if (DataAccessService.Instance.ValidateMasterkey(masterPasswordBox.Password))
                     {
                         var aesHelper = new AesHelper();
-                        var hashedKey = aesHelper.CreateKey(masterPasswordBox.Password, 512, CurrentFortressData.Salt);
+                        var hashedKey = aesHelper.CreateKey(masterPasswordBox.Password, 256, CurrentFortressData.Salt);
                         var secureMasterkey = new Masterkey(hashedKey);
                         hashedKey = null;
 

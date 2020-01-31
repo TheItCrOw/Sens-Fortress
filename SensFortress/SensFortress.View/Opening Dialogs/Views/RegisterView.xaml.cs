@@ -97,7 +97,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
                 // If they are - continue to make the fortress.
                 var aesHelper = new AesHelper();
                 var salt = aesHelper.GenerateSalt();
-                var hashedKey = aesHelper.CreateKey(Master_PasswordBox.Password, 512, salt);
+                var hashedKey = aesHelper.CreateKey(Master_PasswordBox.Password, 256, salt);
                 var fullPath = string.Empty;
 
                 // If the user has entered a custom path -> Disabled for now

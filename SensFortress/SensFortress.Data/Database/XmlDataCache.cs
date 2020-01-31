@@ -391,7 +391,7 @@ namespace SensFortress.Data.Database
 
                     // =========================================================== Create masterkey
 
-                    var hashedKey = aesHelper.CreateKey(password, 512, saltBytes);
+                    var hashedKey = aesHelper.CreateKey(password, 256, saltBytes);
                     password = string.Empty; // Delete the password in plaintext from RAM
                     var masterKey = new Masterkey(hashedKey);
                     hashedKey = null; // Hash also
@@ -463,7 +463,7 @@ namespace SensFortress.Data.Database
 
                     // =========================================================== Create masterkey
 
-                    var hashedKey = aesHelper.CreateKey(password, 512, saltBytes);
+                    var hashedKey = aesHelper.CreateKey(password, 256, saltBytes);
                     password = string.Empty; // Delete the password in plaintext from RAM
                     var masterKey = new Masterkey(hashedKey);
                     Logger.log.Debug("Masterkey created.");

@@ -12,12 +12,15 @@ namespace SensFortress.Security.AES
     {
         public Masterkey(byte[] keyBytes)
         {
-            var encryptedKey = Encoding.UTF8.GetString(keyBytes);
-            Value = GetSecureString(encryptedKey);
+            var encryptedKey = CryptMemoryProtection.EncryptInMemoryData(keyBytes);
+            Value = encryptedKey;
             encryptedKey = null;
         }
 
-        public SecureString Value { get; }
+        /// <summary>
+        /// Gets the encrypted byte value of the masterkey
+        /// </summary>
+        public byte[] Value { get; }
 
         /// <summary>
         /// Creates a SecureString out of a string.
