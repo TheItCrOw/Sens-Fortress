@@ -110,7 +110,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
                 var lastName = "NOT GIVEN";
                 var userName = "notGiven";
                 var eMail = "NotGiven@xyz.com";
-                var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail, Guid.NewGuid());
+                var fortress = new Fortress(salt, hashedKey, fullPath, name, lastName, userName, eMail);
 
                 DataAccessService.Instance.CreateNewFortress(fortress); // Create the new fortress.
 

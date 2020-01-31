@@ -436,7 +436,6 @@ namespace SensFortress.View.Main.ViewModel
                     SelectedTreeViewItem.IsExpanded = true;
                 }
             }
-
             ChangesTracker++;
         }
 
@@ -445,6 +444,9 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         private void UpdateRootNodes(bool isSelected = false, bool isEditable = false, bool resetIsDirty = false)
         {
+            if(SelectedTreeViewItem == null)
+                return;
+
             foreach (var item in RootNodes)
             {
                 UpdateRootNodes(item, resetIsDirty);

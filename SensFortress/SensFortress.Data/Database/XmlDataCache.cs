@@ -191,16 +191,12 @@ namespace SensFortress.Data.Database
                 }
                 else
                 {
-                    var ex = new ArgumentNullException($"{model.Id} could not be found in the MemoryDC for deletion.");
-                    ex.SetUserMessage("Item has already been deleted.");
-                    throw ex;
+                    Logger.log.Info($"{model.Id} was not found in DC. So no need to delete it.");
                 }
             }
             else
             {
-                var ex = new ArgumentNullException($"{model.Id} could not be found in the MemoryDC for deletion.");
-                ex.SetUserMessage("Item has already been deleted.");
-                throw ex;
+                Logger.log.Info($"{model.GetType()} was not found in DC. So no need to delete it.");
             }
         }
 

@@ -14,7 +14,7 @@ namespace SensFortress.Models.Fortress
     [DataContract]
     public class Fortress : ModelBase
     {
-        public Fortress(byte[] salt, byte[] key, string fullPath, string name, string lastName, string userName, string eMail, Guid id)
+        public Fortress(byte[] salt, byte[] key, string fullPath, string name, string lastName, string userName, string eMail)
         {
             Salt = salt;
             MasterKey = new Masterkey(key);
@@ -23,7 +23,7 @@ namespace SensFortress.Models.Fortress
             LastName = lastName;
             UserName = userName;
             EMail = eMail;
-            Id = id;
+            base.Id = Guid.NewGuid();
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace SensFortress.Models.Fortress
         public byte[] Salt { get; set; }
 
         /// <summary>
-        /// SecureString of the masterkey for passing in memory.
+        /// Encrypted Masterkey for passing in memory.
         /// </summary>
         public Masterkey MasterKey { get; set; } 
 

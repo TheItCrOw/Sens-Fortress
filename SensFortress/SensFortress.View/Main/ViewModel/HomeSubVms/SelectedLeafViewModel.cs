@@ -256,6 +256,5 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             }
         }
 
-
     }
 }
