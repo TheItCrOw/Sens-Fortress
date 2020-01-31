@@ -82,7 +82,7 @@
                                         <StackPanel Margin="10 20 10 20" materialDesign:ShadowAssist.ShadowDepth="Depth5">
                                             <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" Foreground="Black" Style="{StaticResource InformationTextblockStyle}"/>
                                             <!--This has to be changed later - for now the logo is always amazon-->
-                                            <Image Source="{Binding LogoSource}" Height="100" Width="150"/>
+                                            <Image Source="{Binding LogoSource}" Height="90" Width="140" Margin="10"/>
                                         </StackPanel>
                                     </materialDesign:Card>
                                 </HierarchicalDataTemplate>

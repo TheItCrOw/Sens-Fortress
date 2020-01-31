@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:SensFortress.Web"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        
     </Application.Resources>
+
 </Application>

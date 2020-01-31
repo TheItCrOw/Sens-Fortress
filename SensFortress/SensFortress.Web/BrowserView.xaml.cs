@@ -28,6 +28,7 @@ namespace SensFortress.Web
     /// </summary>
     public partial class BrowserView : Window
     {
+        private bool _isLoginAttempt;
         private bool _isRun;
         private string _username;
         private byte[] _encryptedPassword;
@@ -37,6 +38,7 @@ namespace SensFortress.Web
             InitializeComponent();
             _username = username;
             _encryptedPassword = encryptedPassword;
+            _isLoginAttempt = true;
             Webbrowser.Navigate(adress.AbsoluteUri);
         }
 
@@ -44,7 +46,7 @@ namespace SensFortress.Web
         {
             try
             {
-                if (!_isRun)
+                if (!_isRun && _isLoginAttempt)
                 {
                     // Get the website document first
                     mshtml.HTMLDocument document = (mshtml.HTMLDocument)Webbrowser.Document;
@@ -86,6 +88,8 @@ namespace SensFortress.Web
                                 ((HTMLDTElement)el).click();
                         }
                     }
+
+                    Navigation_Textblock.Text = Webbrowser.Source.AbsoluteUri;
                     _isRun = true;
                 }
             }
@@ -118,6 +122,11 @@ namespace SensFortress.Web
                 return;
             }
             objComWebBrowser.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, objComWebBrowser, new object[] { hide });
+        }
+
+        private void GoBack_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Webbrowser.GoBack();
         }
     }
 }

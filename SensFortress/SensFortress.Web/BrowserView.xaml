@@ -7,7 +7,23 @@
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="BrowserView">
+    
     <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--top menu-->
+        <Border BorderThickness="1" BorderBrush="Black" Margin="5">
+            <DockPanel LastChildFill="True" Background="Gray">
+                <!--go back-->
+                <Button x:Name="GoBack_Button" Content="Go Back" FontSize="17" Click="GoBack_Button_Click"/>
+                <!--current adress-->
+                <TextBlock x:Name="Navigation_Textblock" VerticalAlignment="Center" FontSize="17" Foreground="White" Margin="10 0 0 0"/>
+            </DockPanel>
+        </Border>
+        
+        <!--Actual browser-->
         <WebBrowser x:Name="Webbrowser" LoadCompleted="Webbrowser_LoadCompleted" Grid.Row="1" Navigated="Webbrowser_Navigated"/>
     </Grid>
 </Window>

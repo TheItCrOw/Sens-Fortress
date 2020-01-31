@@ -267,7 +267,16 @@ namespace SensFortress.View.Main.ViewModel
             {
                 await Task.Run(() =>
                 {
-                    if (SelectedTreeViewItem.Children.Count == 0)
+                    // If root - just delete
+                    if(SelectedTreeViewItem.TreeType == TreeDepth.Root)
+                    {
+                        DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model); // Delete from cache
+                        Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem)); // Delete from UI
+                        TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted."); // Inform logger
+                        ChangesTracker++; // Track changes
+                    }
+                    // Else do more steps
+                    else if (SelectedTreeViewItem.Children.Count == 0)
                     {
                         DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
                         TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted.");
@@ -399,12 +408,27 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         private void AddTreeItem(string buttonName)
         {
+            // If we add a root
+            if (buttonName == "AddRootItem_Button")
+            {
+                var newBranch = new Branch
+                {
+                    Name = "(new)",
+                    ParentBranchId = Guid.Empty
+                };
+                var newBranchVm = new BranchViewModel(newBranch, this);
+                var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Root, true);
+                DataAccessService.Instance.AddOneToMemoryDC(newBranch); // Store the newly created model into the MemoryDc.
+                RootNodes.Add(newTreeViewItem);
+            }
+
+            // We cant add a child if no object is selected
             if (SelectedTreeViewItem == null)
                 return;
 
             if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel && SelectedTreeViewItem.MayHaveChildren)
             {
-                if (buttonName == "AddBranchButton")
+                if (buttonName == "AddBranch_Button")
                 {
                     var newBranch = new Branch 
                     { 
@@ -417,7 +441,7 @@ namespace SensFortress.View.Main.ViewModel
                     SelectedTreeViewItem.Children.Add(newTreeViewItem);
                     SelectedTreeViewItem.IsExpanded = true;
                 }
-                else if (buttonName == "AddLeafButton")
+                else if (buttonName == "AddLeaf_Button")
                 {
                     var newLeaf = new Leaf
                     {

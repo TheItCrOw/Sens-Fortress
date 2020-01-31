@@ -6,6 +6,7 @@ using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -131,12 +132,13 @@ namespace SensFortress.View.Main.ViewModel
         public ViewModelBase CurrentViewModel { get; }
 
         /// <summary>
-        /// This informs the model that is being saved in the end about changes made in the UI.
+        /// This informs the model and ViewModel that is being saved in the end about changes made in the UI.
         /// </summary>
         /// <param name="propName"></param>
         /// <param name="change"></param>
-        private void UpdateChangesToModel(string propName, object change)
+        private void UpdateChangedProperties(string propName, object change)
         {
+            // First update the model
             var type = CurrentViewModel.Model.GetType();
             var props = new List<PropertyInfo>(type.GetProperties());
 
@@ -155,6 +157,18 @@ namespace SensFortress.View.Main.ViewModel
                     prop.SetValue(CurrentViewModel.Model, change);
                 }
             }
+
+            // Then the viewmodel
+            var typeVm = CurrentViewModel.GetType();
+            var propsVm = new List<PropertyInfo>(typeVm.GetProperties());
+
+            foreach (var prop in propsVm)
+            {
+                if (prop.Name == propName)
+                {
+                    prop.SetValue(CurrentViewModel, change);
+                }
+            }
         }
 
         /// <summary>
@@ -170,7 +184,7 @@ namespace SensFortress.View.Main.ViewModel
             }
             else
             {
-                UpdateChangesToModel(propName, change);
+                UpdateChangedProperties(propName, change);
             }
         }
 

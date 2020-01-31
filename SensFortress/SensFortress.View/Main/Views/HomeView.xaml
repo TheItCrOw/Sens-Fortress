@@ -142,7 +142,9 @@
                         </Expander>
                     </StackPanel>
                 </materialDesign:Card>
-                <extensions:ExtendedTreeView ItemsSource="{Binding RootNodes}" SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0">
+                
+                <!--Strcutre list-->
+                <extensions:ExtendedTreeView Margin="0 10 0 0" ItemsSource="{Binding RootNodes}" SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0">
                     <extensions:ExtendedTreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemContainerStyle}">
                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -221,12 +223,12 @@
                                     <materialDesign:PackIcon Kind="Edit" ToolTip="Edit"/>
                                 </Button>
                                 <!--Add branch button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
-                                <Button x:Name="AddBranchButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranchButton, Path=Name}"
+                                <Button x:Name="AddBranch_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranchButton, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory"/>
                                 </Button>
                                 <!--Add leaf button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
-                                <Button x:Name="AddLeafButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddLeafButton, Path=Name}"
+                                <Button x:Name="AddLeaf_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddLeafButton, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
                                 </Button>
@@ -239,8 +241,15 @@
                         </HierarchicalDataTemplate>
                     </extensions:ExtendedTreeView.ItemTemplate>
                 </extensions:ExtendedTreeView>
-            </StackPanel>
 
+                <!--Add root => Name is used in code!-->
+                <Button x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="10" Command="{Binding AddTreeItemCommand}" 
+                        CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}">
+                    <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
+                </Button>
+                
+            </StackPanel>
+            
             <!--Gridsplitter 1-->
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="Black"/>
 
