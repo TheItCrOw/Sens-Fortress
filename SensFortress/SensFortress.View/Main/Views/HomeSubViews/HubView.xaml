@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="SensFortress.View.Main.Views.HomeSubViews.HubView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SensFortress.View.Main.Views.HomeSubViews"
+             mc:Ignorable="d" 
+             AllowDrop="True"
+             d:DesignHeight="900" d:DesignWidth="1100"           
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal"
+            TextOptions.TextRenderingMode="Auto"
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!--Title-->
+        <materialDesign:Card VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57">
+            <TextBlock Text="Home-Hub" Style="{StaticResource InformationTextblockStyle}" Foreground="White"/>
+        </materialDesign:Card>
+
+        <!--Main Content-->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!--Quickbar-->
+            <StackPanel x:Name="Quickbar_Stackpanel" >
+                <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 10 0 10" HorizontalAlignment="Stretch"/>
+                <materialDesign:Card Height="200" Margin="10" x:Name="Quickbar_Card">
+                    <ListBox x:Name="Quickbar_ListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding QuickBar}"
+                             >
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <materialDesign:Card Background="GhostWhite" Margin="5">
+                                    <StackPanel Height="160" Width="150">
+                                        <TextBlock Text="{Binding Name}" Style="{StaticResource CategoryTextblockStyle}" Foreground="Black" Margin="0 3 0 0"/>
+                                        <DockPanel Margin="5 10 5 5" LastChildFill="False" HorizontalAlignment="Center">
+                                            <!--copy password button-->
+                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password">
+                                                <materialDesign:PackIcon Kind="Key" Width="25" Height="25"/>
+                                            </Button>
+                                            <!--copy username button-->
+                                            <Button Style="{StaticResource GoBackButtonStyle}" Margin="7 0 7 0" ToolTip="Copy username">
+                                                <materialDesign:PackIcon Kind="User" Width="25" Height="25"/>
+                                            </Button>
+                                            <!--open linked page button-->
+                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website">
+                                                <materialDesign:PackIcon Kind="Login" Width="25" Height="25"/>
+                                            </Button>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </materialDesign:Card>
+                
+                <materialDesign:Card x:Name="DragAdd_Card" Height="200" Margin="10" Background="GhostWhite" materialDesign:ShadowAssist.ShadowDepth="Depth5" Visibility="Collapsed"
+                                     AllowDrop="True" DragOver="Quickbar_ListBox_DragOver" Drop="Quickbar_ListBox_Drop" DragLeave="Quickbar_ListBox_DragLeave">
+                    <Border BorderThickness="2" BorderBrush="Black" Margin="15">
+                        <materialDesign:PackIcon Kind="AddBox" VerticalAlignment="Center" Foreground="Black" HorizontalAlignment="Center" Width="100" Height="100"/>
+                    </Border>
+                </materialDesign:Card>
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

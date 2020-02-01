@@ -100,12 +100,15 @@
             </materialDesign:Card>
         </DockPanel>
 
-
         <!--Header Title-->
         <materialDesign:Card Height="50">
             <DockPanel HorizontalAlignment="Left" Margin="80 0 0 0" VerticalAlignment="Center">
+                <!--Home Button-->
+                <Button  Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding NavigateToHomeHubCommand}">
+                    <materialDesign:PackIcon Kind="Home" Height="30" Width="30" VerticalAlignment="Center"/>
+                </Button>
                 <!--Save button-->
-                <materialDesign:Badged Badge="{Binding ChangesTracker}" BadgeColorZoneMode="Dark" ToolTip="Saveable changes" Margin="10 0 0 0" VerticalAlignment="Center">
+                <materialDesign:Badged Badge="{Binding ChangesTracker}" BadgeColorZoneMode="Dark" ToolTip="Saveable changes" VerticalAlignment="Center" Margin="10 0 0 0">
                     <Button Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Save" Command="{Binding SaveTreeChangesCommand}">
                         <materialDesign:PackIcon Kind="Gate" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>
@@ -114,9 +117,12 @@
         </materialDesign:Card>
 
         <!--Progress Bar-->
-        <ProgressBar x:Name="HomeLoading_ProgressBar" Grid.Row="1" IsIndeterminate="{Binding IsLoading}"
+        <StackPanel Grid.Row="1" Height="6">
+            <ProgressBar x:Name="HomeLoading_ProgressBar" IsIndeterminate="{Binding IsLoading}"
                      Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisConverter}}" 
-                     Foreground="White" Height="10" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"/>
+                     Foreground="White" Height="6" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"/>
+        </StackPanel>
+
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -144,7 +150,8 @@
                 </materialDesign:Card>
                 
                 <!--Strcutre list-->
-                <extensions:ExtendedTreeView Margin="0 10 0 0" ItemsSource="{Binding RootNodes}" SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0">
+                <extensions:ExtendedTreeView x:Name="RootNodes_TreeView" Margin="0 10 0 0" ItemsSource="{Binding RootNodes}" SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                             Background="Transparent" BorderThickness="0">
                     <extensions:ExtendedTreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemContainerStyle}">
                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -152,7 +159,7 @@
                     </extensions:ExtendedTreeView.ItemContainerStyle>
                     <extensions:ExtendedTreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vms:TreeItemViewModel}" ItemsSource="{Binding Children}">
-                            <DockPanel>
+                            <DockPanel x:Name="TreeItem_Dockpanel" PreviewMouseLeftButtonDown="TreeItem_Dockpanel_PreviewMouseLeftButtonDown" AllowDrop="True">
                                 <!--This is a placeholder for the badge, which shows, if the item is saveable!-->
                                 <materialDesign:Badged BadgeColorZoneMode="Light" Margin="10 0 0 0" ToolTip="Saveable changes" VerticalAlignment="Top">
                                     <materialDesign:Badged.Badge>
@@ -194,7 +201,7 @@
                                     </materialDesign:PackIcon.Style>
                                 </materialDesign:PackIcon>
                                 <!--Name textbox-->
-                                <TextBox Text="{Binding Name}" Margin="3 2" Focusable="{Binding IsEditable}" Cursor="Arrow">
+                                <TextBox x:Name="TreeItemName_Textbox" Text="{Binding Name}" Margin="3 2" Focusable="{Binding IsEditable}" Cursor="Arrow">
                                     <TextBox.Style>
                                         <Style TargetType="TextBox" BasedOn="{StaticResource TreeViewTextboxStyle}">
                                             <Style.Triggers>

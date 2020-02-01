@@ -2,6 +2,7 @@
 using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
+using SensFortress.View.Helper;
 using SensFortress.View.Main.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -91,6 +92,24 @@ namespace SensFortress.View.Main.Views
                 MasterLock_Textbox.Visibility = Visibility.Collapsed;
                 MasterLock_PasswordBox.Visibility = Visibility.Visible;
                 _pwIsHidden = !_pwIsHidden;
+            }
+        }
+
+        //Start Drag and Drop
+        private void TreeItem_Dockpanel_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Source.GetType().Name.Equals("TextBox"))
+            {
+                // The source is the object that is being touched to drag
+                var item = (TextBox)e.Source;
+                // This is the data behind
+                var treeItem = ((DockPanel)sender).DataContext;
+
+                if (item != null)
+                {
+                    Navigation.HomeManagementInstance.GetCurrentHub()?.InformAboutDragDrop();
+                    DragDrop.DoDragDrop(item, treeItem, DragDropEffects.Move);
+                }
             }
         }
     }

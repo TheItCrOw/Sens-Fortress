@@ -34,6 +34,7 @@ namespace SensFortress.View.Main.ViewModel
         private object _selectedContent;
         private bool _isLocked;
         private bool _showLockCard;
+        private HubView _hubView;
 
         /// <summary>
         /// Collection showing in the TreeView
@@ -48,6 +49,7 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand DeleteTreeItemCommand => new DelegateCommand(DeleteTreeItem);
         public DelegateCommand SaveTreeChangesCommand => new DelegateCommand(SaveTreeChanges);
         public DelegateCommand LockUnlockFortressCommand => new DelegateCommand(LockUnlockFortress);
+        public DelegateCommand NavigateToHomeHubCommand => new DelegateCommand(NavigateToHomeHub);
 
         /// <summary>
         /// Holds the currently selected item in the TreeView UI.
@@ -125,7 +127,8 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _isLocked, value);
             }
         }
-        public HomeViewModel()
+
+        public void Initialize()
         {
             try
             {
@@ -140,6 +143,28 @@ namespace SensFortress.View.Main.ViewModel
                 ex.SetUserMessage("An error occured while trying to load data.");
                 Communication.InformUserAboutError(ex);
             }
+        }
+
+        /// <summary>
+        /// Returns the current instance of the Hub. Return null if not instantiated.
+        /// </summary>
+        /// <returns></returns>
+        public HubView GetCurrentHub() => _hubView;
+
+        /// <summary>
+        /// Navigates to the Hub
+        /// </summary>
+        private void NavigateToHomeHub()
+        {
+            if(_hubView == null)
+            {
+                _hubView = new HubView();
+                var hubVm = new HubViewModel();
+                _hubView.DataContext = hubVm;
+            }
+            SelectedContent = _hubView;
+            ((HubViewModel)_hubView.DataContext).Initialize();
+            UpdateRootNodes();
         }
 
         /// <summary>

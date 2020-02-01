@@ -7,17 +7,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Controls;
+using SensFortress.View.Main.Views.HomeSubViews;
+using SensFortress.View.Main.ViewModel.HomeSubVms;
 
 namespace SensFortress.View.Helper
 {
     public static class Navigation
     {
+        public static HomeView HomeView;
         public static Frame MainFrame { get; set; }
-
         public static LoginViewModel LoginManagementInstance { get; set; }
-
         public static HomeViewModel HomeManagementInstance { get; set; }
-
         /// <summary>
         /// Navigates to the given view.
         /// </summary>
@@ -27,11 +27,15 @@ namespace SensFortress.View.Helper
             switch (view)
             {
                 case NavigationViews.HomeView:
-                    var homeView = new HomeView();
-                    var homeVm = new HomeViewModel();
-                    HomeManagementInstance = homeVm;
-                    homeView.DataContext = homeVm;
-                    MainFrame.Content = homeView;
+                    if (HomeView == null)
+                    {
+                        HomeView = new HomeView();
+                        var homeVm = new HomeViewModel();
+                        HomeManagementInstance = homeVm;
+                        HomeView.DataContext = homeVm;
+                    }
+                    MainFrame.Content = HomeView;
+                    ((HomeViewModel)HomeView.DataContext).Initialize();
                     return true;
                 default:
                     return false;
@@ -46,6 +50,5 @@ namespace SensFortress.View.Helper
     public enum NavigationViews
     {
         HomeView,
-
     }
 }

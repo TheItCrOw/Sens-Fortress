@@ -126,7 +126,15 @@ namespace SensFortress.Web
 
         private void GoBack_Button_Click(object sender, RoutedEventArgs e)
         {
-            Webbrowser.GoBack();
+            try
+            {
+                Webbrowser.GoBack();
+            }
+            catch (Exception ex)
+            {
+                Communication.InformUser("Can't go back.");
+                Logger.log.Error($"Couldnt navigate page back: {ex}");
+            }
         }
     }
 }
