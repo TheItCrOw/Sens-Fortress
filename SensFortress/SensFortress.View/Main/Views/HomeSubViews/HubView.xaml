@@ -35,47 +35,51 @@
             </Grid.RowDefinitions>
             
             <!--Quickbar-->
-            <StackPanel x:Name="Quickbar_Stackpanel" >
-                <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 10 0 10" HorizontalAlignment="Stretch"/>
-                <materialDesign:Card Height="200" Margin="10" x:Name="Quickbar_Card">
-                    <ListBox x:Name="Quickbar_ListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding QuickBar}"
-                             >
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel IsItemsHost="True" />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <materialDesign:Card Background="GhostWhite" Margin="5">
-                                    <StackPanel Height="160" Width="150">
-                                        <TextBlock Text="{Binding Name}" Style="{StaticResource CategoryTextblockStyle}" Foreground="Black" Margin="0 3 0 0"/>
-                                        <DockPanel Margin="5 10 5 5" LastChildFill="False" HorizontalAlignment="Center">
-                                            <!--copy password button-->
-                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password">
-                                                <materialDesign:PackIcon Kind="Key" Width="25" Height="25"/>
-                                            </Button>
-                                            <!--copy username button-->
-                                            <Button Style="{StaticResource GoBackButtonStyle}" Margin="7 0 7 0" ToolTip="Copy username">
-                                                <materialDesign:PackIcon Kind="User" Width="25" Height="25"/>
-                                            </Button>
-                                            <!--open linked page button-->
-                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website">
-                                                <materialDesign:PackIcon Kind="Login" Width="25" Height="25"/>
-                                            </Button>
-                                        </DockPanel>
-                                    </StackPanel>
-                                </materialDesign:Card>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </materialDesign:Card>
-                
-                <materialDesign:Card x:Name="DragAdd_Card" Height="200" Margin="10" Background="GhostWhite" materialDesign:ShadowAssist.ShadowDepth="Depth5" Visibility="Collapsed"
-                                     AllowDrop="True" DragOver="Quickbar_ListBox_DragOver" Drop="Quickbar_ListBox_Drop" DragLeave="Quickbar_ListBox_DragLeave">
-                    <Border BorderThickness="2" BorderBrush="Black" Margin="15">
-                        <materialDesign:PackIcon Kind="AddBox" VerticalAlignment="Center" Foreground="Black" HorizontalAlignment="Center" Width="100" Height="100"/>
-                    </Border>
+            <StackPanel>
+                <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 20 0 20" HorizontalAlignment="Center"/>
+                <materialDesign:Card>
+                    <DockPanel Margin="10 0 0 0">
+                        <materialDesign:Card Background="DarkGray" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
+                                             VerticalAlignment="Center" Height="138" Width="150" Margin="0 -17 10 0">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
+                                <materialDesign:PackIcon Kind="AddBox" Height="50" Width="50" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Here" Foreground="Black"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                        <StackPanel x:Name="Quickbar_Stackpanel" >
+                            <ListBox x:Name="Quickbar_ListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding QuickBar}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <materialDesign:Card Background="GhostWhite" Margin="5">
+                                            <StackPanel Height="140" Width="150">
+                                                <TextBlock Text="{Binding Name}" Style="{StaticResource CategoryTextblockStyle}" Foreground="Black" Margin="0 3 0 0"/>
+                                                <DockPanel Margin="5 10 5 5" LastChildFill="False" HorizontalAlignment="Center">
+                                                    <!--copy password button-->
+                                                    <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password">
+                                                        <materialDesign:PackIcon Kind="Key" Width="25" Height="25"/>
+                                                    </Button>
+                                                    <!--copy username button-->
+                                                    <Button Style="{StaticResource GoBackButtonStyle}" Margin="7 0 7 0" ToolTip="Copy username">
+                                                        <materialDesign:PackIcon Kind="User" Width="25" Height="25"/>
+                                                    </Button>
+                                                    <!--open linked page button-->
+                                                    <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website">
+                                                        <materialDesign:PackIcon Kind="Login" Width="25" Height="25"/>
+                                                    </Button>
+                                                </DockPanel>
+                                            </StackPanel>
+                                        </materialDesign:Card>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </DockPanel>
                 </materialDesign:Card>
             </StackPanel>
 

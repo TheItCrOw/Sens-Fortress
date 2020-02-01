@@ -25,13 +25,7 @@ namespace SensFortress.View.Main.Views.HomeSubViews
             InitializeComponent();
         }
 
-        public void InformAboutDragDrop()
-        {
-            Quickbar_Card.Visibility = Visibility.Collapsed;
-            DragAdd_Card.Visibility = Visibility.Visible;
-        }
-
-        private void Quickbar_ListBox_DragOver(object sender, DragEventArgs e)
+        private void AddDragItem_Card_DragOver(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(typeof(TreeItemViewModel)))
             {
@@ -40,30 +34,24 @@ namespace SensFortress.View.Main.Views.HomeSubViews
             }
             else
             {
-                //((ListBox)sender).Background = Brushes.Gray;
-                //((ListBox)sender).BorderThickness = new Thickness(3,3,3,3);
+                ((Card)sender).Background = Brushes.GhostWhite;
                 e.Effects = DragDropEffects.Move;
             }
         }
 
-        private void Quickbar_ListBox_Drop(object sender, DragEventArgs e)
+        private void AddDragItem_Card_DragLeave(object sender, DragEventArgs e)
+        {
+            ((Card)sender).Background = Brushes.DarkGray;
+        }
+
+        private void AddDragItem_Card_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(TreeItemViewModel)))
             {
                 // do whatever you want do with the dropped element
                 var droppedThingie = e.Data.GetData(typeof(TreeItemViewModel)) as TreeItemViewModel;
             }
-
-            Quickbar_Card.Visibility = Visibility.Visible;
-            DragAdd_Card.Visibility = Visibility.Collapsed;
-        }
-
-        private void Quickbar_ListBox_DragLeave(object sender, DragEventArgs e)
-        {
-            //((ListBox)sender).Background = Brushes.GhostWhite;
-            //((ListBox)sender).BorderThickness = new Thickness(0);
-            //Quickbar_Card.Visibility = Visibility.Visible;
-            //DragAdd_Card.Visibility = Visibility.Collapsed;
+            ((Card)sender).Background = Brushes.DarkGray;
         }
     }
 }

@@ -136,6 +136,7 @@ namespace SensFortress.View.Main.ViewModel
                 TaskLogger.Instance.SetHomeView(this);
                 LoadTreeView();
                 TaskLogger.Instance.Track("Fortress has been built!");
+                NavigateToHomeHub();
             }
             catch (Exception ex)
             {

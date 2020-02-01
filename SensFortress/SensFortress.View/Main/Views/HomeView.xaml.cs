@@ -107,7 +107,6 @@ namespace SensFortress.View.Main.Views
 
                 if (item != null)
                 {
-                    Navigation.HomeManagementInstance.GetCurrentHub()?.InformAboutDragDrop();
                     DragDrop.DoDragDrop(item, treeItem, DragDropEffects.Move);
                 }
             }
