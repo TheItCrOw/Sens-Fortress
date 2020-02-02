@@ -28,7 +28,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
         public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
-        public Func<double, string> Formatter { get; set; }
+        public Func<int, string> Formatter { get; set; }
 
         /// <summary>
         /// Determines whether the fortress is currently locked.
@@ -64,7 +64,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 new ColumnSeries
                 {
                     Title = "2015",
-                    Values = new ChartValues<double> { 10, 50, 39, 50 }
+                    Values = new ChartValues<int> { 10, 50, 39, 50 }
                 }
             };
 
@@ -72,7 +72,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             SeriesCollection.Add(new ColumnSeries
             {
                 Title = "2016",
-                Values = new ChartValues<double> { 11, 56, 42 }
+                Values = new ChartValues<int> { 11, 56, 42 }
             });
 
             //also adding values updates and animates the chart automatically

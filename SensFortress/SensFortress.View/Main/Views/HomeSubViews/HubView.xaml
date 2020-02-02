@@ -24,6 +24,9 @@
         </UserControl.Background>
 
         <Grid>
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.6"/>
+            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -38,14 +41,12 @@
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <!--Quickbar-->
                 <StackPanel>
-                    <StackPanel.Background>
-                        <SolidColorBrush Color="Black" Opacity="0.3"/>
-                    </StackPanel.Background>
                     <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 20 0 20" HorizontalAlignment="Center"/>
                     <materialDesign:Card Background="Transparent">
                         <DockPanel Margin="10 0 0 0" Height="155">
@@ -99,8 +100,12 @@
                     </materialDesign:Card>
                 </StackPanel>
 
+                <materialDesign:Card Grid.Row="1" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57" Margin="0 1 0 0" Background="Transparent">
+                    <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Statistics"/>
+                </materialDesign:Card>
+                
                 <!--Charts-->
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -110,12 +115,45 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <materialDesign:Card VerticalAlignment="Stretch">
+                    <!--chart 1-->
+                    <materialDesign:Card VerticalAlignment="Stretch" Grid.Row="1">
                         <materialDesign:Card.Background>
-                            <SolidColorBrush Color="Black" Opacity="0.3"/>
+                            <LinearGradientBrush StartPoint="0 0" EndPoint="0 1">
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStop Offset="0.05" Color="Transparent" />
+                                    <GradientStop Offset="1" Color="Black" />
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
                         </materialDesign:Card.Background>
                         <!--<lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15"/>-->
-                        <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="20" Margin="7">
+                        <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15" Margin="7">
+                            <lvc:CartesianChart.DataTooltip>
+                                <lvc:DefaultTooltip BulletSize="20" Background="Black"/>
+                            </lvc:CartesianChart.DataTooltip>
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Foreground="White" Title="Salesman" Labels="{Binding Labels}" FontSize="15"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis FontSize="15" Foreground="White" LabelFormatter="{Binding Formatter}"></lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+                    </materialDesign:Card>
+
+                    <!--chart 2--> 
+                    <materialDesign:Card VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1">
+                        <materialDesign:Card.Background>
+                            <LinearGradientBrush StartPoint="0 0" EndPoint="0 1">
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStop Offset="0.05" Color="Transparent" />
+                                    <GradientStop Offset="1" Color="Black" />
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+                        </materialDesign:Card.Background>
+                        <!--<lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15"/>-->
+                        <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15" Margin="7">
+                            <lvc:CartesianChart.DataTooltip>
+                                <lvc:DefaultTooltip BulletSize="20" Background="Black"/>
+                            </lvc:CartesianChart.DataTooltip>
                             <lvc:CartesianChart.AxisX>
                                 <lvc:Axis Foreground="White" Title="Salesman" Labels="{Binding Labels}" FontSize="15"></lvc:Axis>
                             </lvc:CartesianChart.AxisX>
