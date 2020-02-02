@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using SensFortress.View.Main.ViewModel;
+using SensFortress.View.Main.ViewModel.HomeSubVms;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,6 +26,11 @@ namespace SensFortress.View.Main.Views.HomeSubViews
             InitializeComponent();
         }
 
+        /// <summary>
+        ///  When draggin over => Dragging gets started in <see cref="HomeView"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddDragItem_Card_DragOver(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(typeof(TreeItemViewModel)))
@@ -34,24 +40,35 @@ namespace SensFortress.View.Main.Views.HomeSubViews
             }
             else
             {
-                ((Card)sender).Background = Brushes.GhostWhite;
+                ((Card)sender).Background = Brushes.LightGray;
                 e.Effects = DragDropEffects.Move;
             }
         }
 
+        /// <summary>
+        /// When leaving the drag 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddDragItem_Card_DragLeave(object sender, DragEventArgs e)
         {
-            ((Card)sender).Background = Brushes.DarkGray;
+            ((Card)sender).Background = Brushes.GhostWhite;
         }
 
+        /// <summary>
+        /// Drop the item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddDragItem_Card_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(TreeItemViewModel)))
             {
                 // do whatever you want do with the dropped element
-                var droppedThingie = e.Data.GetData(typeof(TreeItemViewModel)) as TreeItemViewModel;
+                var droppedItem = e.Data.GetData(typeof(TreeItemViewModel)) as TreeItemViewModel;
+                ((HubViewModel)DataContext).AddQuickBarItemCommand.Execute(droppedItem);
             }
-            ((Card)sender).Background = Brushes.DarkGray;
+            ((Card)sender).Background = Brushes.GhostWhite;
         }
     }
 }

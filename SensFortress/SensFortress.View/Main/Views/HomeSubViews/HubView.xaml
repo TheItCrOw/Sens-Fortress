@@ -14,76 +14,92 @@
             TextOptions.TextFormattingMode="Ideal"
             TextOptions.TextRenderingMode="Auto"
             Background="{DynamicResource MaterialDesignPaper}"
-            FontFamily="{DynamicResource MaterialDesignFont}">
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <!--Title-->
-        <materialDesign:Card VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57">
-            <TextBlock Text="Home-Hub" Style="{StaticResource InformationTextblockStyle}" Foreground="White"/>
-        </materialDesign:Card>
+            FontFamily="{DynamicResource MaterialDesignFont}"
+             >
+    <!--Background Image-->
+    <UserControl>
+        <UserControl.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Fortress-Bridge.jpg" Stretch="UniformToFill"/>
+        </UserControl.Background>
 
-        <!--Main Content-->
-        <Grid Grid.Row="1">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
-            <!--Quickbar-->
-            <StackPanel>
-                <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 20 0 20" HorizontalAlignment="Center"/>
-                <materialDesign:Card>
-                    <DockPanel Margin="10 0 0 0">
-                        <materialDesign:Card Background="DarkGray" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
-                                             VerticalAlignment="Center" Height="138" Width="150" Margin="0 -17 10 0">
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
-                                <materialDesign:PackIcon Kind="AddBox" Height="50" Width="50" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Here" Foreground="Black"/>
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <StackPanel x:Name="Quickbar_Stackpanel" >
-                            <ListBox x:Name="Quickbar_ListBox" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding QuickBar}">
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel IsItemsHost="True" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <materialDesign:Card Background="GhostWhite" Margin="5">
-                                            <StackPanel Height="140" Width="150">
-                                                <TextBlock Text="{Binding Name}" Style="{StaticResource CategoryTextblockStyle}" Foreground="Black" Margin="0 3 0 0"/>
-                                                <DockPanel Margin="5 10 5 5" LastChildFill="False" HorizontalAlignment="Center">
-                                                    <!--copy password button-->
-                                                    <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password">
-                                                        <materialDesign:PackIcon Kind="Key" Width="25" Height="25"/>
-                                                    </Button>
-                                                    <!--copy username button-->
-                                                    <Button Style="{StaticResource GoBackButtonStyle}" Margin="7 0 7 0" ToolTip="Copy username">
-                                                        <materialDesign:PackIcon Kind="User" Width="25" Height="25"/>
-                                                    </Button>
-                                                    <!--open linked page button-->
-                                                    <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website">
-                                                        <materialDesign:PackIcon Kind="Login" Width="25" Height="25"/>
-                                                    </Button>
-                                                </DockPanel>
-                                            </StackPanel>
-                                        </materialDesign:Card>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
-                    </DockPanel>
-                </materialDesign:Card>
-            </StackPanel>
+
+            <!--Title-->
+            <materialDesign:Card VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57">
+                <TextBlock Text="Home-Hub" Style="{StaticResource InformationTextblockStyle}" Foreground="White"/>
+            </materialDesign:Card>
+
+            <!--Main Content-->
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!--Quickbar-->
+                <StackPanel>
+                    <StackPanel.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.3"/>
+                    </StackPanel.Background>
+                    <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 20 0 20" HorizontalAlignment="Center"/>
+                    <materialDesign:Card Background="Transparent">
+                        <DockPanel Margin="10 0 0 0" Height="155">
+                            <materialDesign:Card Background="White" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
+                                             VerticalAlignment="Center" Height="110" Width="130" Margin="0 -22 10 0" Panel.ZIndex="1" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
+                                    <materialDesign:PackIcon Kind="AddBox" Height="50" Width="50" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Here" Foreground="Black"/>
+                                </StackPanel>
+                            </materialDesign:Card>
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                <StackPanel>
+                                    <ListBox x:Name="Quickbar_ListBox" ItemsSource="{Binding QuickBar}">
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel IsItemsHost="True" />
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <materialDesign:Card Background="GhostWhite" Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                                                    <StackPanel Height="110" MinWidth="150">
+                                                        <TextBlock Text="{Binding Name}" Style="{StaticResource CategoryTextblockStyle}" Foreground="Black" Margin="5 3 5 0"/>
+                                                        <DockPanel Margin="5 40 5 5" LastChildFill="False" HorizontalAlignment="Center">
+                                                            <!--copy password button-->
+                                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password" Height="30" Width="30" Command="{Binding CopyPasswordCommand}">
+                                                                <materialDesign:PackIcon Kind="Key" Width="22" Height="22"/>
+                                                            </Button>
+                                                            <!--copy username button-->
+                                                            <Button Style="{StaticResource GoBackButtonStyle}" Margin="5 0 5 0" ToolTip="Copy username" Height="30" Width="30" Command="{Binding CopyUsernameCommand}">
+                                                                <materialDesign:PackIcon Kind="User" Width="22" Height="22"/>
+                                                            </Button>
+                                                            <!--open linked page button-->
+                                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website" Height="30" Width="30">
+                                                                <materialDesign:PackIcon Kind="Login" Width="22" Height="22"/>
+                                                            </Button>
+                                                            <!--Delete from quickbar-->
+                                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Delete from quickbar" Margin="5 0 0 0" Height="30" Width="30" Command="{Binding DeleteFromQuickbarCommand}">
+                                                                <materialDesign:PackIcon Kind="Delete" Width="22" Height="22"/>
+                                                            </Button>
+                                                        </DockPanel>
+                                                    </StackPanel>
+                                                </materialDesign:Card>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </materialDesign:Card>
+                </StackPanel>
+
+            </Grid>
 
         </Grid>
-
-    </Grid>
+    </UserControl>
 </UserControl>

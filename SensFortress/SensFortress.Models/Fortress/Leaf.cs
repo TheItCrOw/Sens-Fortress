@@ -30,5 +30,11 @@ namespace SensFortress.Models.Fortress
         [DataMember]
         public string Username { get; set; }
 
+        /// <summary>
+        /// When 0, the item is not in the quickbar.
+        /// </summary>
+        [DataMember]
+        public int QuickbarOrder { get; set; }
+
     }
 }

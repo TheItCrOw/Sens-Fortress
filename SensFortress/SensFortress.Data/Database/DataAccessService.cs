@@ -155,14 +155,22 @@ namespace SensFortress.Data.Database
         /// </summary>
         /// <param name="masterKey"></param>
         /// <param name="alsoSaveSecureDC"></param>
-        public void SaveFortress(Masterkey masterKey, bool alsoSaveSecureDC) => _xmlDatacache.SaveFortress(masterKey);
+        public void SaveFortress(Masterkey masterKey) => _xmlDatacache.SaveFortress(masterKey);
 
         /// <summary>
-        /// Get all non sensible models of type T.
+        /// Get all non sensible models of type T. Can return null.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public IEnumerable<T> GetAll<T>() => _xmlDatacache.GetAllFromUnsecure<T>();
+
+        /// <summary>
+        /// Returns all models of the given type with the specified properties. Can return null.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propertiesWithValues"> string=propertyName, object = propertyvalue </param>
+        /// <returns></returns>
+        public IEnumerable<T> GetExplicit<T>(Tuple<string, object>[] propertiesWithValues) => _xmlDatacache.GetExplicit<T>(propertiesWithValues);
 
         /// <summary>
         /// Returns the sensible model with the given foreignKey from the secureMemoryDC

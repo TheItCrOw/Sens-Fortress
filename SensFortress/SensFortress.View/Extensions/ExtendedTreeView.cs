@@ -24,7 +24,7 @@ namespace SensFortress.View.Extensions
                 SetValue(SelectedItem_Property, SelectedItem);
             }
         }
-
+        
         public object SelectedItem_
         {
             get { return (object)GetValue(SelectedItem_Property); }

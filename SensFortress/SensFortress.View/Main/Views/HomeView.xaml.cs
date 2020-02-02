@@ -1,4 +1,5 @@
-﻿using SensFortress.Data.Database;
+﻿using MaterialDesignThemes.Wpf;
+using SensFortress.Data.Database;
 using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
@@ -96,14 +97,14 @@ namespace SensFortress.View.Main.Views
         }
 
         //Start Drag and Drop
-        private void TreeItem_Dockpanel_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void TreeItem_Icon_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.Source.GetType().Name.Equals("TextBox"))
+            if (e.Source.GetType().Name.Equals("PackIcon"))
             {
                 // The source is the object that is being touched to drag
-                var item = (TextBox)e.Source;
+                var item = (PackIcon)e.Source;
                 // This is the data behind
-                var treeItem = ((DockPanel)sender).DataContext;
+                var treeItem = ((PackIcon)sender).DataContext;
 
                 if (item != null)
                 {

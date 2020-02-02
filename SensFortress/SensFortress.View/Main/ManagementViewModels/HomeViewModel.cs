@@ -35,6 +35,7 @@ namespace SensFortress.View.Main.ViewModel
         private bool _isLocked;
         private bool _showLockCard;
         private HubView _hubView;
+        private bool _isSelected;
 
         /// <summary>
         /// Collection showing in the TreeView
@@ -47,7 +48,7 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand<string> AddTreeItemCommand => new DelegateCommand<string>(AddTreeItem);
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(EditTreeItem);
         public DelegateCommand DeleteTreeItemCommand => new DelegateCommand(DeleteTreeItem);
-        public DelegateCommand SaveTreeChangesCommand => new DelegateCommand(SaveTreeChanges);
+        public DelegateCommand SaveTreeChangesCommand => new DelegateCommand(SaveFortress);
         public DelegateCommand LockUnlockFortressCommand => new DelegateCommand(LockUnlockFortress);
         public DelegateCommand NavigateToHomeHubCommand => new DelegateCommand(NavigateToHomeHub);
 
@@ -60,8 +61,11 @@ namespace SensFortress.View.Main.ViewModel
             set
             {
                 SetProperty(ref _selectedTreeViewItem, value);
-                UpdateRootNodes(true, false);
-                UpdateContent();
+                if (SelectedTreeViewItem != null)
+                {
+                    UpdateRootNodes(true, false);
+                    UpdateContent();
+                }
             }
         }
         /// <summary>
@@ -153,11 +157,17 @@ namespace SensFortress.View.Main.ViewModel
         public HubView GetCurrentHub() => _hubView;
 
         /// <summary>
+        /// Returns a snapshot of the current RootNodes.
+        /// </summary>
+        /// <returns></returns>
+        public List<TreeItemViewModel> GetRootNodesSnapshot() => RootNodes.ToList();
+
+        /// <summary>
         /// Navigates to the Hub
         /// </summary>
         private void NavigateToHomeHub()
         {
-            if(_hubView == null)
+            if (_hubView == null)
             {
                 _hubView = new HubView();
                 var hubVm = new HubViewModel();
@@ -165,7 +175,40 @@ namespace SensFortress.View.Main.ViewModel
             }
             SelectedContent = _hubView;
             ((HubViewModel)_hubView.DataContext).Initialize();
+
+            // This is ugly af - must fix later. When we switch to HomeView => the IsSelected property is false. However, this property
+            // doesn't force the TreeView to "unfocus" the last used item. As a consequence, it is still half selected, which has it's
+            // problems. We remove the selecteditem from its parent and add it again. That way IsSelected gets reseted probarly.
+            foreach (var node in RootNodes)
+            {
+                ResetChildOfParent(SelectedTreeViewItem, node);
+            }
             UpdateRootNodes();
+        }
+
+        /// <summary>
+        /// Recursivly resets the child of a parent.
+        /// </summary>
+        /// <param name="selectedChil"></param>
+        /// <param name="currentNode"></param>
+        private void ResetChildOfParent(TreeItemViewModel selectedChild, TreeItemViewModel currentNode)
+        {
+            if (currentNode.Children.Count == 0)
+                return;
+
+            if (currentNode.Children.Contains(selectedChild))
+            {
+                var selectedItemCopy = SelectedTreeViewItem;
+                currentNode.Children.Remove(SelectedTreeViewItem);
+                currentNode.Children.Add(selectedItemCopy);
+            }
+            else
+            {
+                foreach (var child in currentNode.Children)
+                {
+                    ResetChildOfParent(selectedChild, child);
+                }
+            }
         }
 
         /// <summary>
@@ -209,10 +252,10 @@ namespace SensFortress.View.Main.ViewModel
         }
 
         /// <summary>
-        /// Saves changes made in the TreeView.
+        /// Saves changes made in the fortress.
         /// Mainly Models added, changed or deleted. We do it async to stay responsive.
         /// </summary>
-        private async void SaveTreeChanges()
+        private async void SaveFortress()
         {
             IsLoading = true;
             try
@@ -260,22 +303,19 @@ namespace SensFortress.View.Main.ViewModel
         /// <param name="item"></param>
         private void RecursivlySaveChanges(TreeItemViewModel item)
         {
-            if (item.IsDirty)
+            // If the dirty item is a leaf and the LeafPasswordCopy isnt null => password has been changed.
+            // So save the sensible part in the secureDC
+            if (item.CurrentViewModel is LeafViewModel leafVm && leafVm.LeafPasswordCopy != null)
             {
-                // If the dirty item is a leaf and the LeafPasswordCopy isnt null => password has been changed.
-                // So save the sensible part in the secureDC
-                if(item.CurrentViewModel is LeafViewModel leafVm && leafVm.LeafPasswordCopy != null)
-                {
-                    // For transporting sake, we encrypt the value of the leafPwCopy beforehand. When adding to secureDC tho => decrypt it. It gets encrypted again anyways.
-                    if (leafVm.LeafPasswordCopy.EncryptedValue != null)
-                        leafVm.LeafPasswordCopy.Value = CryptMemoryProtection.DecryptInMemoryData(leafVm.LeafPasswordCopy.EncryptedValue);
+                // For transporting sake, we encrypt the value of the leafPwCopy beforehand. When adding to secureDC tho => decrypt it. It gets encrypted again anyways.
+                if (leafVm.LeafPasswordCopy.EncryptedValue != null)
+                    leafVm.LeafPasswordCopy.Value = CryptMemoryProtection.DecryptInMemoryData(leafVm.LeafPasswordCopy.EncryptedValue);
 
-                    DataAccessService.Instance.DeleteOneFromMemoryDC(null, true, leafVm.LeafPasswordCopy);
-                    DataAccessService.Instance.AddOneToMemoryDC(null, true, leafVm.LeafPasswordCopy);
-                }
-                DataAccessService.Instance.DeleteOneFromMemoryDC(item.CurrentViewModel.Model);
-                DataAccessService.Instance.AddOneToMemoryDC(item.CurrentViewModel.Model);
+                DataAccessService.Instance.DeleteOneFromMemoryDC(null, true, leafVm.LeafPasswordCopy);
+                DataAccessService.Instance.AddOneToMemoryDC(null, true, leafVm.LeafPasswordCopy);
             }
+            DataAccessService.Instance.DeleteOneFromMemoryDC(item.CurrentViewModel.Model);
+            DataAccessService.Instance.AddOneToMemoryDC(item.CurrentViewModel.Model);
 
             if (item.Children.Count > 0)
                 foreach (var child in item.Children)
@@ -294,7 +334,7 @@ namespace SensFortress.View.Main.ViewModel
                 await Task.Run(() =>
                 {
                     // If root - just delete
-                    if(SelectedTreeViewItem.TreeType == TreeDepth.Root)
+                    if (SelectedTreeViewItem.TreeType == TreeDepth.Root)
                     {
                         DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model); // Delete from cache
                         Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem)); // Delete from UI
@@ -427,7 +467,7 @@ namespace SensFortress.View.Main.ViewModel
         /// <summary>
         /// Marks the TreeItem as editable
         /// </summary>
-        private void EditTreeItem() => UpdateRootNodes(true, true);        
+        private void EditTreeItem() => UpdateRootNodes(true, true);
 
         /// <summary>
         /// Adds a new object to the currently selected treeItem
@@ -456,10 +496,10 @@ namespace SensFortress.View.Main.ViewModel
             {
                 if (buttonName == "AddBranch_Button")
                 {
-                    var newBranch = new Branch 
-                    { 
-                        Name = "(new)", 
-                        ParentBranchId = SelectedTreeViewItem.CurrentViewModel.Id 
+                    var newBranch = new Branch
+                    {
+                        Name = "(new)",
+                        ParentBranchId = SelectedTreeViewItem.CurrentViewModel.Id
                     };
                     var newBranchVm = new BranchViewModel(newBranch, this);
                     var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Branch, true);
@@ -477,7 +517,7 @@ namespace SensFortress.View.Main.ViewModel
                         Username = "username123"
                     };
                     var exPw = ByteHelper.StringToByteArray("(new password)");
-                    var newLeafPw = new LeafPassword{ForeignId=newLeaf.Id, Value = exPw};
+                    var newLeafPw = new LeafPassword { ForeignId = newLeaf.Id, Value = exPw };
                     var newLeafVm = new LeafViewModel(newLeaf, this);
                     var newTreeItem = new TreeItemViewModel(newLeafVm, TreeDepth.Leaf, true);
                     DataAccessService.Instance.AddOneToMemoryDC(newLeaf);
@@ -494,7 +534,7 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         private void UpdateRootNodes(bool isSelected = false, bool isEditable = false, bool resetIsDirty = false)
         {
-            if(SelectedTreeViewItem == null)
+            if (SelectedTreeViewItem == null)
                 return;
 
             foreach (var item in RootNodes)
@@ -540,11 +580,11 @@ namespace SensFortress.View.Main.ViewModel
         {
             Logger.log.Info("Loading Home TreeView...");
             var allBranchesVm = DataAccessService.Instance
-                .GetAll<Branch>()
+                .GetAll<Branch>()?
                 .Select(b => new BranchViewModel(b, this));
 
             var allLeafesVmLookup = DataAccessService.Instance
-                .GetAll<Leaf>()
+                .GetAll<Leaf>()?
                 .Select(l => new LeafViewModel(l, this))
                 .ToLookup(l => l.BranchId, l => l);
 

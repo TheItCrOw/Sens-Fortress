@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows.Controls;
 
 namespace SensFortress.View.Main.ViewModel
 {
@@ -52,10 +53,7 @@ namespace SensFortress.View.Main.ViewModel
         public TreeDepth TreeType { get; set; }
         public string Name
         {
-            get
-            {
-                return _name;
-            }
+            get => _name;
             set
             {
                 SetProperty(ref _name, value);
@@ -64,10 +62,7 @@ namespace SensFortress.View.Main.ViewModel
         }
         public bool IsSelected
         {
-            get
-            {
-                return _isSelected;
-            }
+            get => _isSelected;
             set
             {
                 SetProperty(ref _isSelected, value);
@@ -75,10 +70,7 @@ namespace SensFortress.View.Main.ViewModel
         }
         public bool IsEditable
         {
-            get
-            {
-                return _isEditable;
-            }
+            get => _isEditable;
             set
             {
                 SetProperty(ref _isEditable, value);
@@ -86,10 +78,7 @@ namespace SensFortress.View.Main.ViewModel
         }
         public bool MayHaveChildren
         {
-            get
-            {
-                return _mayHaveChildren;
-            }
+            get => _mayHaveChildren;
             set
             {
                 SetProperty(ref _mayHaveChildren, value);
@@ -97,10 +86,7 @@ namespace SensFortress.View.Main.ViewModel
         }
         public bool IsExpanded
         {
-            get
-            {
-                return _isExpanded;
-            }
+            get => _isExpanded;
             set
             {
                 if (Children.Count > 0)
@@ -109,10 +95,7 @@ namespace SensFortress.View.Main.ViewModel
         }
         public bool IsHighlighted
         {
-            get
-            {
-                return _isHighlighted;
-            }
+            get => _isHighlighted;
             set
             {
                 SetProperty(ref _isHighlighted, value);
@@ -120,10 +103,7 @@ namespace SensFortress.View.Main.ViewModel
         }
         public bool IsDirty
         {
-            get
-            {
-                return _isDirty;
-            }
+            get => _isDirty;
             set
             {
                 SetProperty(ref _isDirty, value);

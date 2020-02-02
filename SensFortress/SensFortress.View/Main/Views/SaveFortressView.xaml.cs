@@ -62,7 +62,7 @@ namespace SensFortress.View.Main.Views
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Fortress backed up. Proceeding to save the fortress...");
 
                         // Now save the fortress.                   
-                        DataAccessService.Instance.SaveFortress(secureMasterkey, true);
+                        DataAccessService.Instance.SaveFortress(secureMasterkey);
 
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Fortress saved successfully.");
 

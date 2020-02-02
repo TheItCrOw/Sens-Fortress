@@ -227,10 +227,46 @@ namespace SensFortress.Data.Database
             }
             else
             {
-                var ex = new XmlDataCacheException($"Could not get the model {typeof(T).Name} from unsecureDC");
-                ex.SetUserMessage(WellKnownExceptionMessages.DataExceptionMessage());
-                throw ex;
+                Logger.log.Info($"Given type {typeof(T)} was not found in the unsecure DC");
+                return null;
             }
+        }
+
+        /// <summary>
+        /// Gets all models from the unsecureDc with the specification
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        internal IEnumerable<T> GetExplicit<T>(Tuple<string, object>[] properties)
+        {
+            var allModelsOfType = GetAllFromUnsecure<T>();
+
+            if (allModelsOfType == null)
+                return null;
+
+            var castedModels = allModelsOfType.Cast<T>();
+            var propsVm = new List<PropertyInfo>(typeof(T).GetProperties());
+            var desiredModels = new List<T>();
+
+            // Go through all models of given type
+            foreach (var cModel in castedModels)
+            {
+                var matchedPropertiesCounter = 0;
+                foreach (var prop in propsVm)
+                {
+                    // if the property name and value match with one given tuple => Then we have found one match
+                    if(properties.Any(p => p.Item1 == prop.Name && p.Item2 == prop.GetValue(cModel)))
+                    {
+                        matchedPropertiesCounter++;
+                    }
+                }
+                // A list of specified criteria is given. Only when matchedProperties equal the amount of critera => we add it to the returnList.
+                if (matchedPropertiesCounter == properties.Count())
+                    desiredModels.Add(cModel);
+            }
+            return desiredModels;
         }
 
         /// <summary>

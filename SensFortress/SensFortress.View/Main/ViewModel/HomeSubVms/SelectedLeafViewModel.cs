@@ -197,14 +197,23 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// </summary>
         private void LoadPassword()
         {
-            if (DataAccessService.Instance.TryGetSensible<LeafPassword>(CurrentItem.CurrentViewModel.Id, out var leafPw))
+            if (CurrentItem.CurrentViewModel is LeafViewModel leafVm)
             {
-                _encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
-                leafPw = null;
-            }
-            else
-            {
-                Communication.InformUser($"There was a problem finding the password in the {TermHelper.GetDatabaseTerm()}.");
+                // If the password has been edited, we need to use the PasswordCopy. Otherwise we always load the old one stored in the DC!
+                if (leafVm.LeafPasswordCopy != null)
+                    _encryptedPassword = leafVm.LeafPasswordCopy.EncryptedValue;
+                else
+                {
+                    if (DataAccessService.Instance.TryGetSensible<LeafPassword>(CurrentItem.CurrentViewModel.Id, out var leafPw))
+                    {
+                        _encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
+                        leafPw = null;
+                    }
+                    else
+                    {
+                        Communication.InformUser($"There was a problem finding the password in the {TermHelper.GetDatabaseTerm()}.");
+                    }
+                }
             }
         }
         /// <summary>

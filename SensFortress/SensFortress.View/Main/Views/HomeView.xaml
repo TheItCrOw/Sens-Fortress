@@ -159,7 +159,7 @@
                     </extensions:ExtendedTreeView.ItemContainerStyle>
                     <extensions:ExtendedTreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vms:TreeItemViewModel}" ItemsSource="{Binding Children}">
-                            <DockPanel x:Name="TreeItem_Dockpanel" PreviewMouseLeftButtonDown="TreeItem_Dockpanel_PreviewMouseLeftButtonDown" AllowDrop="True">
+                            <DockPanel x:Name="TreeItem_Dockpanel">
                                 <!--This is a placeholder for the badge, which shows, if the item is saveable!-->
                                 <materialDesign:Badged BadgeColorZoneMode="Light" Margin="10 0 0 0" ToolTip="Saveable changes" VerticalAlignment="Top">
                                     <materialDesign:Badged.Badge>
@@ -176,8 +176,9 @@
                                     </materialDesign:Badged.Style>
                                 </materialDesign:Badged>
 
-                                <!--Icon-->
-                                <materialDesign:PackIcon VerticalAlignment="Center" Margin="0 0 5 0" Foreground="Gray">
+                                <!--Icon => this is the trigger point for dragging also-->
+                                <materialDesign:PackIcon x:Name="TreeItem_Icon" VerticalAlignment="Center" Margin="0 0 5 0" Foreground="Gray" 
+                                                         PreviewMouseLeftButtonDown="TreeItem_Icon_PreviewMouseLeftButtonDown" AllowDrop="True">
                                     <materialDesign:PackIcon.Style>
                                         <Style TargetType="materialDesign:PackIcon">
                                             <Style.Triggers>
@@ -230,12 +231,12 @@
                                     <materialDesign:PackIcon Kind="Edit" ToolTip="Edit"/>
                                 </Button>
                                 <!--Add branch button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
-                                <Button x:Name="AddBranch_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranchButton, Path=Name}"
+                                <Button x:Name="AddBranch_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranch_Button, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory"/>
                                 </Button>
                                 <!--Add leaf button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
-                                <Button x:Name="AddLeaf_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddLeafButton, Path=Name}"
+                                <Button x:Name="AddLeaf_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddLeaf_Button, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
                                     <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
                                 </Button>
