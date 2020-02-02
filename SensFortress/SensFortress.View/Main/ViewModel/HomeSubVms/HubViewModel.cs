@@ -76,7 +76,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             });
 
             //also adding values updates and animates the chart automatically
-            SeriesCollection[1].Values.Add(48d);
+            SeriesCollection[1].Values.Add(48);
 
             Labels = new[] { "Maria", "Susan", "Charles", "Frida" };
             Formatter = value => value.ToString("N");
