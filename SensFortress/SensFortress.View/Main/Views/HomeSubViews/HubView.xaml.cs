@@ -1,4 +1,6 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using LiveCharts;
+using LiveCharts.Wpf;
+using MaterialDesignThemes.Wpf;
 using SensFortress.View.Main.ViewModel;
 using SensFortress.View.Main.ViewModel.HomeSubVms;
 using System;
@@ -24,8 +26,11 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         public HubView()
         {
             InitializeComponent();
+
+            DataContext = this;
         }
 
+        #region DragDrop
         /// <summary>
         ///  When draggin over => Dragging gets started in <see cref="HomeView"/>
         /// </summary>
@@ -69,6 +74,19 @@ namespace SensFortress.View.Main.Views.HomeSubViews
                 ((HubViewModel)DataContext).AddQuickBarItemCommand.Execute(droppedItem);
             }
             ((Card)sender).Background = Brushes.GhostWhite;
+        }
+        #endregion
+
+        private void Chart_OnDataClick(object sender, ChartPoint chartpoint)
+        {
+            var chart = (LiveCharts.Wpf.PieChart)chartpoint.ChartView;
+
+            //clear selected slice.
+            foreach (PieSeries series in chart.Series)
+                series.PushOut = 0;
+
+            var selectedSeries = (PieSeries)chartpoint.SeriesView;
+            selectedSeries.PushOut = 8;
         }
     }
 }

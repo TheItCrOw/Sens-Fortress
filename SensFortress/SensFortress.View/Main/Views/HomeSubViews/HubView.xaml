@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Main.Views.HomeSubViews"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              AllowDrop="True"
              d:DesignHeight="900" d:DesignWidth="1100"           
@@ -97,6 +98,33 @@
                         </DockPanel>
                     </materialDesign:Card>
                 </StackPanel>
+
+                <!--Charts-->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <materialDesign:Card VerticalAlignment="Stretch">
+                        <materialDesign:Card.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.3"/>
+                        </materialDesign:Card.Background>
+                        <!--<lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15"/>-->
+                        <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="20" Margin="7">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Foreground="White" Title="Salesman" Labels="{Binding Labels}" FontSize="15"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis FontSize="15" Foreground="White" LabelFormatter="{Binding Formatter}"></lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+                    </materialDesign:Card>
+                </Grid>
 
             </Grid>
 

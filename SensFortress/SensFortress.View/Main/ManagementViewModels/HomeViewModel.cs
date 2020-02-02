@@ -35,7 +35,6 @@ namespace SensFortress.View.Main.ViewModel
         private bool _isLocked;
         private bool _showLockCard;
         private HubView _hubView;
-        private bool _isSelected;
 
         /// <summary>
         /// Collection showing in the TreeView
@@ -145,7 +144,7 @@ namespace SensFortress.View.Main.ViewModel
             catch (Exception ex)
             {
                 Logger.log.Error($"Error while loading HomeView: {ex}");
-                ex.SetUserMessage("An error occured while trying to load data.");
+                ex.SetUserMessage("Ann erorr occured while trying to load data. Some entries may be missing.");
                 Communication.InformUserAboutError(ex);
             }
         }
@@ -217,7 +216,7 @@ namespace SensFortress.View.Main.ViewModel
         private void LockUnlockFortress()
         {
             if (CurrentFortressData.IsLocked)
-                ShowLockCard = true;
+                ShowLockCard = true; 
             else
                 CurrentFortressData.IsLocked = true;
         }
@@ -265,7 +264,7 @@ namespace SensFortress.View.Main.ViewModel
                     // Make sure all changes are being saved.
                     foreach (var node in RootNodes)
                     {
-                        RecursivlySaveChanges(node);
+                        RecursivlySaveChangesToDC(node);
                     }
                     // UI stuff has to be called from Dispatcher - WPF is a bit autistic here. 
                     Application.Current.Dispatcher.Invoke(() =>
@@ -301,7 +300,7 @@ namespace SensFortress.View.Main.ViewModel
         /// Replaces the old models in the DC with the dirty models
         /// </summary>
         /// <param name="item"></param>
-        private void RecursivlySaveChanges(TreeItemViewModel item)
+        private void RecursivlySaveChangesToDC(TreeItemViewModel item)
         {
             // If the dirty item is a leaf and the LeafPasswordCopy isnt null => password has been changed.
             // So save the sensible part in the secureDC
@@ -319,7 +318,7 @@ namespace SensFortress.View.Main.ViewModel
 
             if (item.Children.Count > 0)
                 foreach (var child in item.Children)
-                    RecursivlySaveChanges(child);
+                    RecursivlySaveChangesToDC(child);
         }
 
         /// <summary>

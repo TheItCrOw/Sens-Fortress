@@ -1,8 +1,12 @@
-﻿using Prism.Commands;
+﻿using LiveCharts;
+using LiveCharts.Defaults;
+using LiveCharts.Wpf;
+using Prism.Commands;
 using SensFortress.Data.Database;
 using SensFortress.Models.Fortress;
 using SensFortress.Security;
 using SensFortress.Utility;
+using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
 using SensFortress.View.Helper;
@@ -22,6 +26,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
+        public SeriesCollection SeriesCollection { get; set; }
+        public string[] Labels { get; set; }
+        public Func<double, string> Formatter { get; set; }
 
         /// <summary>
         /// Determines whether the fortress is currently locked.
@@ -37,7 +44,43 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         public void Initialize()
         {
-            LoadQuickbar();
+            try
+            {
+                LoadQuickbar();
+                ChartTesting();
+            }
+            catch (Exception ex)
+            {
+                ex.SetUserMessage("A problem occured while trying to load the Home-Hub. Some functions may not work proberly.");
+                Logger.log.Error($"Error while trying to initialize HubView: {ex}");
+                Communication.InformUserAboutError(ex);
+            }
+        }
+
+        private void ChartTesting()
+        {
+            SeriesCollection = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "2015",
+                    Values = new ChartValues<double> { 10, 50, 39, 50 }
+                }
+            };
+
+            //adding series will update and animate the chart automatically
+            SeriesCollection.Add(new ColumnSeries
+            {
+                Title = "2016",
+                Values = new ChartValues<double> { 11, 56, 42 }
+            });
+
+            //also adding values updates and animates the chart automatically
+            SeriesCollection[1].Values.Add(48d);
+
+            Labels = new[] { "Maria", "Susan", "Charles", "Frida" };
+            Formatter = value => value.ToString("N");
+
         }
 
         /// <summary>
@@ -59,7 +102,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         private void LoadQuickbar(TreeItemViewModel currentItem)
         {
-            if(currentItem.CurrentViewModel is LeafViewModel leafVm)
+            if (currentItem.CurrentViewModel is LeafViewModel leafVm)
             {
                 if (leafVm.QuickbarOrder > 0)
                     QuickBar.Add(leafVm);
