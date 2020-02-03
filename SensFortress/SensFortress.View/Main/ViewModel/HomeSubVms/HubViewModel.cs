@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Media;
 
 namespace SensFortress.View.Main.ViewModel.HomeSubVms
 {
@@ -64,7 +65,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 new ColumnSeries
                 {
                     Title = "2015",
-                    Values = new ChartValues<int> { 10, 50, 39, 50 }
+                    Values = new ChartValues<int> { 10, 50, 39, 50 },
+                    Fill = Brushes.Black,
+                    StrokeThickness = 1,
+                    Stroke = Brushes.Black
                 }
             };
 
@@ -72,7 +76,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             SeriesCollection.Add(new ColumnSeries
             {
                 Title = "2016",
-                Values = new ChartValues<int> { 11, 56, 42 }
+                Values = new ChartValues<int> { 11, 56, 42 },
+                Fill = Brushes.White,
+                StrokeThickness = 1,
+                Stroke = Brushes.Black
             });
 
             //also adding values updates and animates the chart automatically

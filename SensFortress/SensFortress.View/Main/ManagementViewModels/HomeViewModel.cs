@@ -182,7 +182,7 @@ namespace SensFortress.View.Main.ViewModel
             {
                 ResetChildOfParent(SelectedTreeViewItem, node);
             }
-            UpdateRootNodes();
+            UpdateRootNodes(true);
         }
 
         /// <summary>
@@ -198,8 +198,9 @@ namespace SensFortress.View.Main.ViewModel
             if (currentNode.Children.Contains(selectedChild))
             {
                 var selectedItemCopy = SelectedTreeViewItem;
+                var index = currentNode.Children.IndexOf(selectedChild);
                 currentNode.Children.Remove(SelectedTreeViewItem);
-                currentNode.Children.Add(selectedItemCopy);
+                currentNode.Children.Insert(index, selectedItemCopy);
             }
             else
             {
@@ -216,7 +217,7 @@ namespace SensFortress.View.Main.ViewModel
         private void LockUnlockFortress()
         {
             if (CurrentFortressData.IsLocked)
-                ShowLockCard = true; 
+                ShowLockCard = true;
             else
                 CurrentFortressData.IsLocked = true;
         }

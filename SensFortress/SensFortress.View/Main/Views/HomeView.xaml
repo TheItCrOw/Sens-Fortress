@@ -125,6 +125,9 @@
 
 
         <Grid Grid.Row="2">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.5"/>
+            </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400" MinWidth="200"/>
                 <ColumnDefinition Width="5"/>
@@ -148,10 +151,16 @@
                         </Expander>
                     </StackPanel>
                 </materialDesign:Card>
-                
+
+                <!--Add root => Name is used in code!-->
+                <Button x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="10" Command="{Binding AddTreeItemCommand}" 
+                        CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}">
+                    <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
+                </Button>
+
                 <!--Strcutre list-->
                 <extensions:ExtendedTreeView x:Name="RootNodes_TreeView" Margin="0 10 0 0" ItemsSource="{Binding RootNodes}" SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                             Background="Transparent" BorderThickness="0">
+                                             Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="500">
                     <extensions:ExtendedTreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemContainerStyle}">
                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -159,102 +168,115 @@
                     </extensions:ExtendedTreeView.ItemContainerStyle>
                     <extensions:ExtendedTreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vms:TreeItemViewModel}" ItemsSource="{Binding Children}">
-                            <DockPanel x:Name="TreeItem_Dockpanel">
-                                <!--This is a placeholder for the badge, which shows, if the item is saveable!-->
-                                <materialDesign:Badged BadgeColorZoneMode="Light" Margin="10 0 0 0" ToolTip="Saveable changes" VerticalAlignment="Top">
-                                    <materialDesign:Badged.Badge>
-                                        <materialDesign:PackIcon Kind="Exclamation"/>
-                                    </materialDesign:Badged.Badge>
-                                    <materialDesign:Badged.Style>
-                                        <Style TargetType="materialDesign:Badged">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDirty}" Value="False">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </materialDesign:Badged.Style>
-                                </materialDesign:Badged>
+                            <materialDesign:Card BorderThickness="3" BorderBrush="White">
+                                <!--Highlight the card when selected-->
+                                <materialDesign:Card.Style>
+                                    <Style TargetType="materialDesign:Card">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="Background" Value="GhostWhite"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </materialDesign:Card.Style>
+                                <DockPanel x:Name="TreeItem_Dockpanel" Margin="3">
+                                    <!--This is a placeholder for the badge, which shows, if the item is saveable!-->
+                                    <materialDesign:Badged Background="Transparent" Margin="6 6 0 0" ToolTip="Saveable changes" VerticalAlignment="Top">
+                                        <materialDesign:Badged.Badge>
+                                            <materialDesign:PackIcon Kind="Exclamation" Foreground="Black"/>
+                                        </materialDesign:Badged.Badge>
+                                        <materialDesign:Badged.Style>
+                                            <Style TargetType="materialDesign:Badged">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsDirty}" Value="False">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </materialDesign:Badged.Style>
+                                    </materialDesign:Badged>
 
-                                <!--Icon => this is the trigger point for dragging also-->
-                                <materialDesign:PackIcon x:Name="TreeItem_Icon" VerticalAlignment="Center" Margin="0 0 5 0" Foreground="Gray" 
+                                    <!--Icon => this is the trigger point for dragging also-->
+                                    <materialDesign:PackIcon x:Name="TreeItem_Icon" VerticalAlignment="Center" Margin="0 0 5 0" Foreground="Gray" 
                                                          PreviewMouseLeftButtonDown="TreeItem_Icon_PreviewMouseLeftButtonDown" AllowDrop="True">
-                                    <materialDesign:PackIcon.Style>
-                                        <Style TargetType="materialDesign:PackIcon">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static vms:TreeDepth.Root}">
-                                                    <Setter Property="Kind" Value="FolderMultiple"/>
-                                                    <Setter Property="Width" Value="28"/>
-                                                    <Setter Property="Height" Value="28"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static vms:TreeDepth.Branch}">
-                                                    <Setter Property="Kind" Value="Folder"/>
-                                                    <Setter Property="Width" Value="25"/>
-                                                    <Setter Property="Height" Value="25"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=TreeType}"  Value="{x:Static vms:TreeDepth.Leaf}">
-                                                    <Setter Property="Kind" Value="Key"/>
-                                                    <Setter Property="Width" Value="25"/>
-                                                    <Setter Property="Height" Value="25"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </materialDesign:PackIcon.Style>
-                                </materialDesign:PackIcon>
-                                <!--Name textbox-->
-                                <TextBox x:Name="TreeItemName_Textbox" Text="{Binding Name}" Margin="3 2" Focusable="{Binding IsEditable}" Cursor="Arrow">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox" BasedOn="{StaticResource TreeViewTextboxStyle}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static vms:TreeDepth.Branch}">
-                                                    <Setter Property="FontSize" Value="17"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=TreeType}"  Value="{x:Static vms:TreeDepth.Leaf}">
-                                                    <Setter Property="FontSize" Value="17"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=IsEditable}"  Value="True">
-                                                    <Setter Property="BorderThickness" Value="0 0 0 1"/>
-                                                    <Setter Property="Background" Value="FloralWhite"/>
-                                                    <Setter Property="Foreground" Value="Black"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=IsHighlighted}" Value="true">
-                                                    <Setter Property="Foreground" Value="Red"/>
-                                                    <Setter Property="FontWeight" Value="ExtraBold"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBox.Style>
-                                </TextBox>
-                                <!--Edit button-->
-                                <Button x:Name="EditTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding EditTreeItemCommand}"
+                                        <materialDesign:PackIcon.Style>
+                                            <Style TargetType="materialDesign:PackIcon">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static vms:TreeDepth.Root}">
+                                                        <Setter Property="Kind" Value="FolderMultiple"/>
+                                                        <Setter Property="Width" Value="28"/>
+                                                        <Setter Property="Height" Value="28"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static vms:TreeDepth.Branch}">
+                                                        <Setter Property="Kind" Value="Folder"/>
+                                                        <Setter Property="Width" Value="25"/>
+                                                        <Setter Property="Height" Value="25"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=TreeType}"  Value="{x:Static vms:TreeDepth.Leaf}">
+                                                        <Setter Property="Kind" Value="Key"/>
+                                                        <Setter Property="Width" Value="25"/>
+                                                        <Setter Property="Height" Value="25"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </materialDesign:PackIcon.Style>
+                                    </materialDesign:PackIcon>
+                                    <!--Name textbox-->
+                                    <TextBox x:Name="TreeItemName_Textbox" Text="{Binding Name}" Margin="3 2" Focusable="{Binding IsEditable}" Cursor="Arrow">
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox" BasedOn="{StaticResource TreeViewTextboxStyle}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=IsSelected}" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static vms:TreeDepth.Branch}">
+                                                        <Setter Property="FontSize" Value="17"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=TreeType}"  Value="{x:Static vms:TreeDepth.Leaf}">
+                                                        <Setter Property="FontSize" Value="17"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=IsEditable}" Value="True">
+                                                        <Setter Property="BorderThickness" Value="0 0 0 1"/>
+                                                        <Setter Property="Background" Value="FloralWhite"/>
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=IsHighlighted}" Value="true">
+                                                        <Setter Property="Foreground" Value="Red"/>
+                                                        <Setter Property="FontWeight" Value="ExtraBold"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </TextBox>
+                                    <!--Edit button-->
+                                    <Button x:Name="EditTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding EditTreeItemCommand}"
                                         Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
-                                    <materialDesign:PackIcon Kind="Edit" ToolTip="Edit"/>
-                                </Button>
-                                <!--Add branch button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
-                                <Button x:Name="AddBranch_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranch_Button, Path=Name}"
+                                        <materialDesign:PackIcon Kind="Edit" ToolTip="Edit"/>
+                                    </Button>
+                                    <!--Add branch button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
+                                    <Button x:Name="AddBranch_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranch_Button, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
-                                    <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory"/>
-                                </Button>
-                                <!--Add leaf button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
-                                <Button x:Name="AddLeaf_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddLeaf_Button, Path=Name}"
+                                        <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory"/>
+                                    </Button>
+                                    <!--Add leaf button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
+                                    <Button x:Name="AddLeaf_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddLeaf_Button, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
-                                    <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
-                                </Button>
-                                <!--Delete button-->
-                                <Button x:Name="DeleteTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding DeleteTreeItemCommand}"
+                                        <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
+                                    </Button>
+                                    <!--Delete button-->
+                                    <Button x:Name="DeleteTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding DeleteTreeItemCommand}"
                                         Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
-                                    <materialDesign:PackIcon Kind="Delete" ToolTip="Delete"/>
-                                </Button>
-                            </DockPanel>
+                                        <materialDesign:PackIcon Kind="Delete" ToolTip="Delete"/>
+                                    </Button>
+                                </DockPanel>
+                            </materialDesign:Card>
                         </HierarchicalDataTemplate>
                     </extensions:ExtendedTreeView.ItemTemplate>
                 </extensions:ExtendedTreeView>
 
-                <!--Add root => Name is used in code!-->
-                <Button x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="10" Command="{Binding AddTreeItemCommand}" 
-                        CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}">
-                    <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
-                </Button>
                 
             </StackPanel>
             

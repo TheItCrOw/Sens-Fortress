@@ -113,20 +113,47 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="200"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="210"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <materialDesign:Card Grid.Row="1" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57" Margin="0 1 0 0" Grid.ColumnSpan="2"
-                                         Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Statistics"/>
-                    </materialDesign:Card>
+                    <!--Lock/Unlock image and text-->
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Height="200" HorizontalAlignment="Center" Width="200" Foreground="White">
+                            <materialDesign:PackIcon.Style>
+                                <Style TargetType="materialDesign:PackIcon">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                            <Setter Property="Kind" Value="ShieldCheck"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsLocked}" Value="False">
+                                            <Setter Property="Kind" Value="ShieldOff"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </materialDesign:PackIcon.Style>
+                        </materialDesign:PackIcon>
+                        <TextBlock>
+                              <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource InformationTextblockStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                            <Setter Property="Text" Value="Fortress is locked."/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsLocked}" Value="False">
+                                            <Setter Property="Text" Value="Fortress isn't locked."/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
 
                     <!--chart 1-->
-                    <materialDesign:Card Grid.Row="2" VerticalAlignment="Stretch" Background="Transparent">
+                    <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="3">
                         <!--<lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15"/>-->
                         <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15" Margin="7">
                             <lvc:CartesianChart.DataTooltip>

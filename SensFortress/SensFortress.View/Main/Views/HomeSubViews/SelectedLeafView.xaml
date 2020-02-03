@@ -33,7 +33,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <materialDesign:PackIcon Kind="ShieldKey" Height="300" Width="300" Foreground="White" HorizontalAlignment="Center"/>
+            <materialDesign:PackIcon Kind="ShieldTemplar" Height="300" Width="300" Foreground="White" HorizontalAlignment="Center"/>
             <StackPanel Grid.Row="1">
                 <TextBlock Text="The fortress is currently locked up." Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
                 <Button x:Name="FrontContent_Button" Style="{StaticResource MaterialDesignRaisedLightButton}" MaxWidth="400" Height="40" Command="{Binding ShowUnlockCardCommand}"
