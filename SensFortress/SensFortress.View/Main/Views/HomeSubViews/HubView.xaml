@@ -116,7 +116,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="210"/>
+                        <RowDefinition Height="225"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
@@ -154,16 +154,15 @@
 
                     <!--chart 1-->
                     <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="3">
-                        <!--<lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15"/>-->
-                        <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Top" FontSize="15" Margin="7">
+                        <lvc:CartesianChart Series="{Binding ChartSeries}" LegendLocation="Top" FontSize="15" Margin="7">
                             <lvc:CartesianChart.DataTooltip>
                                 <lvc:DefaultTooltip BulletSize="20" Background="Black"/>
                             </lvc:CartesianChart.DataTooltip>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis Foreground="White" Title="Salesman" Labels="{Binding Labels}" FontSize="15"></lvc:Axis>
+                                <lvc:Axis Foreground="White" Title="Salesman" Labels="{Binding ChartLabels}" FontSize="15"></lvc:Axis>
                             </lvc:CartesianChart.AxisX>
                             <lvc:CartesianChart.AxisY>
-                                <lvc:Axis FontSize="15" Foreground="White" LabelFormatter="{Binding Formatter}"></lvc:Axis>
+                                <lvc:Axis FontSize="15" Foreground="White" LabelFormatter="{Binding ChartFormatter}"></lvc:Axis>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
                     </materialDesign:Card>

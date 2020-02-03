@@ -22,6 +22,7 @@ namespace SensFortress.View.Main.ViewModel
         private string _description;
         private string _userName;
         private int _quickbarOrder;
+        private int _interactedCounter;
 
         public DelegateCommand CopyPasswordCommand => new DelegateCommand(CopyPassword);
         public DelegateCommand CopyUsernameCommand => new DelegateCommand(CopyUsername);
@@ -37,6 +38,7 @@ namespace SensFortress.View.Main.ViewModel
             CurrentBase = currentBase;
             Username = model.Username;
             QuickbarOrder = model.QuickbarOrder;
+            InteractedCounter = model.InteractedCounter;
         }
         public Guid BranchId { get; set; }
 
@@ -78,6 +80,17 @@ namespace SensFortress.View.Main.ViewModel
                 ((Leaf)Model).QuickbarOrder = QuickbarOrder;
             }
         }
+        public int InteractedCounter
+        {
+            get => _interactedCounter;
+            set
+            {
+                SetProperty(ref _interactedCounter, value);
+                // Inform the model about the changed property. We do this very easily, since nothing needs to be informed in this case.
+                ((Leaf)Model).InteractedCounter = InteractedCounter;
+            }
+        }
+
         private void DeleteFromQuickbar()
         {
             if(Navigation.HomeManagementInstance.GetCurrentHub().DataContext is HubViewModel hubVm)

@@ -36,5 +36,10 @@ namespace SensFortress.Models.Fortress
         [DataMember]
         public int QuickbarOrder { get; set; }
 
+        /// <summary>
+        /// Tracks how much this leaf is being used => copied e.g.
+        /// </summary>
+        [DataMember]
+        public int InteractedCounter { get; set; }
     }
 }

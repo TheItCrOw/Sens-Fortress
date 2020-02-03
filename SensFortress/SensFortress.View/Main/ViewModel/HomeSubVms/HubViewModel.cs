@@ -24,12 +24,13 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
     public class HubViewModel : ViewModelManagementBase
     {
         private bool _isLocked;
+        private List<LeafViewModel> _allLeafsVmSnapshot;
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
-        public SeriesCollection SeriesCollection { get; set; }
-        public string[] Labels { get; set; }
-        public Func<int, string> Formatter { get; set; }
+        public SeriesCollection ChartSeries { get; set; }
+        public List<string> ChartLabels { get; set; }
+        public Func<int, string> ChartFormatter { get; set; }
 
         /// <summary>
         /// Determines whether the fortress is currently locked.
@@ -47,8 +48,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             try
             {
-                LoadQuickbar();
-                ChartTesting();
+                var currentNodes = Navigation.HomeManagementInstance.GetRootNodesSnapshot();
+                _allLeafsVmSnapshot = new List<LeafViewModel>();
+                LoadQuickbar(currentNodes);
+                LoadChart(currentNodes);
             }
             catch (Exception ex)
             {
@@ -56,38 +59,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 Logger.log.Error($"Error while trying to initialize HubView: {ex}");
                 Communication.InformUserAboutError(ex);
             }
-        }
-
-        private void ChartTesting()
-        {
-            SeriesCollection = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "2015",
-                    Values = new ChartValues<int> { 10, 50, 39, 50 },
-                    Fill = Brushes.Black,
-                    StrokeThickness = 1,
-                    Stroke = Brushes.Black
-                }
-            };
-
-            //adding series will update and animate the chart automatically
-            SeriesCollection.Add(new ColumnSeries
-            {
-                Title = "2016",
-                Values = new ChartValues<int> { 11, 56, 42 },
-                Fill = Brushes.White,
-                StrokeThickness = 1,
-                Stroke = Brushes.Black
-            });
-
-            //also adding values updates and animates the chart automatically
-            SeriesCollection[1].Values.Add(48);
-
-            Labels = new[] { "Maria", "Susan", "Charles", "Frida" };
-            Formatter = value => value.ToString("N");
-
         }
 
         /// <summary>
@@ -99,18 +70,66 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// <summary>
         /// Recursivly loads the quickbar from the RootNodes in the TreeView.
         /// </summary>
-        private void LoadQuickbar()
+        private void LoadQuickbar(List<TreeItemViewModel> currentNodes)
         {
-            var currentNodes = Navigation.HomeManagementInstance.GetRootNodesSnapshot();
             QuickBar.Clear();
             foreach (var node in currentNodes)
                 LoadQuickbar(node);
+        }
+
+        private void LoadChart(List<TreeItemViewModel> currentNodes)
+        {
+            ChartSeries = new SeriesCollection();
+
+            // Load the chart values
+            var topTenInteracted = new ChartValues<int>();
+            var topTenLabels = new List<string>();
+
+            foreach(var leafVm in _allLeafsVmSnapshot)
+            {
+                if (topTenInteracted.Count < 10)
+                {
+                    topTenInteracted.Add(leafVm.InteractedCounter);
+                    topTenLabels.Add(leafVm.Name);
+                }
+                else
+                {
+                    var possibleLessValue = topTenInteracted.FirstOrDefault(i => i < leafVm.InteractedCounter);
+                    if(possibleLessValue != default)
+                    {
+                        topTenInteracted.Remove(possibleLessValue);
+                        topTenInteracted.Add(leafVm.InteractedCounter);
+
+                        var index = topTenInteracted.IndexOf(possibleLessValue);
+                        topTenLabels.RemoveAt(index);
+                        topTenLabels.Add(leafVm.Name);
+                    }
+                }
+            }
+
+            var columnSeries = new ColumnSeries
+            {
+                Title = "Usage amount: ",
+                Values = topTenInteracted,
+                Fill = Brushes.Black,
+                StrokeThickness = 1,
+                Stroke = Brushes.Black,   
+            };
+
+            //also adding values updates and animates the chart automatically
+            //ChartSeries[0].Values.Add(48);
+
+            ChartSeries.Add(columnSeries);
+            ChartLabels = topTenLabels;
+            ChartFormatter = value => value.ToString();
         }
 
         private void LoadQuickbar(TreeItemViewModel currentItem)
         {
             if (currentItem.CurrentViewModel is LeafViewModel leafVm)
             {
+                _allLeafsVmSnapshot.Add(leafVm);
+
                 if (leafVm.QuickbarOrder > 0)
                     QuickBar.Add(leafVm);
             }
