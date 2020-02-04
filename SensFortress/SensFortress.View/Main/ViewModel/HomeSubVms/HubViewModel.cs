@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -25,12 +26,34 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
     {
         private bool _isLocked;
         private List<LeafViewModel> _allLeafsVmSnapshot;
+        private int _chartMinValue;
+        private int _chartMaxValue;
+
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
-        public SeriesCollection ChartSeries { get; set; }
-        public List<string> ChartLabels { get; set; }
+
+        #region Chart Properties
+        public SeriesCollection ChartSeries { get; set; } = new SeriesCollection();
+        public List<string> ChartLabels { get; set; } = new List<string>();
         public Func<int, string> ChartFormatter { get; set; }
+        public int ChartMinValue
+        {
+            get => _chartMinValue;
+            set
+            {
+                SetProperty(ref _chartMinValue, value);
+            }
+        }
+        public int ChartMaxValue
+        {
+            get => _chartMaxValue;
+            set
+            {
+                SetProperty(ref _chartMaxValue, value);
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Determines whether the fortress is currently locked.
@@ -51,7 +74,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 var currentNodes = Navigation.HomeManagementInstance.GetRootNodesSnapshot();
                 _allLeafsVmSnapshot = new List<LeafViewModel>();
                 LoadQuickbar(currentNodes);
-                LoadChart(currentNodes);
+                LoadChart();
             }
             catch (Exception ex)
             {
@@ -77,51 +100,70 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 LoadQuickbar(node);
         }
 
-        private void LoadChart(List<TreeItemViewModel> currentNodes)
+        private void LoadChart()
         {
-            ChartSeries = new SeriesCollection();
+            ChartSeries.Clear();
 
-            // Load the chart values
-            var topTenInteracted = new ChartValues<int>();
-            var topTenLabels = new List<string>();
-
-            foreach(var leafVm in _allLeafsVmSnapshot)
+            Task.Run(() =>
             {
-                if (topTenInteracted.Count < 10)
-                {
-                    topTenInteracted.Add(leafVm.InteractedCounter);
-                    topTenLabels.Add(leafVm.Name);
-                }
-                else
-                {
-                    var possibleLessValue = topTenInteracted.FirstOrDefault(i => i < leafVm.InteractedCounter);
-                    if(possibleLessValue != default)
-                    {
-                        topTenInteracted.Remove(possibleLessValue);
-                        topTenInteracted.Add(leafVm.InteractedCounter);
+                // Load the chart values
+                var topTenInteracted = new List<Tuple<int, string>>();
 
-                        var index = topTenInteracted.IndexOf(possibleLessValue);
-                        topTenLabels.RemoveAt(index);
-                        topTenLabels.Add(leafVm.Name);
+                foreach (var leafVm in _allLeafsVmSnapshot)
+                {
+                    // We cant plot value 0
+                    if (leafVm.InteractedCounter == 0)
+                        leafVm.InteractedCounter = 1;
+                    // If the list isnt at 10, just add it
+                    if (topTenInteracted.Count < 10)
+                    {
+                        topTenInteracted.Add(Tuple.Create(leafVm.InteractedCounter, leafVm.Name));
+                    }
+                    // Else check for higher values
+                    else
+                    {
+                        var possibleLowestValue = topTenInteracted.FirstOrDefault(t => t.Item1 < leafVm.InteractedCounter);
+                        if (possibleLowestValue != null)
+                        {
+                            var index = topTenInteracted.IndexOf(possibleLowestValue);
+
+                            topTenInteracted.RemoveAt(index);
+                            topTenInteracted.Add(Tuple.Create(leafVm.InteractedCounter, leafVm.Name));
+                        }
                     }
                 }
-            }
+                // Order from 10 to 1 e.g.
+                topTenInteracted = topTenInteracted.OrderByDescending(i => i.Item1).ToList();
+                var chartValues = new ChartValues<int>();
+                ChartLabels.Clear();
+                foreach (var tuple in topTenInteracted)
+                {
+                    chartValues.Add(tuple.Item1);
+                    ChartLabels.Add(tuple.Item2);
+                }
+                // Cant change UI stuff in diff task...
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var columnSeries = new ColumnSeries
+                    {
+                        Title = "Usage amount: ",
+                        Values = chartValues,
+                        Fill = Brushes.Black,
+                        StrokeThickness = 1,
+                        Stroke = Brushes.Black
+                    };
 
-            var columnSeries = new ColumnSeries
-            {
-                Title = "Usage amount: ",
-                Values = topTenInteracted,
-                Fill = Brushes.Black,
-                StrokeThickness = 1,
-                Stroke = Brushes.Black,   
-            };
+                    ChartMinValue = 0;
+                    if (chartValues.Max() < 10)
+                        ChartMaxValue = 10;
+                    else
+                        ChartMaxValue = chartValues.Max();
 
-            //also adding values updates and animates the chart automatically
-            //ChartSeries[0].Values.Add(48);
-
-            ChartSeries.Add(columnSeries);
-            ChartLabels = topTenLabels;
-            ChartFormatter = value => value.ToString();
+                    ChartSeries.Add(columnSeries);
+                    // Obsolete, but maybe need later
+                    ChartFormatter = value => value.ToString("N");
+                }); // dispatcher end
+            }); // task end
         }
 
         private void LoadQuickbar(TreeItemViewModel currentItem)

@@ -56,7 +56,7 @@ namespace SensFortress.View.Main.ViewModel
         }
         public string Username
         {
-            get => _userName;            
+            get => _userName;
             set
             {
                 SetProperty(ref _userName, value);
@@ -90,10 +90,9 @@ namespace SensFortress.View.Main.ViewModel
                 ((Leaf)Model).InteractedCounter = InteractedCounter;
             }
         }
-
         private void DeleteFromQuickbar()
         {
-            if(Navigation.HomeManagementInstance.GetCurrentHub().DataContext is HubViewModel hubVm)
+            if (Navigation.HomeManagementInstance.GetCurrentHub().DataContext is HubViewModel hubVm)
             {
                 hubVm.RemoveQuickBarItemCommand.Execute(this);
             }
@@ -105,10 +104,14 @@ namespace SensFortress.View.Main.ViewModel
                 Logger.log.Error($"Error while trying to remove {Id} from Quickbar: {ex}");
             }
         }
-        private void CopyUsername() => Clipboard.SetText(Username);
+        private void CopyUsername()
+        {
+            Clipboard.SetText(Username);
+            InteractedCounter++;
+        }
         private void CopyPassword()
         {
-            if(LeafPasswordCopy != null)
+            if (LeafPasswordCopy != null)
                 Clipboard.SetText(ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(LeafPasswordCopy.EncryptedValue)));
             else
             {
@@ -121,6 +124,7 @@ namespace SensFortress.View.Main.ViewModel
                 }
             }
             TaskLogger.Instance.Track($"{Name}: Password has been copied.");
+            InteractedCounter++;
         }
     }
 }

@@ -144,6 +144,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             Clipboard.SetText(ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword)));
             TaskLogger.Instance.Track($"{CurrentItem.Name}: Password has been copied.");
+
+            // Inform the hubview chart about changes
+            var cLeafVm = (LeafViewModel)CurrentItem.CurrentViewModel;
+            var newValue = cLeafVm.InteractedCounter + 1;
+            CurrentItem.HandleChangeableProperties(nameof(cLeafVm.InteractedCounter), newValue);
         }
         /// <summary>
         /// Copies the username to the clipboard.
@@ -152,6 +157,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             Clipboard.SetText(Username);
             TaskLogger.Instance.Track($"{CurrentItem.Name}: Username has been copied.");
+
+            // Inform the hubview chart about changes
+            var cLeafVm = (LeafViewModel)CurrentItem.CurrentViewModel;
+            var newValue = cLeafVm.InteractedCounter + 1;
+            CurrentItem.HandleChangeableProperties(nameof(cLeafVm.InteractedCounter), newValue);
         }
         /// <summary>
         /// Give user oppurtunity to unlock fortress
@@ -228,15 +238,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
             var amazonVm = new WebsiteViewModel(amazon, this);
             Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
-            Websites.Add(amazonVm);
+
         }
 
         /// <summary>

@@ -159,10 +159,10 @@
                                 <lvc:DefaultTooltip BulletSize="20" Background="Black"/>
                             </lvc:CartesianChart.DataTooltip>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis Foreground="White" Title="Salesman" Labels="{Binding ChartLabels}" FontSize="15"></lvc:Axis>
+                                <lvc:Axis Foreground="White" Labels="{Binding ChartLabels}" FontSize="15"></lvc:Axis>
                             </lvc:CartesianChart.AxisX>
                             <lvc:CartesianChart.AxisY>
-                                <lvc:Axis FontSize="15" Foreground="White" LabelFormatter="{Binding ChartFormatter}"></lvc:Axis>
+                                <lvc:Axis FontSize="15" Foreground="White" MinValue="{Binding ChartMinValue}" MaxValue="{Binding ChartMaxValue}"></lvc:Axis>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
                     </materialDesign:Card>

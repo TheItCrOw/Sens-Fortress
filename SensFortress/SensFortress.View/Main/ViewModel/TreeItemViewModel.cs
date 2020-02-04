@@ -131,9 +131,14 @@ namespace SensFortress.View.Main.ViewModel
                     if (from == change)
                         return;
 
-                    IsDirty = true;
-                    ((HomeViewModel)CurrentViewModel.CurrentBase).ChangesTracker++;
-                    TaskLogger.Instance.Track($"{Name}: Changed the {prop.Name} from {from} to {change}.");
+                    // We do not want to inform user about changes from the following properties
+                    if (prop.Name != "InteractedCounter")
+                    {
+                        IsDirty = true;
+                        ((HomeViewModel)CurrentViewModel.CurrentBase).ChangesTracker++;
+                        TaskLogger.Instance.Track($"{Name}: Changed the {prop.Name} from {from} to {change}.");
+                    }
+
                     prop.SetValue(CurrentViewModel.Model, change);
                 }
             }
