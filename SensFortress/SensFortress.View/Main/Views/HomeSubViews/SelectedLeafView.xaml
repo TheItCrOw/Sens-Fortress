@@ -23,6 +23,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--Moody dark background-->
         <Grid.Background>
             <SolidColorBrush Color="Black" Opacity="0.5"/>
         </Grid.Background>
@@ -60,9 +61,10 @@
                     <VisualBrush.Visual>
                         <materialDesign:PackIcon Kind="ShieldOutline">
                             <materialDesign:PackIcon.Foreground>
-                                <LinearGradientBrush StartPoint="0 0" EndPoint="0 0.3">
+                                <LinearGradientBrush StartPoint="0 0" EndPoint="{Binding ShieldEndPoint}">
                                     <LinearGradientBrush.GradientStops>
-                                        <GradientStop Offset="1" Color="Gray" />
+                                        <!--This is a dark gray-->
+                                        <GradientStop Offset="1" Color="#5B5C5C"/>
                                         <GradientStop Offset="1" Color="White" />
                                     </LinearGradientBrush.GradientStops>
                                 </LinearGradientBrush>
@@ -92,6 +94,10 @@
             </materialDesign:Card>
 
             <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="20 20 20 0">
+                
+                <!--PW strength lvl-->
+                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Password strength: 75%" Margin="0 -40 0 10"/>
+
                 <!--username-->
                 <materialDesign:Card HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth5">
                     <materialDesign:Card.Background>
@@ -111,7 +117,7 @@
                         </Button>
                     </StackPanel>
                 </materialDesign:Card>
-
+                
                 <!--Password area-->
                 <materialDesign:Card Margin="0 20 0 0" Width="600" materialDesign:ShadowAssist.ShadowDepth="Depth5">
                     <materialDesign:Card.Background>
@@ -132,7 +138,6 @@
                         </Button>
                     </DockPanel>
                 </materialDesign:Card>
-
                 <!--Link a website-->
                 <!--<StackPanel Grid.Row="2">
                 <TextBlock Text="Link a website" Style="{StaticResource InformationTextblockStyle}" HorizontalAlignment="Center" Margin="0 20 0 20"/>
@@ -162,20 +167,6 @@
             </StackPanel>
         </Grid>
         
-        <!--Charts-->
-        <!--<lvc:PieChart Name="Chart" Grid.Row="1" Panel.ZIndex="-1" Series="{Binding SeriesCollection}"
-                      LegendLocation="None" InnerRadius="440" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 15">
-            <lvc:PieChart.ChartLegend>
-                <lvc:DefaultLegend BulletSize="20"></lvc:DefaultLegend>
-            </lvc:PieChart.ChartLegend>
-            <lvc:PieChart.DataTooltip>
-                <lvc:DefaultTooltip BulletSize="20"></lvc:DefaultTooltip>
-            </lvc:PieChart.DataTooltip>
-        </lvc:PieChart>-->
-
-
-
-
         <!--Drawer area       
         <materialDesign:DrawerHost Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" 
                                    Visibility="{Binding ShowContent, Converter={StaticResource BoolToVisConverter}}">

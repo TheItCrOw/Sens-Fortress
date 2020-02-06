@@ -17,7 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,6 +38,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private HomeViewModel _currentBase;
         private string _userName;
         private string _description;
+        private Point _shieldEndPoint;
+
+        #region Properties
         public ObservableCollection<WebsiteViewModel> Websites { get; set; } = new ObservableCollection<WebsiteViewModel>();
         public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
         public DelegateCommand ShowUnlockCardCommand => new DelegateCommand(ShowUnlockCard);
@@ -43,7 +48,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand CopyPasswordToClipboardCommand => new DelegateCommand(CopyPasswordToClipboard);
         public DelegateCommand CopyUsernameToClipboardCommand => new DelegateCommand(CopyUsernameToClipboard);
         public DelegateCommand OpenUrlWithLoginCommand => new DelegateCommand(OpenUrlWithLogin);
-        public SeriesCollection SeriesCollection { get; set; }
+        public Point ShieldEndPoint
+        {
+            get => _shieldEndPoint;
+            set
+            {
+                SetProperty(ref _shieldEndPoint, value);
+            }
+        }
 
         public TreeItemViewModel CurrentItem
         {
@@ -105,6 +117,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 ShowHidePassword();
             }
         }
+        #endregion
 
         public SelectedLeafViewModel(TreeItemViewModel selectedLeaf, ViewModelManagementBase currentBase)
         {
@@ -131,21 +144,29 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             LoadPassword();
             ShowHidePassword();
             LoadWebsites();
-            Testing();
+            LoadShieldUI();
         }
 
-        private void Testing()
+        /// <summary>
+        /// Loads the Shield UI showing how strong the given PW is.
+        /// </summary>
+        private void LoadShieldUI()
         {
-            SeriesCollection = new SeriesCollection
+            Task.Run(() => AnimateValueFill(0.35, 1));
+        }
+
+        /// <summary>
+        /// Animating the loading by filling the graph slowly.
+        /// </summary>
+        /// <param name="end"></param>
+        /// <param name="step"></param>
+        private void AnimateValueFill(double end, int step)
+        {
+            for(double i = 1; i >= end; i = i - 0.001)
             {
-                new PieSeries
-                {
-                    Title = "Chrome",
-                    Values = new ChartValues<ObservableValue> { new ObservableValue(8) },
-                    DataLabels = true,
-                    Fill = Brushes.White
-                },
-            };
+                ShieldEndPoint = new Point(0, i);
+                Thread.Sleep(step);
+            }
         }
 
         /// <summary>
