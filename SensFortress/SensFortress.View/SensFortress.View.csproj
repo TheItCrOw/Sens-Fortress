@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Blurry-Knights.jpg" />
+    <None Remove="Images\Centurion.jpg" />
     <None Remove="Images\Fortress-Bridge.jpg" />
+    <None Remove="Images\Fortress-Dungeon.jpg" />
     <None Remove="Images\Fortress-Nature.jpg" />
     <None Remove="Images\Home-Bonfire.jpg" />
+    <None Remove="Images\lawbringer.jpg" />
     <None Remove="Images\Opening-Gate.jpg" />
     <None Remove="Images\Worldmap.jpg" />
     <None Remove="Logos\amazon-logo.png" />
@@ -49,9 +53,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\Blurry-Knights.jpg" />
+    <Resource Include="Images\Centurion.jpg" />
     <Resource Include="Images\Fortress-Bridge.jpg" />
+    <Resource Include="Images\Fortress-Dungeon.jpg" />
     <Resource Include="Images\Fortress-Nature.jpg" />
     <Resource Include="Images\Home-Bonfire.jpg" />
+    <Resource Include="Images\Lawbringer.jpg" />
     <Resource Include="Images\Opening-Gate.jpg" />
     <Resource Include="Images\Worldmap.jpg" />
     <Resource Include="Logos\amazon-logo.png" />

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Main.Views.HomeSubViews"
              xmlns:vms="clr-namespace:SensFortress.View.Main.ViewModel"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:extensions="clr-namespace:SensFortress.View.Extensions"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1100"           
@@ -22,9 +23,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <Grid.Background>
+            <SolidColorBrush Color="Black" Opacity="0.5"/>
+        </Grid.Background>
+        
         <!--Title-->
-        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="Transparent">
-            <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="{Binding CurrentItem.Name}" Margin="10 10 10 15"/>
+        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
+            <TextBlock Style="{StaticResource InformationTextblockStyle}" Foreground="White" Text="{Binding CurrentItem.Name}" Margin="10 10 10 15"/>
         </materialDesign:Card>
 
         <!--if the fortress is locked -> show this content-->
@@ -42,26 +47,138 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <!--if the fortress is not locked - show this content-->
-        <!--Description-->
-        <materialDesign:Card Grid.Row="1" materialDesign:ShadowAssist.ShadowDepth="Depth5" Margin="20" MaxHeight="250">
-            <StackPanel>
-                <DockPanel LastChildFill="False" HorizontalAlignment="Center">
-                    <TextBlock Text="Description" Style="{StaticResource InformationTextblockStyle}" Margin="25 10 10 0"/>
-                    <Button x:Name="EditDescription_Button" Click="EditDescription_Button_Click" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" Margin="0 10 0 0">
-                        <materialDesign:PackIcon Kind="Edit" Width="15" Height="15"/>
-                    </Button>
-                </DockPanel>
-                <TextBlock x:Name="Description_Textblock" Text="{Binding Description}" FontSize="15" FontWeight="Light" HorizontalAlignment="Center" 
+               
+        <!--try new ui design-->
+        <Grid Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}" Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+            <Grid.Background>
+                <VisualBrush Stretch="Uniform">
+                    <VisualBrush.Visual>
+                        <materialDesign:PackIcon Kind="ShieldOutline">
+                            <materialDesign:PackIcon.Foreground>
+                                <LinearGradientBrush StartPoint="0 0" EndPoint="0 0.3">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStop Offset="1" Color="Gray" />
+                                        <GradientStop Offset="1" Color="White" />
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </materialDesign:PackIcon.Foreground>
+                        </materialDesign:PackIcon>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Grid.Background>
+
+            <!--Description-->
+            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Margin="20" MaxHeight="250">
+                <materialDesign:Card.Background>
+                    <SolidColorBrush Color="Black" Opacity="0.9"/>
+                </materialDesign:Card.Background>
+                <StackPanel>
+                    <DockPanel LastChildFill="False" HorizontalAlignment="Center">
+                        <TextBlock Text="Description" Style="{StaticResource InformationTextblockStyle}" Margin="25 10 10 0"/>
+                        <Button x:Name="EditDescription_Button" Click="EditDescription_Button_Click" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" Margin="0 10 0 0">
+                            <materialDesign:PackIcon Kind="Edit" Width="15" Height="15"/>
+                        </Button>
+                    </DockPanel>
+                    <TextBlock x:Name="Description_Textblock" Text="{Binding Description}" FontSize="15" FontWeight="Light" HorizontalAlignment="Center" 
                            Margin="20" AllowDrop="True"/>
-                <TextBox x:Name="Description_Textbox" LostFocus="Description_Textbox_LostFocus" PreviewKeyDown="Description_Textbox_PreviewKeyDown" Text="{Binding Description}" 
+                    <TextBox x:Name="Description_Textbox" LostFocus="Description_Textbox_LostFocus" PreviewKeyDown="Description_Textbox_PreviewKeyDown" Text="{Binding Description}" 
                          FontSize="15" FontWeight="Light" HorizontalAlignment="Center" Margin="20" AllowDrop="True" Visibility="Collapsed"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="20 20 20 0">
+                <!--username-->
+                <materialDesign:Card HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                    <materialDesign:Card.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.9"/>
+                    </materialDesign:Card.Background>
+                    <StackPanel Margin="0 20 0 20">
+                        <TextBlock HorizontalAlignment="Center" Text="Username" Style="{StaticResource InformationTextblockStyle}"/>
+                        <materialDesign:PackIcon Kind="User" Width="100" Height="100" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="Username_Textblock" TextAlignment="Center" MinWidth="200" Text="{Binding Username}"
+                                       Margin="10 0 10 0" FontSize="20"/>
+                        <TextBox x:Name="Username_Textbox" MinWidth="200" Text="{Binding Username}" FontSize="20" TextAlignment="Center" 
+                                     LostFocus="Username_Textbox_LostFocus" PreviewKeyDown="Username_Textbox_PreviewKeyDown" Margin="10 0 10 0" Visibility="Collapsed"/>
+                        <!--Handle editing of username in code behind-->
+                        <Button Width="30" Margin="0 10 0 0" Height="30" x:Name="EditUsername_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" 
+                                    Click="EditUsername_Button_Click">
+                            <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
+                        </Button>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!--Password area-->
+                <materialDesign:Card Margin="0 20 0 0" Width="600" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                    <materialDesign:Card.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.9"/>
+                    </materialDesign:Card.Background>
+                    <DockPanel Margin="25 20 10 20" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Key" Width="35" Height="35" Margin="0 0 10 0"/>
+                        <!--password textblock-->
+                        <TextBlock VerticalAlignment="Center" x:Name="Password_Textblock" MinWidth="350"
+                                       TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Password}" FontSize="20"/>
+                        <Button Width="30" Height="30" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" 
+                                    Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}">
+                            <materialDesign:PackIcon Kind="Show" Width="20" Height="20"/>
+                        </Button>
+                        <Button Width="30" Height="30" x:Name="EditPassword_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit"
+                                    Command="{Binding EditPasswordCommand}">
+                            <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
+                        </Button>
+                    </DockPanel>
+                </materialDesign:Card>
+
+                <!--Link a website-->
+                <!--<StackPanel Grid.Row="2">
+                <TextBlock Text="Link a website" Style="{StaticResource InformationTextblockStyle}" HorizontalAlignment="Center" Margin="0 20 0 20"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListView x:Name="Fortress_TreeView" ItemsSource="{Binding Websites}">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type vms:WebsiteViewModel}">
+                                <materialDesign:Card HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="GhostWhite">
+                                    <StackPanel Margin="10 20 10 20" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                                        <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" Foreground="Black" Style="{StaticResource CategoryTextblockStyle}"/>
+                                        -->
+                <!--This has to be changed later - for now the logo is always amazon-->
+                <!--
+                                        <Image Source="{Binding LogoSource}" Height="60" Width="60" Margin="0 10 0 0"/>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </HierarchicalDataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+            </StackPanel>-->
             </StackPanel>
-        </materialDesign:Card>
-        <!--Drawer area-->
+        </Grid>
+        
+        <!--Charts-->
+        <!--<lvc:PieChart Name="Chart" Grid.Row="1" Panel.ZIndex="-1" Series="{Binding SeriesCollection}"
+                      LegendLocation="None" InnerRadius="440" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 15">
+            <lvc:PieChart.ChartLegend>
+                <lvc:DefaultLegend BulletSize="20"></lvc:DefaultLegend>
+            </lvc:PieChart.ChartLegend>
+            <lvc:PieChart.DataTooltip>
+                <lvc:DefaultTooltip BulletSize="20"></lvc:DefaultTooltip>
+            </lvc:PieChart.DataTooltip>
+        </lvc:PieChart>-->
+
+
+
+
+        <!--Drawer area       
         <materialDesign:DrawerHost Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" 
                                    Visibility="{Binding ShowContent, Converter={StaticResource BoolToVisConverter}}">
-            <!--Loginto page cards-->
             <materialDesign:DrawerHost.LeftDrawerContent>
                 <Grid Margin="0 10 0 10">
                     <Grid.ColumnDefinitions>
@@ -81,7 +198,7 @@
                                     <materialDesign:Card HorizontalAlignment="Center" Background="GhostWhite">
                                         <StackPanel Margin="10 20 10 20" materialDesign:ShadowAssist.ShadowDepth="Depth5">
                                             <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" Foreground="Black" Style="{StaticResource InformationTextblockStyle}"/>
-                                            <!--This has to be changed later - for now the logo is always amazon-->
+                                            --><!--This has to be changed later - for now the logo is always amazon
                                             <Image Source="{Binding LogoSource}" Height="90" Width="140" Margin="10"/>
                                         </StackPanel>
                                     </materialDesign:Card>
@@ -95,13 +212,13 @@
                 </Grid>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
-            <!--Shows password-->
+            Shows password
             <materialDesign:DrawerHost.TopDrawerContent>
                 <StackPanel>
                     <materialDesign:Card Width="600" Background="GhostWhite" materialDesign:ShadowAssist.ShadowDepth="Depth5">
                         <DockPanel Margin="25 20 10 20" HorizontalAlignment="Center">
                             <materialDesign:PackIcon Kind="Key" Width="35" Height="35" Margin="0 0 10 0" Foreground="Black"/>
-                            <!--password textblock-->
+                            password textblock
                             <TextBlock VerticalAlignment="Center" x:Name="Password_Textblock" Width="350" Foreground="Black" 
                                        TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Password}" FontSize="20"/>
                             <Button Width="30" Height="30" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" 
@@ -114,18 +231,18 @@
                             </Button>
                         </DockPanel>
                     </materialDesign:Card>
-                    <!--Should be last-->
+                    Should be last
                     <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" Margin="0 10 0 10" CommandParameter="{x:Static Dock.Top}" 
                             HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}">
                         <materialDesign:PackIcon Kind="ArrowDownBold" Height="30" Width="30" />
                     </Button>
-                    <!--<Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>-->
+                    <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}" Content="Close All"/>
                 </StackPanel>
             </materialDesign:DrawerHost.TopDrawerContent>
 
             <materialDesign:DrawerHost.RightDrawerContent>
                 <DockPanel VerticalAlignment="Center" Margin="0 0 20 0">
-                    <!--close button-->
+                    close button
                     <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}" CommandParameter="{x:Static Dock.Right}" 
                             HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignFlatButton}">
                         <materialDesign:PackIcon Kind="ArrowLeftBold" Height="30" Width="30" />
@@ -138,7 +255,7 @@
                                        Margin="10 0 10 0" FontSize="20"/>
                             <TextBox x:Name="Username_Textbox" MinWidth="200" Text="{Binding Username}" FontSize="20" Foreground="Black" TextAlignment="Center" 
                                      LostFocus="Username_Textbox_LostFocus" PreviewKeyDown="Username_Textbox_PreviewKeyDown" BorderBrush="Black" Margin="10 0 10 0" Visibility="Collapsed"/>
-                            <!--Handle editing of username in code behind-->
+                            Handle editing of username in code behind
                             <Button Width="30" Margin="0 10 0 0" Height="30" x:Name="EditUsername_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" 
                                     Click="EditUsername_Button_Click">
                                 <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
@@ -186,46 +303,46 @@
                             Grid.Row="2" Grid.Column="1" Width="200" Height="61" Margin="0 -1 0 0" Background="Black" Panel.ZIndex="1" BorderThickness="1 0 1 1">
                         <materialDesign:PackIcon Kind="Edit" Foreground="White" Width="30" Height="30"/>
                     </Button>
-                    <!--Core of drawer-->
-                    <!--This is a bit of a messy area since it's all cramped into the grid 1,1 with margins etc. But since we work with polygons, there is no other way around it.-->
+                    Core of drawer
+                    This is a bit of a messy area since it's all cramped into the grid 1,1 with margins etc. But since we work with polygons, there is no other way around it.
 
-                    <!--left polygon-->
+                    left polygon
                     <Polygon Points="0 0 100 100 0 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
-                    <!--left button-->
+                    left button
                     <Button  x:Name="LogintoBrowser_Button" ToolTip="Log into page" Margin="0 0 125 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
                              Background="White" BorderBrush="Black" Command="{Binding OpenUrlWithLoginCommand}">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
                                              Kind="Login" />
                     </Button>
 
-                    <!--top poly-->
+                    top poly
                     <Polygon Points="0 0 200 0 100 100" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
-                    <!--top button-->
+                    top button
                     <Button ToolTip="Get password" Margin="0 0 0 125" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
                              Background="White" BorderBrush="Black" Command="{Binding CopyPasswordToClipboardCommand}">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
                                              Kind="Key" />
                     </Button>
 
-                    <!--down poly-->
+                    down poly
                     <Polygon Points="100 100 0 200 200 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
-                    <!--down button-->
+                    down button
                     <Button ToolTip="Maybe get file?" Margin="0 125 0 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
                              Background="White" BorderBrush="Black">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
                                              Kind="File" />
                     </Button>
 
-                    <!--right poly-->
+                    right poly
                     <Polygon Points="200 0 100 100 200 200" Grid.Row="1" Grid.Column="1" Stroke="White" Fill="Black" StrokeThickness="0.5" HorizontalAlignment="Left"/>
-                    <!--right button-->
+                    right button
                     <Button ToolTip="Get Username" Margin="125 0 0 0" Grid.Row="1" Grid.Column="1" Height="60" Width="60" Style="{StaticResource TreeViewButtonStyle}" 
                              Background="White" BorderBrush="Black" Command="{Binding CopyUsernameToClipboardCommand}">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="40" Width="40" HorizontalAlignment="Center" Foreground="Black" 
                                              Kind="User" />
                     </Button>
 
-                    <!--Open all drawer-->
+                    Open all drawer
                     <Button ToolTip="Expand all" Grid.Row="1" Grid.Column="1" Height="30" Width="30" Style="{StaticResource TreeViewButtonStyle}" 
                             Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" Background="White" BorderBrush="Black">
                         <materialDesign:PackIcon  VerticalAlignment="Center" Height="20" Width="20" HorizontalAlignment="Center" Foreground="Black" 
@@ -233,7 +350,7 @@
                     </Button>
                 </Grid>
             </Grid>
-        </materialDesign:DrawerHost>
+        </materialDesign:DrawerHost>-->
 
     </Grid>
 </UserControl>

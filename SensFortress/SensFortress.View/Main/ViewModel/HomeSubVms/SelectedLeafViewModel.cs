@@ -1,4 +1,7 @@
-﻿using Prism.Commands;
+﻿using LiveCharts;
+using LiveCharts.Defaults;
+using LiveCharts.Wpf;
+using Prism.Commands;
 using SensFortress.Data.Database;
 using SensFortress.Models.Fortress;
 using SensFortress.Security;
@@ -18,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace SensFortress.View.Main.ViewModel.HomeSubVms
 {
@@ -39,6 +43,8 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand CopyPasswordToClipboardCommand => new DelegateCommand(CopyPasswordToClipboard);
         public DelegateCommand CopyUsernameToClipboardCommand => new DelegateCommand(CopyUsernameToClipboard);
         public DelegateCommand OpenUrlWithLoginCommand => new DelegateCommand(OpenUrlWithLogin);
+        public SeriesCollection SeriesCollection { get; set; }
+
         public TreeItemViewModel CurrentItem
         {
             get => _currentItem;
@@ -125,6 +131,21 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             LoadPassword();
             ShowHidePassword();
             LoadWebsites();
+            Testing();
+        }
+
+        private void Testing()
+        {
+            SeriesCollection = new SeriesCollection
+            {
+                new PieSeries
+                {
+                    Title = "Chrome",
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(8) },
+                    DataLabels = true,
+                    Fill = Brushes.White
+                },
+            };
         }
 
         /// <summary>
@@ -140,29 +161,13 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// <summary>
         /// Copies the password to the clipboard.
         /// </summary>
-        private void CopyPasswordToClipboard()
-        {
-            Clipboard.SetText(ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword)));
-            TaskLogger.Instance.Track($"{CurrentItem.Name}: Password has been copied.");
+        private void CopyPasswordToClipboard() => ((LeafViewModel)CurrentItem.CurrentViewModel).CopyPasswordCommand.Execute();
 
-            // Inform the hubview chart about changes
-            var cLeafVm = (LeafViewModel)CurrentItem.CurrentViewModel;
-            var newValue = cLeafVm.InteractedCounter + 1;
-            CurrentItem.HandleChangeableProperties(nameof(cLeafVm.InteractedCounter), newValue);
-        }
         /// <summary>
         /// Copies the username to the clipboard.
         /// </summary>
-        private void CopyUsernameToClipboard()
-        {
-            Clipboard.SetText(Username);
-            TaskLogger.Instance.Track($"{CurrentItem.Name}: Username has been copied.");
+        private void CopyUsernameToClipboard() => ((LeafViewModel)CurrentItem.CurrentViewModel).CopyUsernameCommand.Execute();
 
-            // Inform the hubview chart about changes
-            var cLeafVm = (LeafViewModel)CurrentItem.CurrentViewModel;
-            var newValue = cLeafVm.InteractedCounter + 1;
-            CurrentItem.HandleChangeableProperties(nameof(cLeafVm.InteractedCounter), newValue);
-        }
         /// <summary>
         /// Give user oppurtunity to unlock fortress
         /// </summary>
@@ -238,7 +243,16 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
             var amazonVm = new WebsiteViewModel(amazon, this);
             Websites.Add(amazonVm);
-
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
+            Websites.Add(amazonVm);
         }
 
         /// <summary>

@@ -99,7 +99,7 @@ namespace SensFortress.View.Main.ViewModel
             else
             {
                 var ex = new Exception();
-                ex.SetUserMessage($"Item couldn't be removed from Quickbar. Maybe it has already been deleted - Try to navigate to your home hub.");
+                ex.SetUserMessage($"Item couldn't be removed from Quickbar. Maybe it has already been deleted - Try to navigate to your home hub again.");
                 Communication.InformUserAboutError(ex);
                 Logger.log.Error($"Error while trying to remove {Id} from Quickbar: {ex}");
             }
@@ -108,6 +108,7 @@ namespace SensFortress.View.Main.ViewModel
         {
             Clipboard.SetText(Username);
             InteractedCounter++;
+            TaskLogger.Instance.Track($"{Name}: Username has been copied.");
         }
         private void CopyPassword()
         {

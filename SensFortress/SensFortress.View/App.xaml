@@ -120,6 +120,8 @@
             
             <!--Bool to vis converter-->
             <converters:BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+            <!--Inverse bool to vis converter-->
+            <converters:InverseBooleanToVisibiltyConverter x:Key="InverseBoolToVisConverter"/>
             <!--Specific converter for Leaf/Branch in TreeVIew-->
             <converters:SpecificMultiBooleanToVisibilityConverter x:Key="MultiSpecificBoolToMultiCoverter"/>
 

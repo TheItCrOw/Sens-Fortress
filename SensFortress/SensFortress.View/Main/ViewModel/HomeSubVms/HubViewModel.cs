@@ -25,9 +25,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
     public class HubViewModel : ViewModelManagementBase
     {
         private bool _isLocked;
-        private List<LeafViewModel> _allLeafsVmSnapshot;
+        private HashSet<LeafViewModel> _allLeafsVmSnapshot;
         private int _chartMinValue;
         private int _chartMaxValue;
+        private bool _chartIsLoading;
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
@@ -53,6 +54,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _chartMaxValue, value);
             }
         }
+        public bool ChartIsLoading
+        {
+            get => _chartIsLoading;
+            set
+            {
+                SetProperty(ref _chartIsLoading, value);
+            }
+        }
         #endregion
 
         /// <summary>
@@ -72,7 +81,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             try
             {
                 var currentNodes = Navigation.HomeManagementInstance.GetRootNodesSnapshot();
-                _allLeafsVmSnapshot = new List<LeafViewModel>();
+                _allLeafsVmSnapshot = new HashSet<LeafViewModel>();
                 LoadQuickbar(currentNodes);
                 LoadChart();
             }
@@ -102,6 +111,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         private void LoadChart()
         {
+            ChartIsLoading = true;
             ChartSeries.Clear();
 
             Task.Run(() =>
@@ -164,6 +174,8 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                     ChartFormatter = value => value.ToString("N");
                 }); // dispatcher end
             }); // task end
+
+            ChartIsLoading = false;
         }
 
         private void LoadQuickbar(TreeItemViewModel currentItem)
