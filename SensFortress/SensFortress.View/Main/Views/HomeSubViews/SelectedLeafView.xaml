@@ -96,7 +96,7 @@
             <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="20 20 20 0">
                 
                 <!--PW strength lvl-->
-                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Password strength: 75%" Margin="0 -40 0 10"/>
+                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="{Binding PasswordStrength}" Margin="0 -40 0 10"/>
 
                 <!--username-->
                 <materialDesign:Card HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth5">

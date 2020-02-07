@@ -39,6 +39,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private string _userName;
         private string _description;
         private Point _shieldEndPoint;
+        private string _passwordStrength;
 
         #region Properties
         public ObservableCollection<WebsiteViewModel> Websites { get; set; } = new ObservableCollection<WebsiteViewModel>();
@@ -54,6 +55,15 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             set
             {
                 SetProperty(ref _shieldEndPoint, value);
+            }
+        }
+
+        public string PasswordStrength
+        {
+            get => _passwordStrength;
+            set
+            {
+                SetProperty(ref _passwordStrength, value);
             }
         }
 
@@ -156,11 +166,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         }
 
         /// <summary>
-        /// Loads the Shield UI showing how strong the given PW is.
+        /// Loads the Shield UI and PasswordStrength Property showing how strong the given PW is.
         /// </summary>
         private void LoadShieldUI()
         {
-            Task.Run(() => AnimateValueFill(0.35, 0.001));
+            Task.Run(() => AnimateValueFill(0.25, 0.001));
         }
 
         /// <summary>
@@ -170,9 +180,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// <param name="step"></param>
         private void AnimateValueFill(double end, double step)
         {
-            for(double i = 1; i >= end; i = i - step)
+            // Strength level starts at 100 and loops until 100 - end.
+            for(double i = 1; i > end; i = i - step)
             {
                 ShieldEndPoint = new Point(0, i);
+                PasswordStrength = $"Password strength: {(int)((1 - i + step) * 100)}%";
                 Thread.Sleep(1);
             }
         }
