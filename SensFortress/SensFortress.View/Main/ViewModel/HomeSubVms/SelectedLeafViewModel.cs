@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -40,6 +41,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private string _description;
         private Point _shieldEndPoint;
         private string _passwordStrength;
+        private double _passwordStrengthValue;
 
         #region Properties
         public ObservableCollection<WebsiteViewModel> Websites { get; set; } = new ObservableCollection<WebsiteViewModel>();
@@ -162,7 +164,25 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             LoadPassword();
             ShowHidePassword();
             LoadWebsites();
+            CalculatePasswordStrength();
             LoadShieldUI();
+        }
+
+        private void CalculatePasswordStrength()
+        {
+            _passwordStrengthValue = 1;
+            var pw = ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword));
+
+            if (!pw.Any(c => char.IsUpper(c)))
+                _passwordStrengthValue -= 0.25;
+            if (!pw.Any(c => char.IsDigit(c)))
+                _passwordStrengthValue -= 0.25;
+            if (pw.Length < 8)
+                _passwordStrengthValue -= 0.25;
+            if (!WellKnownSpecialCharacters.ContainsSpecialCharacters(pw))
+                _passwordStrengthValue -= 0.25;
+
+            pw = string.Empty;
         }
 
         /// <summary>
@@ -170,7 +190,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// </summary>
         private void LoadShieldUI()
         {
-            Task.Run(() => AnimateValueFill(0.25, 0.001));
+            Task.Run(() => AnimateValueFill(_passwordStrengthValue, 0.001));
         }
 
         /// <summary>
