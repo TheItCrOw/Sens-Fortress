@@ -56,7 +56,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
-            <Grid.Background>
+            <Grid.Background> 
                 <VisualBrush Stretch="Uniform">
                     <VisualBrush.Visual>
                         <materialDesign:PackIcon Kind="ShieldOutline">

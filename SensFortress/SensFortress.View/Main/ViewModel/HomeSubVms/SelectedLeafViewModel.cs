@@ -121,21 +121,29 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         public SelectedLeafViewModel(TreeItemViewModel selectedLeaf, ViewModelManagementBase currentBase)
         {
-            if (selectedLeaf.CurrentViewModel is LeafViewModel leafVm)
+            try
             {
-                CurrentItem = selectedLeaf;
-                var storeIsDirty = CurrentItem.IsDirty;
-                _pwIsHidden = false;
-                _currentBase = (HomeViewModel)currentBase;
-                Username = leafVm.Username;
-                Description = leafVm.Description;
-                Initialize();
-                CurrentItem.IsDirty = storeIsDirty;
+                if (selectedLeaf.CurrentViewModel is LeafViewModel leafVm)
+                {
+                    CurrentItem = selectedLeaf;
+                    var storeIsDirty = CurrentItem.IsDirty;
+                    _pwIsHidden = false;
+                    _currentBase = (HomeViewModel)currentBase;
+                    Username = leafVm.Username;
+                    Description = leafVm.Description;
+                    Initialize();
+                    CurrentItem.IsDirty = storeIsDirty;
+                }
+                else
+                {
+                    Logger.log.Error("A non LeafViewModel has been found in the SelectedLeafViewModel. Aborting task.");
+                    Communication.InformUser("There was a problem handling the selected item.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.log.Error("A non LeafViewModel has been found in the SelectedLeafViewModel. Aborting task.");
-                Communication.InformUser("There was a problem executing the logic of the selected item.");
+                Logger.log.Error($"Error while loading the selected leaf {selectedLeaf.CurrentViewModel.Id}: {ex}");
+                Communication.InformUser("There was a problem handling the selected item.");
             }
         }
 
@@ -152,7 +160,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// </summary>
         private void LoadShieldUI()
         {
-            Task.Run(() => AnimateValueFill(0.35, 1));
+            Task.Run(() => AnimateValueFill(0.35, 0.001));
         }
 
         /// <summary>
@@ -160,12 +168,12 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// </summary>
         /// <param name="end"></param>
         /// <param name="step"></param>
-        private void AnimateValueFill(double end, int step)
+        private void AnimateValueFill(double end, double step)
         {
-            for(double i = 1; i >= end; i = i - 0.001)
+            for(double i = 1; i >= end; i = i - step)
             {
                 ShieldEndPoint = new Point(0, i);
-                Thread.Sleep(step);
+                Thread.Sleep(1);
             }
         }
 
