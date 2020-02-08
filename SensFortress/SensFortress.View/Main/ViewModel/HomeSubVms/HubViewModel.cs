@@ -127,21 +127,24 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                         var parent = DataAccessService.Instance.GetExplicit<Branch>(tuples).FirstOrDefault();
                         if (parent != null)
                         {
-                            if (DataAccessService.Instance.TryGetSensible<LeafPassword>(leafVm.Id, out var leafPw))
+                            byte[] encryptedPassword = null;
+                            if (leafVm.LeafPasswordCopy != null)
+                                encryptedPassword = leafVm.LeafPasswordCopy.EncryptedValue;
+                            else if (DataAccessService.Instance.TryGetSensible<LeafPassword>(leafVm.Id, out var leafPw))
                             {
-                                var encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
-                                var passwordStrength = PasswordHelper.CalculatePasswordStrength(encryptedPassword);
-                                encryptedPassword = null;
-                                var analysisVm = new AnalysedEntryViewModel
-                                {
-                                    Category = parent.Name,
-                                    Name = leafVm.Name,
-                                    PasswordStrength = $"{passwordStrength * 10} / 10"
-                                };
-                                // Can be deleted later
-                                Thread.Sleep(500);
-                                Application.Current.Dispatcher.Invoke(() => AnalyseResults.Add(analysisVm));
+                                encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
                             }
+                            var passwordStrength = PasswordHelper.CalculatePasswordStrength(encryptedPassword);
+                            encryptedPassword = null;
+                            var analysisVm = new AnalysedEntryViewModel
+                            {
+                                Category = parent.Name,
+                                Name = leafVm.Name,
+                                PasswordStrength = passwordStrength * 100
+                            };
+                            // Can be deleted later
+                            Thread.Sleep(350);
+                            Application.Current.Dispatcher.Invoke(() => AnalyseResults.Add(analysisVm));
                         }
                     }
                     PWAnalysisIsLoading = false;

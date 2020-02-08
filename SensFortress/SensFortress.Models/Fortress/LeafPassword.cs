@@ -16,6 +16,9 @@ namespace SensFortress.Models.Fortress
         }
         public byte[] Value { get; set; }
 
+        /// <summary>
+        /// This only has value if the password has been edited!
+        /// </summary>
         public byte[] EncryptedValue { get; set; }
 
     }

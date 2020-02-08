@@ -172,7 +172,25 @@
                                     <GridView>
                                         <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category" />
                                         <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                                        <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="PW-Strength"/>
+                                        <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="PW-Strength in %"/>
+                                        <GridViewColumn Header="Bar">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ProgressBar IsIndeterminate="False" Foreground="{Binding Color}" MinWidth="200" Value="{Binding PasswordStrength}"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <!--Inspect button-->
+                                                    <Button Style="{StaticResource TreeViewButtonStyle}" Width="15" Height="15" ToolTip="Inspect">
+                                                        <materialDesign:PackIcon Kind="InfoOutline" Width="25" Height="25" 
+                                                                                 VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
