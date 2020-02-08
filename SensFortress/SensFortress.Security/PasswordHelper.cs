@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SensFortress.Utility;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SensFortress.Security
@@ -33,7 +35,7 @@ namespace SensFortress.Security
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static string GenerateSecurePassword(int length = 20)
+        public static string GenerateSecurePassword(int length = 32)
         {
             var result = string.Empty;
 
@@ -52,6 +54,33 @@ namespace SensFortress.Security
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Takes in an encrypted pw and calculates its strength
+        /// </summary>
+        /// <param name="pw"></param>
+        /// <returns></returns>
+        public static double CalculatePasswordStrength(byte[] encryptedPw)
+        {
+            var pw = ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(encryptedPw));
+            double passwordStrengthValue = 1;
+
+            if (!pw.Any(c => char.IsUpper(c)))
+                passwordStrengthValue -= 0.25;
+            if (!pw.Any(c => char.IsDigit(c)))
+                passwordStrengthValue -= 0.25;
+            if (pw.Length < 12)
+                passwordStrengthValue -= 0.50;
+            if (!WellKnownSpecialCharacters.ContainsSpecialCharacters(pw))
+                passwordStrengthValue -= 0.25;
+
+            // We do not want a "negative" value password strength
+            if (passwordStrengthValue <= 0)
+                passwordStrengthValue = 0.1;
+
+            pw = string.Empty;
+            return passwordStrengthValue;
         }
 
     }

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -29,10 +30,13 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private int _chartMinValue;
         private int _chartMaxValue;
         private bool _chartIsLoading;
+        private bool _pWAnalysisIsLoading;
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
+        public ObservableCollection<AnalysedEntryViewModel> AnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
+        public DelegateCommand StartPasswordAnalysisCommand => new DelegateCommand(StartPasswordAnalysis);
 
         #region Chart Properties
         public SeriesCollection ChartSeries { get; set; } = new SeriesCollection();
@@ -75,6 +79,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _isLocked, value);
             }
         }
+        public bool PWAnalysisIsLoading
+        {
+            get => _pWAnalysisIsLoading;
+            set
+            {
+                SetProperty(ref _pWAnalysisIsLoading, value);
+            }
+        }
 
         public void Initialize()
         {
@@ -89,6 +101,56 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             {
                 ex.SetUserMessage("A problem occured while trying to load the Home-Hub. Some functions may not work proberly.");
                 Logger.log.Error($"Error while trying to initialize HubView: {ex}");
+                Communication.InformUserAboutError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Analysies all passwords and calculates it's strength
+        /// </summary>
+        private void StartPasswordAnalysis()
+        {
+            if (_allLeafsVmSnapshot.Count == 0 || _allLeafsVmSnapshot == null)
+                return;
+
+            PWAnalysisIsLoading = true;
+            AnalyseResults.Clear();
+
+            try
+            {
+                Task.Run(() =>
+                {
+                    foreach (var leafVm in _allLeafsVmSnapshot)
+                    {
+                        // Get the parent model
+                        var tuples = new Tuple<string, object>[] { Tuple.Create("Id", (object)leafVm.BranchId) };
+                        var parent = DataAccessService.Instance.GetExplicit<Branch>(tuples).FirstOrDefault();
+                        if (parent != null)
+                        {
+                            if (DataAccessService.Instance.TryGetSensible<LeafPassword>(leafVm.Id, out var leafPw))
+                            {
+                                var encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
+                                var passwordStrength = PasswordHelper.CalculatePasswordStrength(encryptedPassword);
+                                encryptedPassword = null;
+                                var analysisVm = new AnalysedEntryViewModel
+                                {
+                                    Category = parent.Name,
+                                    Name = leafVm.Name,
+                                    PasswordStrength = $"{passwordStrength * 10} / 10"
+                                };
+                                // Can be deleted later
+                                Thread.Sleep(500);
+                                Application.Current.Dispatcher.Invoke(() => AnalyseResults.Add(analysisVm));
+                            }
+                        }
+                    }
+                    PWAnalysisIsLoading = false;
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"An error occured while trying to do a password-analysis: {ex}");
+                ex.SetUserMessage("A problem occured while trying to analyse all passwords => information may be incomplete.");
                 Communication.InformUserAboutError(ex);
             }
         }

@@ -164,34 +164,13 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             LoadPassword();
             ShowHidePassword();
             LoadWebsites();
-            CalculatePasswordStrength();
             LoadShieldUI();
-        }
-
-        private void CalculatePasswordStrength()
-        {
-            _passwordStrengthValue = 1;
-            var pw = ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword));
-
-            if (!pw.Any(c => char.IsUpper(c)))
-                _passwordStrengthValue -= 0.25;
-            if (!pw.Any(c => char.IsDigit(c)))
-                _passwordStrengthValue -= 0.25;
-            if (pw.Length < 8)
-                _passwordStrengthValue -= 0.25;
-            if (!WellKnownSpecialCharacters.ContainsSpecialCharacters(pw))
-                _passwordStrengthValue -= 0.25;
-
-            pw = string.Empty;
         }
 
         /// <summary>
         /// Loads the Shield UI and PasswordStrength Property showing how strong the given PW is.
         /// </summary>
-        private void LoadShieldUI()
-        {
-            Task.Run(() => AnimateValueFill(_passwordStrengthValue, 0.001));
-        }
+        private void LoadShieldUI()=> AnimateValueFill(_passwordStrengthValue, 0.001);        
 
         /// <summary>
         /// Animating the loading by filling the graph slowly.
@@ -200,13 +179,16 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// <param name="step"></param>
         private void AnimateValueFill(double end, double step)
         {
-            // Strength level starts at 100 and loops until 100 - end.
-            for(double i = 1; i > end; i = i - step)
-            {
-                ShieldEndPoint = new Point(0, i);
-                PasswordStrength = $"Password strength: {(int)((1 - i + step) * 100)}%";
-                Thread.Sleep(1);
-            }
+            Task.Run(() =>
+           {
+               // Strength level starts at 1 and loops until 1 - end.
+               for (double i = 0; i < end; i = i + step)
+               {
+                   ShieldEndPoint = new Point(0, 1 - i);
+                   PasswordStrength = $"Password strength: {(int)((i + step) * 100)}%";
+                   Thread.Sleep(1); // This is pretty horrible...but for now I don't have a solution.   
+               }
+           });
         }
 
         /// <summary>
@@ -247,6 +229,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 {
                     // Encrypt pw again
                     _encryptedPassword = changePassordView.ChangedPasswordEncrypted;
+                    // Update strength level
+                    _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword);
+                    LoadShieldUI();
                     _pwIsHidden = !_pwIsHidden;
                     // For saving's sake: Fill the LeafPassword of the current leafViewModel with the new pw. But encrypted!
                     if (CurrentItem.CurrentViewModel is LeafViewModel leafVm)
@@ -266,7 +251,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 ex.SetUserMessage("An error occured while trying to edit the password. The memory is being flushed to prevent any leaks.");
                 Communication.InformUserAboutError(ex);
             }
-
         }
 
         /// <summary>
@@ -284,6 +268,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                     if (DataAccessService.Instance.TryGetSensible<LeafPassword>(CurrentItem.CurrentViewModel.Id, out var leafPw))
                     {
                         _encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
+                        _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword);
                         leafPw = null;
                     }
                     else

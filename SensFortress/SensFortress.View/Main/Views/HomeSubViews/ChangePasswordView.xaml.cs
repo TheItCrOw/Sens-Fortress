@@ -40,12 +40,22 @@ namespace SensFortress.View.Main.Views.HomeSubViews
                 DialogResult = false;
                 return;
             }
+            else if(Password_Textbox.Text == string.Empty)
+            {
+                Information_Textblock.Text = "An empty password is not an option.";
+                return;
+            }
 
             // A bit ugly to put 3 methods into each other, but I want to avoid creating many extra variables when handling sensible data.
             ChangedPasswordEncrypted = CryptMemoryProtection.EncryptInMemoryData(ByteHelper.StringToByteArray(Password_Textbox.Text));
             Password_Textbox.Text = string.Empty;
             _pwAtStart = string.Empty;
             DialogResult = true;
+        }
+
+        private void GeneratePassword_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Password_Textbox.Text = PasswordHelper.GenerateSecurePassword();
         }
     }
 }

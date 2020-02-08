@@ -101,7 +101,7 @@
                 </StackPanel>
                 
                 <!--Charts-->
-                <Grid Grid.Row="2">
+                <Grid Grid.Row="2" Margin="0 10 0 0">
                     <Grid.Background>
                         <LinearGradientBrush StartPoint="0 0" EndPoint="0 4.7">
                             <LinearGradientBrush.GradientStops>
@@ -122,7 +122,7 @@
 
                     <!--Lock/Unlock image and text-->
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Height="200" HorizontalAlignment="Center" Width="200" Foreground="White">
+                        <materialDesign:PackIcon Height="150" HorizontalAlignment="Center" Width="150" Foreground="White">
                             <materialDesign:PackIcon.Style>
                                 <Style TargetType="materialDesign:PackIcon">
                                     <Style.Triggers>
@@ -138,7 +138,7 @@
                         </materialDesign:PackIcon>
                         <TextBlock>
                               <TextBlock.Style>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource InformationTextblockStyle}">
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CategoryTextblockStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsLocked}" Value="True">
                                             <Setter Property="Text" Value="Fortress is locked."/>
@@ -151,6 +151,33 @@
                             </TextBlock.Style>
                         </TextBlock>
                     </StackPanel>
+
+                    <!--Buttons - start password analyis-->
+                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0 0 20 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Background="Transparent" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Command="{Binding StartPasswordAnalysisCommand}"
+                                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding PWAnalysisIsLoading}">
+                            <TextBlock Text="Start password analysis" Style="{StaticResource SubCategoryTextblockStyle}" Foreground="White"/>
+                        </Button>
+                        <materialDesign:Card VerticalAlignment="Stretch" Grid.Row="1" Margin="0 5 0 0">
+                            <materialDesign:Card.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.6"/>
+                            </materialDesign:Card.Background>
+                            <!--placeholder text-->
+                            <ListView ItemsSource="{Binding AnalyseResults}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category" />
+                                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                                        <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="PW-Strength"/>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </materialDesign:Card>
+                    </Grid>
 
                     <!--chart 1-->
                     <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="3" 

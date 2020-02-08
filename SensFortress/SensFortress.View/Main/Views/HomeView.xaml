@@ -87,7 +87,7 @@
                         <materialDesign:PackIcon Kind="Show" Height="20" Width="20" Foreground="White"/>
                     </Button>
                     <!--Lock button-->
-                    <Button Style="{StaticResource TreeViewButtonStyle}" x:Name="UnlockFortress_Button" Click="UnlockFortress_Button_Click" ToolTip="Lock fortress" 
+                    <Button Style="{StaticResource TreeViewButtonStyle}" x:Name="UnlockFortress_Button" Click="UnlockFortress_Button_Click" ToolTip="Unlock fortress" 
                             Height="30" Width="30" VerticalAlignment="Center" Margin="4 10 4 0" Background="Black">
                         <materialDesign:PackIcon Kind="LockOpen" Height="20" Width="20" Foreground="White"/>
                     </Button>

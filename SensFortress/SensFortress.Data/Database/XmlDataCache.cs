@@ -257,7 +257,7 @@ namespace SensFortress.Data.Database
                 foreach (var prop in propsVm)
                 {
                     // if the property name and value match with one given tuple => Then we have found one match
-                    if(properties.Any(p => p.Item1 == prop.Name && p.Item2 == prop.GetValue(cModel)))
+                    if(properties.Any(p => p.Item1 == prop.Name && p.Item2.Equals(prop.GetValue(cModel))))
                     {
                         matchedPropertiesCounter++;
                     }
