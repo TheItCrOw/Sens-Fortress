@@ -26,6 +26,7 @@ namespace SensFortress.View.Main.ViewModel
         private string _name;
         private bool _isDirty;
         private bool _setInitialProperties = false;
+        private bool _hasSearchTerm;
 
         public ObservableCollection<TreeItemViewModel> Children { get; set; } = new ObservableCollection<TreeItemViewModel>();
         public DelegateCommand EditTreeItemCommand => new DelegateCommand(((HomeViewModel)CurrentViewModel.CurrentBase).EditTreeItemCommand.Execute);
@@ -109,6 +110,33 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _isDirty, value);
             }
         }
+
+        /// <summary>
+        /// Used when searching through the tree
+        /// </summary>
+        public bool HasSearchTerm(string searchTerm)
+        {
+            _hasSearchTerm = false;
+            if(Name.ToLower().Contains(searchTerm))
+            {
+                return true;
+            }
+            HasSearchTerm(searchTerm, this);
+            return _hasSearchTerm;
+        }
+
+        private void HasSearchTerm(string searchTerm, TreeItemViewModel node)
+        {
+            foreach(var child in node.Children)
+            {
+                if(child.Name != null && child.Name.ToLower().Contains(searchTerm))
+                {
+                    _hasSearchTerm = true;
+                }
+                HasSearchTerm(searchTerm, child);
+            }
+        }
+
         public ViewModelBase CurrentViewModel { get; }
 
         /// <summary>

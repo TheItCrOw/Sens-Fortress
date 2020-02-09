@@ -167,7 +167,7 @@
                             <SolidColorBrush Color="Black" Opacity="0.6"/>
                             </materialDesign:Card.Background>
                             <!--placeholder text-->
-                            <ListView ItemsSource="{Binding AnalyseResults}">
+                            <ListView ItemsSource="{Binding AnalyseResults}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category"/>

@@ -50,6 +50,7 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand SaveTreeChangesCommand => new DelegateCommand(SaveFortress);
         public DelegateCommand LockUnlockFortressCommand => new DelegateCommand(LockUnlockFortress);
         public DelegateCommand NavigateToHomeHubCommand => new DelegateCommand(NavigateToHomeHub);
+        public DelegateCommand<string> SearchThroughNodesCommand => new DelegateCommand<string>(SearchThroughNodes);
 
         /// <summary>
         /// Holds the currently selected item in the TreeView UI.
@@ -160,6 +161,37 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         /// <returns></returns>
         public List<TreeItemViewModel> GetRootNodesSnapshot() => RootNodes.ToList();
+
+        /// <summary>
+        /// Searches through the nodes, expanding and highlighting the matches
+        /// </summary>
+        private void SearchThroughNodes(string searchTerm)
+        {
+            Task.Run(() =>
+            {
+                if (searchTerm == string.Empty)
+                {
+                    UpdateRootNodes();
+                    return;
+                }
+
+                searchTerm.ToLower();
+                
+                foreach(var node in RootNodes)
+                {
+                    SearchThroughNodes(searchTerm, node);
+                }
+            });
+        }
+
+        private void SearchThroughNodes(string searchTerm, TreeItemViewModel node)
+        {
+            Application.Current.Dispatcher.Invoke(() => node.IsExpanded = node.HasSearchTerm(searchTerm));
+            Application.Current.Dispatcher.Invoke(() => node.IsHighlighted = node.Name.ToLower().Contains(searchTerm));
+
+            foreach (var child in node.Children)
+                SearchThroughNodes(searchTerm, child);
+        }
 
         /// <summary>
         /// Navigates to the Hub
@@ -333,16 +365,8 @@ namespace SensFortress.View.Main.ViewModel
             {
                 await Task.Run(() =>
                 {
-                    // If root - just delete
-                    if (SelectedTreeViewItem.TreeType == TreeDepth.Root)
-                    {
-                        DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model); // Delete from cache
-                        Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem)); // Delete from UI
-                        TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted."); // Inform logger
-                        ChangesTracker++; // Track changes
-                    }
                     // Else do more steps
-                    else if (SelectedTreeViewItem.Children.Count == 0)
+                    if (SelectedTreeViewItem.Children.Count == 0)
                     {
                         DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
                         TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted.");
@@ -357,8 +381,6 @@ namespace SensFortress.View.Main.ViewModel
                         Application.Current.Dispatcher.Invoke(() => ExpandAndHighlightAllChildren(SelectedTreeViewItem));
                         if (Application.Current.Dispatcher.Invoke(() => Communication.AskForAnswer("All highlighted items will be deleted.")))
                         {
-                            TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted.");
-
                             // Delete all children first
                             foreach (var child in SelectedTreeViewItem.Children)
                                 DeleteAllChildren(child);
@@ -372,9 +394,20 @@ namespace SensFortress.View.Main.ViewModel
                                     return;
                                 }
 
-                                // if its not a root, then delete the item from its parent.
-                                foreach (var node in RootNodes)
-                                    DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+                                // if its a root, then delete the item.
+                                if(branchVm.ParentBranchId == Guid.Empty)
+                                {
+                                    DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model); // Delete from cache
+                                    Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem)); // Delete from UI
+                                    TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted."); // Inform logger
+                                    ChangesTracker++; // Track changes
+                                }
+                                // else we need to delte this child from its parent
+                                else
+                                {
+                                    foreach (var node in RootNodes)
+                                        DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+                                }
                             }
                         }
                         else
@@ -418,7 +451,7 @@ namespace SensFortress.View.Main.ViewModel
         }
 
         /// <summary>
-        /// Expands an highlights all children and children children of the given TreeItem.
+        /// Expands and highlights all children and children children of the given TreeItem.
         /// </summary>
         /// <param name="currentItem"></param>
         private void ExpandAndHighlightAllChildren(TreeItemViewModel currentItem)
@@ -534,13 +567,14 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         private void UpdateRootNodes(bool isSelected = false, bool isEditable = false, bool resetIsDirty = false)
         {
-            if (SelectedTreeViewItem == null)
-                return;
-
             foreach (var item in RootNodes)
             {
                 UpdateRootNodes(item, resetIsDirty);
             }
+
+            if (SelectedTreeViewItem == null)
+                return;
+
             if (isSelected)
                 SelectedTreeViewItem.IsSelected = true;
             if (isEditable)

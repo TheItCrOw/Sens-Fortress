@@ -28,11 +28,6 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <!--Background Image-->
-        <!--<Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Images/Home-Bonfire.jpg" RenderOptions.BitmapScalingMode="Fant" Stretch="None"/>
-        </Grid.Background>-->
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -132,35 +127,35 @@
                 <ColumnDefinition Width="400" MinWidth="200"/>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="400"/>
             </Grid.ColumnDefinitions>
 
             <!--left side menu here-->
-            <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--Title-->
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
                     <StackPanel>
-                        <Expander>
+                        <Expander IsExpanded="True">
                             <Expander.Header>
-                                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Structure"/>
+                                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Passwords"/>
                             </Expander.Header>
                             <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
                                 <materialDesign:PackIcon Kind="Search" VerticalAlignment="Top" Height="25" Width="25"/>
-                                <TextBox FontStyle="Italic" FontSize="16" FontWeight="ExtraLight" HorizontalAlignment="Stretch" Margin="5 -15 0 10" materialDesign:HintAssist.Hint="search..." materialDesign:HintAssist.IsFloating="True"/>
+                                <TextBox x:Name="Search_Textbox" FontStyle="Italic" FontSize="16" FontWeight="ExtraLight" HorizontalAlignment="Stretch" Margin="5 -15 0 10" 
+                                         materialDesign:HintAssist.Hint="search..." TextChanged="Search_Textbox_TextChanged" materialDesign:HintAssist.IsFloating="True"/>
                             </DockPanel>
                         </Expander>
                     </StackPanel>
                 </materialDesign:Card>
 
-                <!--Add root => Name is used in code!-->
-                <Button x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="10" Command="{Binding AddTreeItemCommand}" 
-                        CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}">
-                    <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
-                </Button>
-
                 <!--Strcutre list-->
                 <extensions:ExtendedTreeView x:Name="RootNodes_TreeView" Margin="0 10 0 0" ItemsSource="{Binding RootNodes}" SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                             Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="500">
+                                             Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Row="1">
                     <extensions:ExtendedTreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemContainerStyle}">
                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -244,7 +239,7 @@
                                                         <Setter Property="Foreground" Value="Black"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Path=IsHighlighted}" Value="true">
-                                                        <Setter Property="Foreground" Value="Red"/>
+                                                        <Setter Property="Foreground" Value="Lime"/>
                                                         <Setter Property="FontWeight" Value="ExtraBold"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -277,48 +272,38 @@
                     </extensions:ExtendedTreeView.ItemTemplate>
                 </extensions:ExtendedTreeView>
 
-                
-            </StackPanel>
-            
+                <!--Add root => Name is used in code!-->
+                <Button Grid.Row="2" x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="10" Command="{Binding AddTreeItemCommand}" 
+                        CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}">
+                    <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
+                </Button>
+
+                <!--Log here-->
+                <materialDesign:Card Grid.Row="3" VerticalAlignment="Stretch" Background="Transparent">
+                    <ScrollViewer extensions:AutoScrollBehavior.AutoScroll="{Binding ScrollToBottom}" HorizontalScrollBarVisibility="Hidden">
+                        <StackPanel>
+                            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                            </materialDesign:Card>
+                            <ListView ItemsSource="{Binding TaskLogs}" HorizontalContentAlignment="Stretch">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Height="20">
+                                            <materialDesign:PackIcon Kind="ChangeHistory" VerticalAlignment="Center"/>
+                                            <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" AllowDrop="True" Style="{StaticResource SmallTextblockStyle}"/>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </ScrollViewer>
+                </materialDesign:Card>
+            </Grid>
+
             <!--Gridsplitter 1-->
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="Black"/>
 
             <!--Middle menu content-->
             <Frame x:Name="SelectedView_Frame" Grid.Column="2" Content="{Binding SelectedContent}"/>
-
-            <!--Gridsplitter 2-->
-            <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="Black"/>
-
-            <!--Log here-->
-            <materialDesign:Card Grid.Column="4" VerticalAlignment="Stretch" Background="Transparent">
-                <ScrollViewer extensions:AutoScrollBehavior.AutoScroll="{Binding ScrollToBottom}" HorizontalScrollBarVisibility="Hidden">
-                    <StackPanel>
-                        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                            <StackPanel>
-                                <Expander>
-                                    <Expander.Header>
-                                        <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Task-Log"/>
-                                    </Expander.Header>
-                                    <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
-                                        <materialDesign:PackIcon Kind="Search" VerticalAlignment="Top" Height="25" Width="25"/>
-                                        <TextBox FontStyle="Italic" FontSize="16" FontWeight="ExtraLight" HorizontalAlignment="Stretch" Margin="5 -15 0 10" materialDesign:HintAssist.Hint="search..." materialDesign:HintAssist.IsFloating="True"/>
-                                    </DockPanel>
-                                </Expander>
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <ListView ItemsSource="{Binding TaskLogs}" HorizontalContentAlignment="Stretch">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <DockPanel Height="20">
-                                        <materialDesign:PackIcon Kind="ChangeHistory" VerticalAlignment="Center"/>
-                                        <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" AllowDrop="True" Style="{StaticResource SmallTextblockStyle}"/>
-                                    </DockPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                </ScrollViewer>
-            </materialDesign:Card>
 
         </Grid>
     </Grid>

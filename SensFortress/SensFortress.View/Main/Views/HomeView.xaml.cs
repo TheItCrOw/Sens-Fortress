@@ -55,7 +55,7 @@ namespace SensFortress.View.Main.Views
                 else
                     currentPw = MasterLock_Textbox.Text;
 
-                if(DataAccessService.Instance.ValidateMasterkey(currentPw))
+                if (DataAccessService.Instance.ValidateMasterkey(currentPw))
                 {
                     CurrentFortressData.IsLocked = false;
                     MasterLock_PasswordBox.Password = string.Empty;
@@ -111,6 +111,11 @@ namespace SensFortress.View.Main.Views
                     DragDrop.DoDragDrop(item, treeItem, DragDropEffects.Move);
                 }
             }
+        }
+
+        private void Search_Textbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ((HomeViewModel)DataContext).SearchThroughNodesCommand.Execute(Search_Textbox.Text);
         }
     }
 }
