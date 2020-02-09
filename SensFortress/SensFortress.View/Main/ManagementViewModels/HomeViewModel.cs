@@ -176,8 +176,8 @@ namespace SensFortress.View.Main.ViewModel
                 }
 
                 searchTerm.ToLower();
-                
-                foreach(var node in RootNodes)
+
+                foreach (var node in RootNodes)
                 {
                     SearchThroughNodes(searchTerm, node);
                 }
@@ -365,57 +365,29 @@ namespace SensFortress.View.Main.ViewModel
             {
                 await Task.Run(() =>
                 {
-                    // Else do more steps
-                    if (SelectedTreeViewItem.Children.Count == 0)
+                    Application.Current.Dispatcher.Invoke(() => ExpandAndHighlightAllChildren(SelectedTreeViewItem));
+                    Application.Current.Dispatcher.Invoke(() => SelectedTreeViewItem.IsHighlighted = true);
+                    if (Application.Current.Dispatcher.Invoke(() => Communication.AskForAnswer("All highlighted items will be deleted.")))
                     {
-                        DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model);
-                        TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted.");
+                        // Delete all children first
+                        foreach (var child in SelectedTreeViewItem.Children)
+                            DeleteAllChildren(child);
 
-                        foreach (var node in RootNodes)
-                            DeleteItemFromParentChildren(SelectedTreeViewItem, node);
-
-                        ChangesTracker++;
+                        if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel branchVm)
+                        {
+                            // if its a root, then delete the item.else delete it from its parent
+                            if (branchVm.ParentBranchId == Guid.Empty)
+                                DeleteRootNode(SelectedTreeViewItem);
+                            else
+                                foreach (var node in RootNodes)
+                                    DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+                        }
                     }
                     else
                     {
-                        Application.Current.Dispatcher.Invoke(() => ExpandAndHighlightAllChildren(SelectedTreeViewItem));
-                        if (Application.Current.Dispatcher.Invoke(() => Communication.AskForAnswer("All highlighted items will be deleted.")))
-                        {
-                            // Delete all children first
-                            foreach (var child in SelectedTreeViewItem.Children)
-                                DeleteAllChildren(child);
-
-                            if (SelectedTreeViewItem.CurrentViewModel is BranchViewModel branchVm)
-                            {
-                                // If its a root, just delete it.
-                                if (branchVm.ParentBranchId == Guid.Empty)
-                                {
-                                    Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem));
-                                    return;
-                                }
-
-                                // if its a root, then delete the item.
-                                if(branchVm.ParentBranchId == Guid.Empty)
-                                {
-                                    DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model); // Delete from cache
-                                    Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem)); // Delete from UI
-                                    TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted."); // Inform logger
-                                    ChangesTracker++; // Track changes
-                                }
-                                // else we need to delte this child from its parent
-                                else
-                                {
-                                    foreach (var node in RootNodes)
-                                        DeleteItemFromParentChildren(SelectedTreeViewItem, node);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            UpdateRootNodes(true, false);
-                            IsLoading = false;
-                            return;
-                        }
+                        UpdateRootNodes(true, false);
+                        IsLoading = false;
+                        return;
                     }
                 });
             }
@@ -429,6 +401,14 @@ namespace SensFortress.View.Main.ViewModel
             {
                 IsLoading = false;
             }
+        }
+
+        private void DeleteRootNode(TreeItemViewModel root)
+        {
+            DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model); // Delete from cache
+            Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem)); // Delete from UI
+            TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted."); // Inform logger
+            ChangesTracker++; // Track changes
         }
 
         /// <summary>
