@@ -59,7 +59,19 @@
             <Grid.Background> 
                 <VisualBrush Stretch="Uniform">
                     <VisualBrush.Visual>
-                        <materialDesign:PackIcon Kind="ShieldOutline">
+                        <materialDesign:PackIcon>
+                            <materialDesign:PackIcon.Style>
+                                <Style TargetType="materialDesign:PackIcon">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsBlackListed}" Value="True">
+                                            <Setter Property="Kind" Value="WarningBoxOutline"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsBlackListed}" Value="False">
+                                            <Setter Property="Kind" Value="ShieldOutline"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </materialDesign:PackIcon.Style>
                             <materialDesign:PackIcon.Foreground>
                                 <LinearGradientBrush StartPoint="0 0" EndPoint="{Binding ShieldEndPoint}">
                                     <LinearGradientBrush.GradientStops>
@@ -124,10 +136,26 @@
                         <SolidColorBrush Color="Black" Opacity="0.9"/>
                     </materialDesign:Card.Background>
                     <DockPanel Margin="25 20 10 20" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Key" Width="35" Height="35" Margin="0 0 10 0"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="70" Height="40" ToolTip="Copy password" 
+                                Command="{Binding CopyPasswordToClipboardCommand}">
+                            <materialDesign:PackIcon Kind="Key" Width="35" Height="35" VerticalAlignment="Center" Foreground="White"/>
+                        </Button>
                         <!--password textblock-->
                         <TextBlock VerticalAlignment="Center" x:Name="Password_Textblock" MinWidth="350"
-                                       TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Password}" FontSize="20"/>
+                                       TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Password}" FontSize="20">
+                            <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsBlackListed}" Value="True">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsBlackListed}" Value="False">
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                        </TextBlock>
                         <Button Width="30" Height="30" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" 
                                     Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}">
                             <materialDesign:PackIcon Kind="Show" Width="20" Height="20"/>

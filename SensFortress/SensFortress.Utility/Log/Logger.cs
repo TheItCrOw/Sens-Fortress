@@ -36,7 +36,7 @@ namespace SensFortress.Utility.Log
         private static XmlDocument GetLogConfigAndSetCustomSettings()
         {
             // Open the logConfig
-            using (FileStream fs = new FileStream(IOPathHelper.Getlog4netConfigDirectory(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+            using (FileStream fs = new FileStream(IOPathHelper.Getlog4netConfigFile(), FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
             {
                 XmlDocument log4netconfig = new XmlDocument();
                 log4netconfig.Load(fs);

@@ -22,10 +22,16 @@ namespace SensFortress.Utility
         }
 
         /// <summary>
+        /// Gets the path where the current exe lies.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAppLocation() => AppDomain.CurrentDomain.BaseDirectory;
+
+        /// <summary>
         /// Returns the path of the log4net.config of the logger.
         /// </summary>
         /// <returns></returns>
-        public static string Getlog4netConfigDirectory() => AppDomain.CurrentDomain.BaseDirectory + "\\log4net.config";
+        public static string Getlog4netConfigFile() => AppDomain.CurrentDomain.BaseDirectory + "\\log4net.config";
 
         /// <summary>
         /// Gets the desktopPath of the current user.
@@ -62,6 +68,18 @@ namespace SensFortress.Utility
         /// </summary>
         /// <returns></returns>
         public static string GetBackedUpFortressDirectory() => $"{_appdataPath}\\Sen's Fortress\\Backups";
+
+        /// <summary>
+        /// Returns the full path of the password_black list file.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetPasswordBlackListFile() => $"{_appdataPath}\\Sen's Fortress\\Lists\\{TermHelper.GetPasswordBlackListName()}";
+
+        /// <summary>
+        /// Returns the path of the "lists" direcoty
+        /// </summary>
+        /// <returns></returns>
+        public static string GetListsDirectory() => $"{_appdataPath}\\Sen's Fortress\\Lists";
 
     }
 }

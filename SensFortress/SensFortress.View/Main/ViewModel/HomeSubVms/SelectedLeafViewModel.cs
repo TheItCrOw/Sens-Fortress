@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -42,6 +43,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private Point _shieldEndPoint;
         private string _passwordStrength;
         private double _passwordStrengthValue;
+        private bool _isBlackListed;
 
         #region Properties
         public ObservableCollection<WebsiteViewModel> Websites { get; set; } = new ObservableCollection<WebsiteViewModel>();
@@ -101,6 +103,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             {
                 SetProperty(ref _description, value);
                 CurrentItem.HandleChangeableProperties(nameof(Description), Description);
+            }
+        }
+        public bool IsBlackListed
+        {
+            get => _isBlackListed;
+            set
+            {
+                SetProperty(ref _isBlackListed, value);
             }
         }
 
@@ -181,6 +191,12 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             Task.Run(() =>
            {
+               if(_passwordStrengthValue == 0)
+               {
+                   PasswordStrength = "This password is blacklisted.";
+                   ShieldEndPoint = new Point(0,1);
+                   return;
+               }
                // Strength level starts at 1 and loops until 1 - end.
                for (double i = 0; i < end; i = i + step)
                {
@@ -230,7 +246,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                     // Encrypt pw again
                     _encryptedPassword = changePassordView.ChangedPasswordEncrypted;
                     // Update strength level
-                    _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword);
+                    _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword, out var resultTips, out var isBlackListed);
+                    IsBlackListed = isBlackListed;
+
                     LoadShieldUI();
                     _pwIsHidden = !_pwIsHidden;
                     // For saving's sake: Fill the LeafPassword of the current leafViewModel with the new pw. But encrypted!
@@ -268,7 +286,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                     if (DataAccessService.Instance.TryGetSensible<LeafPassword>(CurrentItem.CurrentViewModel.Id, out var leafPw))
                     {
                         _encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
-                        _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword);
                         leafPw = null;
                     }
                     else
@@ -276,6 +293,8 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                         Communication.InformUser($"There was a problem finding the password in the {TermHelper.GetDatabaseTerm()}.");
                     }
                 }
+                _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword, out var resultTips, out var isBlackListed);
+                IsBlackListed = isBlackListed;
             }
         }
         /// <summary>

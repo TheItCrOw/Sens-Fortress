@@ -1,6 +1,7 @@
 ﻿using SensFortress.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -57,27 +58,50 @@ namespace SensFortress.Security
         }
 
         /// <summary>
-        /// Takes in an encrypted pw and calculates its strength
+        /// Takes in an encrypted pw and calculates its strength => return list of tips and blackList status.
         /// </summary>
         /// <param name="pw"></param>
         /// <returns></returns>
-        public static double CalculatePasswordStrength(byte[] encryptedPw)
+        public static double CalculatePasswordStrength(byte[] encryptedPw,out HashSet<string> resultTips, out bool isBlackListed)
         {
+            // Load in the pw blacklist
+            isBlackListed = false;
+            resultTips = new HashSet<string>();
             var pw = ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(encryptedPw));
             double passwordStrengthValue = 1;
 
             if (!pw.Any(c => char.IsUpper(c)))
+            {
                 passwordStrengthValue -= 0.25;
+                resultTips.Add("The password doesn't contain upper case characters.");
+            }
             if (!pw.Any(c => char.IsDigit(c)))
+            {
                 passwordStrengthValue -= 0.25;
+                resultTips.Add("The password doesn't contain digits.");
+            }
             if (pw.Length < 12)
+            {
                 passwordStrengthValue -= 0.50;
+                resultTips.Add("The password is too short. It should be at least 12 characters long.");
+            }
             if (!WellKnownSpecialCharacters.ContainsSpecialCharacters(pw))
+            {
                 passwordStrengthValue -= 0.25;
+                resultTips.Add("The password doesn't contain special characters.");
+            }
+            if(PasswordBlackList.GetBlackList().Contains(pw))
+            {
+                passwordStrengthValue -= 1;
+                isBlackListed = true;
+                resultTips.Add("This password has already been leaked and is widely spread on the internet - combined with it's hash. It is not save.");
+            }
 
             // We do not want a "negative" value password strength
             if (passwordStrengthValue <= 0)
                 passwordStrengthValue = 0.1;
+            if (isBlackListed)
+                passwordStrengthValue = 0;
 
             pw = string.Empty;
             return passwordStrengthValue;

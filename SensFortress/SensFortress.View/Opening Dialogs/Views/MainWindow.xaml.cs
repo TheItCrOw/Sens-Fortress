@@ -50,6 +50,11 @@ namespace SensFortress.View
             // Give the NavigationHelper access to the views.
             Navigation.MainFrame = MainFrame;
 
+            // Load the Password_Blacklist into appdata.
+            IOPathHelper.CreateDirectory(IOPathHelper.GetListsDirectory());
+            if (!File.Exists(IOPathHelper.GetPasswordBlackListFile()))
+                File.Copy(IOPathHelper.GetAppLocation() + $"\\{TermHelper.GetPasswordBlackListName()}", IOPathHelper.GetPasswordBlackListFile());
+
             Logger.log.Info("Gates have been built but remain closed.");
             Testing();
         }

@@ -33,5 +33,10 @@ namespace SensFortress.Utility
         /// <returns></returns>
         public static string GetTextFileEnding() => ".sftf";
 
+        /// <summary>
+        /// Returns the name of the password blacklist.
+        /// </summary>
+        public static string GetPasswordBlackListName() => $"Password_Blacklist{GetTextFileEnding()}";
+
     }
 }

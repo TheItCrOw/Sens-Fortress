@@ -134,13 +134,12 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                             {
                                 encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
                             }
-                            var passwordStrength = PasswordHelper.CalculatePasswordStrength(encryptedPassword);
+                            var passwordStrength = PasswordHelper.CalculatePasswordStrength(encryptedPassword, out var resultTips, out var isBlackListed);
                             encryptedPassword = null;
-                            var analysisVm = new AnalysedEntryViewModel
+                            var analysisVm = new AnalysedEntryViewModel(passwordStrength, resultTips)
                             {
                                 Category = parent.Name,
                                 Name = leafVm.Name,
-                                PasswordStrength = passwordStrength * 100
                             };
                             // Can be deleted later
                             Thread.Sleep(350);

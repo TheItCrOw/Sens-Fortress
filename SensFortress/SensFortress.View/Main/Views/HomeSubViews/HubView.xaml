@@ -170,7 +170,7 @@
                             <ListView ItemsSource="{Binding AnalyseResults}">
                                 <ListView.View>
                                     <GridView>
-                                        <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category" />
+                                        <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category"/>
                                         <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
                                         <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="PW-Strength in %"/>
                                         <GridViewColumn Header="Bar">
@@ -184,7 +184,7 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <!--Inspect button-->
-                                                    <Button Style="{StaticResource TreeViewButtonStyle}" Width="15" Height="15" ToolTip="Inspect">
+                                                    <Button Style="{StaticResource TreeViewButtonStyle}" Width="15" Height="15" ToolTip="Inspect" Command="{Binding InspectResultCommand}">
                                                         <materialDesign:PackIcon Kind="InfoOutline" Width="25" Height="25" 
                                                                                  VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                                     </Button>
