@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Main.Views.HomeSubViews"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:vms="clr-namespace:SensFortress.View.Main.ViewModel.HomeSubVms"
              mc:Ignorable="d" 
              AllowDrop="True"
              d:DesignHeight="900" d:DesignWidth="1100"           
@@ -111,6 +112,7 @@
                         </LinearGradientBrush>
                     </Grid.Background>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -121,7 +123,7 @@
                     </Grid.RowDefinitions>
 
                     <!--Lock/Unlock image and text-->
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="60 0 60 0">
                         <materialDesign:PackIcon Height="150" HorizontalAlignment="Center" Width="150" Foreground="White">
                             <materialDesign:PackIcon.Style>
                                 <Style TargetType="materialDesign:PackIcon">
@@ -153,7 +155,7 @@
                     </StackPanel>
 
                     <!--Buttons - start password analyis-->
-                    <Grid Grid.Column="1" Grid.ColumnSpan="2" Margin="0 0 20 0">
+                    <Grid Grid.Column="1" Margin="0 0 20 0" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
@@ -176,7 +178,7 @@
                                         <GridViewColumn Header="Bar">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <ProgressBar IsIndeterminate="False" Foreground="{Binding Color}" MinWidth="200" Value="{Binding PasswordStrength}"/>
+                                                    <ProgressBar IsIndeterminate="False" Foreground="{Binding Color}" MinWidth="150" Value="{Binding PasswordStrength}"/>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -196,8 +198,62 @@
                             </ListView>
                         </materialDesign:Card>
                     </Grid>
+                    
+                    <!--right side configurations-->
+                    <Grid Grid.Column="3" Margin="0 0 20 20" Grid.RowSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!--title-->
+                        <materialDesign:Card Grid.ColumnSpan="3" Foreground="White" Background="Transparent">
+                            <TextBlock Style="{StaticResource CategoryTextblockStyle}" Margin="0 6 0 6" Text="Your configurations:"/>
+                        </materialDesign:Card>
 
-                    <!--chart 1-->
+                        <!-- and here's another -->
+                        <ItemsControl ItemsSource="{Binding Configurations}" Grid.IsSharedSizeScope="True" Grid.Row="1" BorderBrush="White" BorderThickness="0.3">
+                            <ItemsControl.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.6"/>
+                            </ItemsControl.Background>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vms:AnalysedEntryViewModel}">
+                                    <Border x:Name="Border" Padding="8" BorderThickness="0 0 0 1" BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition SharedSizeGroup="Checkerz" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <!--progress button-->
+                                            <Button VerticalAlignment="Center" FontSize="20" Height="30" Width="30" Style="{StaticResource MaterialDesignFloatingActionButton}"
+                                                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" >
+                                                <materialDesign:PackIcon Kind="Settings"/>
+                                            </Button>
+                                            <!--Description and name-->
+                                            <StackPanel Margin="10 0 0 0" Grid.Column="1">
+                                                <TextBlock FontWeight="Bold" Text="{Binding Name}" FontSize="15" HorizontalAlignment="Left"/>
+                                                <TextBlock Text="{Binding Category}" Margin="0 2 0 0"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <!--button at the bottom: Open options-->
+                        <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Grid.Row="2" Height="35" Margin="0 10 0 0">
+                            <DockPanel>
+                                <TextBlock Text="Configure Settings" Style="{StaticResource SubCategoryTextblockStyle}" Foreground="Black" Margin="0 0 5 0"/>
+                                <materialDesign:PackIcon Kind="Settings" Foreground="Black" Height="20" Width="20" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Button>
+                    </Grid>
+
+                    <!--chart -->
                     <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="3" 
                                          Visibility="{Binding ChartIsLoading, Converter={StaticResource InverseBoolToVisConverter}}">
                         <lvc:CartesianChart Series="{Binding ChartSeries}" LegendLocation="Top" FontSize="15" Margin="7">

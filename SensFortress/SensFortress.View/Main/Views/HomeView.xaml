@@ -97,7 +97,7 @@
 
         <!--Header Title-->
         <materialDesign:Card Height="50">
-            <DockPanel HorizontalAlignment="Left" Margin="80 0 0 0" VerticalAlignment="Center">
+            <DockPanel HorizontalAlignment="Left" Margin="80 0 20 0" VerticalAlignment="Center" LastChildFill="False">
                 <!--Home Button-->
                 <Button  Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding NavigateToHomeHubCommand}">
                     <materialDesign:PackIcon Kind="Home" Height="30" Width="30" VerticalAlignment="Center"/>
@@ -108,6 +108,10 @@
                         <materialDesign:PackIcon Kind="Gate" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>
                 </materialDesign:Badged>
+                <!--Export passwords Button-->
+                <Button Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding NavigateToHomeHubCommand}">
+                    <materialDesign:PackIcon Kind="Settings" Height="30" Width="30" VerticalAlignment="Center"/>
+                </Button>
             </DockPanel>
         </materialDesign:Card>
 
@@ -142,7 +146,7 @@
                     <StackPanel>
                         <Expander IsExpanded="True">
                             <Expander.Header>
-                                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Passwords"/>
+                                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Storage chamber"/>
                             </Expander.Header>
                             <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
                                 <materialDesign:PackIcon Kind="Search" VerticalAlignment="Top" Height="25" Width="25"/>

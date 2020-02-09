@@ -34,6 +34,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
+        public ObservableCollection<AnalysedEntryViewModel> Configurations { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
         public DelegateCommand StartPasswordAnalysisCommand => new DelegateCommand(StartPasswordAnalysis);
@@ -96,6 +97,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 _allLeafsVmSnapshot = new HashSet<LeafViewModel>();
                 LoadQuickbar(currentNodes);
                 LoadChart();
+                Testing();
             }
             catch (Exception ex)
             {
@@ -103,6 +105,20 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 Logger.log.Error($"Error while trying to initialize HubView: {ex}");
                 Communication.InformUserAboutError(ex);
             }
+        }
+
+        private void Testing()
+        {
+            var hashset = new HashSet<string> { "test" };
+            var testVm = new AnalysedEntryViewModel (3.0, hashset) { Category = "Category1", Name = "Saving", PasswordStrength = 3 };
+
+            Configurations.Add(testVm);
+            Configurations.Add(testVm);
+            Configurations.Add(testVm);
+            Configurations.Add(testVm);
+            Configurations.Add(testVm);
+            Configurations.Add(testVm);
+            Configurations.Add(testVm);
         }
 
         /// <summary>

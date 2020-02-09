@@ -12,6 +12,7 @@ namespace SensFortress.Utility
     {
         private static bool _isLocked;
         public delegate void FortressLockedStatusChangedEvent();
+
         /// <summary>
         /// Subscribe to get informed whenever the IsLocked status changes.
         /// </summary>
