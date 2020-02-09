@@ -23,7 +23,7 @@ namespace SensFortress.Models.Fortress
             LastName = lastName;
             UserName = userName;
             EMail = eMail;
-            base.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
 
         /// <summary>

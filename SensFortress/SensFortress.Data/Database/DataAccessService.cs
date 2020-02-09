@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Security;
 using System.Text;
 using System.Windows;
@@ -55,6 +56,7 @@ namespace SensFortress.Data.Database
                 CurrentFortressData.FullPath = fullPath;
                 CurrentFortressData.FortressName = fortressName;
                 CurrentFortressData.IsLocked = false;
+                CurrentFortressData.FortressId = _xmlDatacache.GetAllFromUnsecure<Fortress>().FirstOrDefault().Id;
 
                 return true;
             }

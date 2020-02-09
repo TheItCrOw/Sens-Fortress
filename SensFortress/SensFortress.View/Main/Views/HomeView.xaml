@@ -122,7 +122,6 @@
                      Foreground="White" Height="6" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"/>
         </StackPanel>
 
-
         <Grid Grid.Row="2">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.5"/>

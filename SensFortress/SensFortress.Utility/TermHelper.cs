@@ -38,5 +38,11 @@ namespace SensFortress.Utility
         /// </summary>
         public static string GetPasswordBlackListName() => $"Password_Blacklist{GetTextFileEnding()}";
 
+        /// <summary>
+        /// Gets the name of the currently needed settings file. Use this only when a user has already been locked in.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSettingsConfigName() => $"Settings_{CurrentFortressData.FortressId}.config";
+
     }
 }

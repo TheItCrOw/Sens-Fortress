@@ -17,13 +17,10 @@ namespace SensFortress.Utility
         /// Subscribe to get informed whenever the IsLocked status changes.
         /// </summary>
         public static event FortressLockedStatusChangedEvent FortressLockedStatusChanged;
-
         public static string FullPath { get; set; }
-
         public static string FortressName { get; set; }
-
+        public static Guid FortressId { get; set; }
         public static byte[] Salt { get; set; }
-
         public static bool IsLocked
         {
             get

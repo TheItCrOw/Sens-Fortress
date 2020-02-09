@@ -62,6 +62,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
             if (result)
             {
                 pw = string.Empty;
+                Settings.Initialize();
                 Application.Current.Dispatcher.Invoke(() => Navigation.NavigateTo(NavigationViews.HomeView));
                 Logger.log.Info($"Login successfull!");
             }

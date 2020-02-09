@@ -61,7 +61,7 @@ namespace SensFortress.Utility
         /// Gets the location of the directory where the linkedFortresses are being written to.
         /// </summary>
         /// <returns></returns>
-        public static string GetLinkedFortressListDirectory() => $"{_appdataPath}\\Sen's Fortress\\Configs";
+        public static string GetConfigsDirectory() => $"{_appdataPath}\\Sen's Fortress\\Configs";
 
         /// <summary>
         /// Gets the location of the backed up fortresses.
@@ -81,5 +81,10 @@ namespace SensFortress.Utility
         /// <returns></returns>
         public static string GetListsDirectory() => $"{_appdataPath}\\Sen's Fortress\\Lists";
 
+        /// <summary>
+        /// Returns the path of the settings config file of the current fortress. Only use this after someone  has logged in!
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSettingsFile() => GetConfigsDirectory() + $"\\{TermHelper.GetSettingsConfigName()}";
     }
 }
