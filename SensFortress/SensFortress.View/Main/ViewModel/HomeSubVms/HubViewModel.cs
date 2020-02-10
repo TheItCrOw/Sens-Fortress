@@ -118,6 +118,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         private void Testing()
         {
+            Configurations.Clear();
             var hashset = new HashSet<string> { "test" };
             var testVm = new AnalysedEntryViewModel (3.0, hashset) { Category = "Category1", Name = "Saving", PasswordStrength = 3 };
 
@@ -145,6 +146,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             {
                 Task.Run(() =>
                 {
+                    int totalPasswordStrength = 0;
                     foreach (var leafVm in _allLeafsVmSnapshot)
                     {
                         // Get the parent model
@@ -161,7 +163,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                                 encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
                             }
                             var passwordStrength = PasswordHelper.CalculatePasswordStrength(encryptedPassword, out var resultTips, out var isBlackListed);
-                            TotalPWAnalysisScore += (int)(passwordStrength * 100);
+                            totalPasswordStrength += (int)(passwordStrength * 100);
                             encryptedPassword = null;
 
                             var analysisVm = new AnalysedEntryViewModel(passwordStrength, resultTips)
@@ -171,12 +173,12 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                             };
                             // Can be deleted later
                             Thread.Sleep(350);
+                            // add the result to the list
                             Application.Current.Dispatcher.Invoke(() => AnalyseResults.Add(analysisVm));
+                            // calculate the total score
+                            TotalPWAnalysisScore = (totalPasswordStrength / AnalyseResults.Count);
                         }
                     }
-
-                    // Now calculate the total result
-                    TotalPWAnalysisScore = (int)(TotalPWAnalysisScore / AnalyseResults.Count);
 
                     PWAnalysisIsLoading = false;
                 });
