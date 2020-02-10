@@ -145,7 +145,7 @@
                     <StackPanel>
                         <Expander IsExpanded="True">
                             <Expander.Header>
-                                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Storage chamber"/>
+                                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Storage"/>
                             </Expander.Header>
                             <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
                                 <materialDesign:PackIcon Kind="Search" VerticalAlignment="Top" Height="25" Width="25"/>

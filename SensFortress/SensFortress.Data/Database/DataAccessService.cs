@@ -182,6 +182,5 @@ namespace SensFortress.Data.Database
         /// <returns></returns>
         public bool TryGetSensible<T>(Guid foreignKey, out T model) => _xmlDatacache.TryGetSensible<T>(foreignKey, out model);
 
-
     }
 }

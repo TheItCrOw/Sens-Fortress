@@ -30,22 +30,31 @@ namespace SensFortress.View.Opening_Dialogs.Views
         /// <param name="e"></param>
         private async void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password) || Fortress_TreeView.SelectedItem_ == null)
+            try
             {
-                Communication.InformUser("You shall not pass!");
-                return;
+                if (string.IsNullOrEmpty(MasterKey_PasswordBox.Password) || Fortress_TreeView.SelectedItem_ == null)
+                {
+                    Communication.InformUser("You shall not pass!");
+                    return;
+                }
+
+                Login_ProgressBar.IsIndeterminate = true;
+
+                var pw = MasterKey_PasswordBox.Password;
+                var fortressVm = (FortressViewModel)Fortress_TreeView.SelectedItem_;
+                Logger.log.Info($"Login attempt in fortress: {fortressVm.ToString()}");
+
+                await Task.Run(() => IsValidMasterKey(fortressVm, pw));
+
+                pw = string.Empty;
+                Login_ProgressBar.IsIndeterminate = false;
             }
-
-            Login_ProgressBar.IsIndeterminate = true;
-
-            var pw = MasterKey_PasswordBox.Password;
-            var fortressVm = (FortressViewModel)Fortress_TreeView.SelectedItem_;
-            Logger.log.Info($"Login attempt in fortress: {fortressVm.ToString()}");
-
-            await Task.Run(() => IsValidMasterKey(fortressVm, pw));
-
-            pw = string.Empty;
-            Login_ProgressBar.IsIndeterminate = false;
+            catch (Exception ex)
+            {
+                ex.SetUserMessage("An error occured while trying to escort you into the fortress.");
+                Communication.InformUserAboutError(ex);
+                Logger.log.Error($"Error while trying to log in {ex}");
+            }
         }
 
         /// <summary>
@@ -63,6 +72,7 @@ namespace SensFortress.View.Opening_Dialogs.Views
             {
                 pw = string.Empty;
                 Settings.Initialize();
+                Logger.log.Info("Settings initialized.");
                 Application.Current.Dispatcher.Invoke(() => Navigation.NavigateTo(NavigationViews.HomeView));
                 Logger.log.Info($"Login successfull!");
             }

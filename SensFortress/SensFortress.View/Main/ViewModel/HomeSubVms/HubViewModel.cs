@@ -31,6 +31,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private int _chartMaxValue;
         private bool _chartIsLoading;
         private bool _pWAnalysisIsLoading;
+        private int _totalPWAnalysisScore;
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
@@ -88,6 +89,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _pWAnalysisIsLoading, value);
             }
         }
+        public int TotalPWAnalysisScore
+        {
+            get => _totalPWAnalysisScore;
+            set
+            {
+                SetProperty(ref _totalPWAnalysisScore, value);
+            }
+        }
 
         public void Initialize()
         {
@@ -141,6 +150,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                         // Get the parent model
                         var tuples = new Tuple<string, object>[] { Tuple.Create("Id", (object)leafVm.BranchId) };
                         var parent = DataAccessService.Instance.GetExplicit<Branch>(tuples).FirstOrDefault();
+
                         if (parent != null)
                         {
                             byte[] encryptedPassword = null;
@@ -151,7 +161,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                                 encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
                             }
                             var passwordStrength = PasswordHelper.CalculatePasswordStrength(encryptedPassword, out var resultTips, out var isBlackListed);
+                            TotalPWAnalysisScore += (int)(passwordStrength * 100);
                             encryptedPassword = null;
+
                             var analysisVm = new AnalysedEntryViewModel(passwordStrength, resultTips)
                             {
                                 Category = parent.Name,
@@ -162,6 +174,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                             Application.Current.Dispatcher.Invoke(() => AnalyseResults.Add(analysisVm));
                         }
                     }
+
+                    // Now calculate the total result
+                    TotalPWAnalysisScore = (int)(TotalPWAnalysisScore / AnalyseResults.Count);
+
                     PWAnalysisIsLoading = false;
                 });
             }

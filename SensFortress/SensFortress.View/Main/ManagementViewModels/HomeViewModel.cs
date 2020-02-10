@@ -186,8 +186,8 @@ namespace SensFortress.View.Main.ViewModel
 
         private void SearchThroughNodes(string searchTerm, TreeItemViewModel node)
         {
-            Application.Current.Dispatcher.Invoke(() => node.IsExpanded = node.HasSearchTerm(searchTerm));
-            Application.Current.Dispatcher.Invoke(() => node.IsHighlighted = node.Name.ToLower().Contains(searchTerm));
+            node.IsExpanded = node.HasSearchTerm(searchTerm);
+            node.IsHighlighted = node.Name.ToLower().Contains(searchTerm);
 
             foreach (var child in node.Children)
                 SearchThroughNodes(searchTerm, child);

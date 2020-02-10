@@ -46,84 +46,72 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!--Quickbar-->
-                <StackPanel>
-                    <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 20 0 20" HorizontalAlignment="Center"/>
-                    <materialDesign:Card Background="Transparent">
-                        <DockPanel Margin="10 0 0 0" Height="155">
-                            <materialDesign:Card Background="White" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
-                                             VerticalAlignment="Center" Height="110" Width="130" Margin="0 -22 10 0" Panel.ZIndex="1" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                                <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
-                                    <materialDesign:PackIcon Kind="AddBox" Height="50" Width="50" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Here" Foreground="Black"/>
-                                </StackPanel>
-                            </materialDesign:Card>
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                                <StackPanel>
-                                    <ListBox x:Name="Quickbar_ListBox" ItemsSource="{Binding QuickBar}">
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel IsItemsHost="True" />
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <materialDesign:Card Background="GhostWhite" Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                                                    <StackPanel Height="110" MinWidth="150">
-                                                        <TextBlock Text="{Binding Name}" Style="{StaticResource CategoryTextblockStyle}" Foreground="Black" Margin="5 3 5 0"/>
-                                                        <DockPanel Margin="5 40 5 5" LastChildFill="False" HorizontalAlignment="Center">
-                                                            <!--copy password button-->
-                                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password" Height="30" Width="30" Command="{Binding CopyPasswordCommand}">
-                                                                <materialDesign:PackIcon Kind="Key" Width="22" Height="22"/>
-                                                            </Button>
-                                                            <!--copy username button-->
-                                                            <Button Style="{StaticResource GoBackButtonStyle}" Margin="5 0 5 0" ToolTip="Copy username" Height="30" Width="30" Command="{Binding CopyUsernameCommand}">
-                                                                <materialDesign:PackIcon Kind="User" Width="22" Height="22"/>
-                                                            </Button>
-                                                            <!--open linked page button-->
-                                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website" Height="30" Width="30">
-                                                                <materialDesign:PackIcon Kind="Login" Width="22" Height="22"/>
-                                                            </Button>
-                                                            <!--Delete from quickbar-->
-                                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Delete from quickbar" Margin="5 0 0 0" Height="30" Width="30" Command="{Binding DeleteFromQuickbarCommand}">
-                                                                <materialDesign:PackIcon Kind="Delete" Width="22" Height="22"/>
-                                                            </Button>
-                                                        </DockPanel>
-                                                    </StackPanel>
-                                                </materialDesign:Card>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </DockPanel>
-                    </materialDesign:Card>
-                </StackPanel>
-                
-                <!--Charts-->
-                <Grid Grid.Row="2" Margin="0 10 0 0">
-                    <Grid.Background>
-                        <LinearGradientBrush StartPoint="0 0" EndPoint="0 4.7">
-                            <LinearGradientBrush.GradientStops>
-                                <GradientStop Offset="0.05" Color="Transparent" />
-                                <GradientStop Offset="1" Color="Black" />
-                            </LinearGradientBrush.GradientStops>
-                        </LinearGradientBrush>
-                    </Grid.Background>
+                <!--Quickbar and locked status-->
+                <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="225"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
+                    
+                    <!--Quickbar-->
+                    <StackPanel Grid.ColumnSpan="2">
+                        <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 20 0 20" HorizontalAlignment="Center"/>
+                        <materialDesign:Card Background="Transparent">
+                            <DockPanel Margin="10 0 0 0" Height="155">
+                                <materialDesign:Card Background="White" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
+                                             VerticalAlignment="Center" Height="110" Width="130" Margin="0 -22 10 0" Panel.ZIndex="1" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
+                                        <materialDesign:PackIcon Kind="AddBox" Height="50" Width="50" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Here" Foreground="Black"/>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                    <StackPanel>
+                                        <ListBox x:Name="Quickbar_ListBox" ItemsSource="{Binding QuickBar}">
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel IsItemsHost="True" />
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <materialDesign:Card Background="GhostWhite" Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                                                        <StackPanel Height="110" MinWidth="150">
+                                                            <TextBlock Text="{Binding Name}" Style="{StaticResource CategoryTextblockStyle}" Foreground="Black" Margin="5 3 5 0"/>
+                                                            <DockPanel Margin="5 40 5 5" LastChildFill="False" HorizontalAlignment="Center">
+                                                                <!--copy password button-->
+                                                                <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password" Height="30" Width="30" Command="{Binding CopyPasswordCommand}">
+                                                                    <materialDesign:PackIcon Kind="Key" Width="22" Height="22"/>
+                                                                </Button>
+                                                                <!--copy username button-->
+                                                                <Button Style="{StaticResource GoBackButtonStyle}" Margin="5 0 5 0" ToolTip="Copy username" Height="30" Width="30" Command="{Binding CopyUsernameCommand}">
+                                                                    <materialDesign:PackIcon Kind="User" Width="22" Height="22"/>
+                                                                </Button>
+                                                                <!--open linked page button-->
+                                                                <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website" Height="30" Width="30">
+                                                                    <materialDesign:PackIcon Kind="Login" Width="22" Height="22"/>
+                                                                </Button>
+                                                                <!--Delete from quickbar-->
+                                                                <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Delete from quickbar" Margin="5 0 0 0" Height="30" Width="30" Command="{Binding DeleteFromQuickbarCommand}">
+                                                                    <materialDesign:PackIcon Kind="Delete" Width="22" Height="22"/>
+                                                                </Button>
+                                                            </DockPanel>
+                                                        </StackPanel>
+                                                    </materialDesign:Card>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </materialDesign:Card>
+                    </StackPanel>
+                    
+                    <!--locked status-->
                     <!--Lock/Unlock image and text-->
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="60 0 60 0">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2">
                         <materialDesign:PackIcon Height="150" HorizontalAlignment="Center" Width="150" Foreground="White">
                             <materialDesign:PackIcon.Style>
                                 <Style TargetType="materialDesign:PackIcon">
@@ -139,8 +127,8 @@
                             </materialDesign:PackIcon.Style>
                         </materialDesign:PackIcon>
                         <TextBlock>
-                              <TextBlock.Style>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource CategoryTextblockStyle}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource InformationTextblockStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsLocked}" Value="True">
                                             <Setter Property="Text" Value="Fortress is locked."/>
@@ -153,14 +141,40 @@
                             </TextBlock.Style>
                         </TextBlock>
                     </StackPanel>
+                </Grid>
 
+                <!--Middle content: password analysis, shields etc.-->
+                <Grid Grid.Row="2" Margin="0 10 0 0">
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0 0" EndPoint="0 4.7">
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Offset="0.05" Color="Transparent" />
+                                <GradientStop Offset="1" Color="Black" />
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="230"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                   
                     <!--Buttons - start password analyis-->
-                    <Grid Grid.Column="1" Margin="0 0 20 0" Grid.ColumnSpan="2">
+                    <Grid Grid.Column="0" Margin="0 0 20 0" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Button Background="Transparent" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Command="{Binding StartPasswordAnalysisCommand}"
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <!--Start password analysis button-->
+                        <Button Background="Transparent" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Command="{Binding StartPasswordAnalysisCommand}"
                                 materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding PWAnalysisIsLoading}">
                             <TextBlock Text="Start password analysis" Style="{StaticResource SubCategoryTextblockStyle}" Foreground="White"/>
                         </Button>
@@ -174,7 +188,7 @@
                                     <GridView>
                                         <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category"/>
                                         <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                                        <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="PW-Strength in %"/>
+                                        <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="% PW-Strength"/>
                                         <GridViewColumn Header="Bar">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
@@ -197,10 +211,21 @@
                                 </ListView.View>
                             </ListView>
                         </materialDesign:Card>
+
+                        <!--Total password strength-->
+                        <StackPanel Grid.Column="1" Grid.Row="1" Margin="20 10 20 0">
+                            <materialDesign:PackIcon Kind="ShieldKey" Height="135" Width="135"/>
+                            <TextBlock Text="Total score: " Style="{StaticResource CategoryTextblockStyle}"/>
+                            <DockPanel LastChildFill="False" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding TotalPWAnalysisScore}" Style="{StaticResource CategoryTextblockStyle}"/>
+                                <TextBlock Text="%" Style="{StaticResource CategoryTextblockStyle}"/>
+                            </DockPanel>
+                        </StackPanel>
+
                     </Grid>
                     
                     <!--right side configurations-->
-                    <Grid Grid.Column="3" Margin="0 0 20 20" Grid.RowSpan="2">
+                    <Grid Grid.Column="2" Margin="0 0 20 20" Grid.RowSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
@@ -215,11 +240,20 @@
                             <TextBlock Style="{StaticResource CategoryTextblockStyle}" Margin="0 6 0 6" Text="Your configurations:"/>
                         </materialDesign:Card>
 
-                        <!-- and here's another -->
+                        <!-- Config list -->
                         <ItemsControl ItemsSource="{Binding Configurations}" Grid.IsSharedSizeScope="True" Grid.Row="1" BorderBrush="White" BorderThickness="0.3">
                             <ItemsControl.Background>
                                 <SolidColorBrush Color="Black" Opacity="0.6"/>
                             </ItemsControl.Background>
+                            <!--scroll viewer-->
+                            <ItemsControl.Template>
+                                <ControlTemplate>
+                                    <ScrollViewer x:Name="ScrollViewer">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                            <!--data template of object-->
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type vms:AnalysedEntryViewModel}">
                                     <Border x:Name="Border" Padding="8" BorderThickness="0 0 0 1" BorderBrush="{DynamicResource MaterialDesignDivider}">
@@ -243,7 +277,6 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-
                         <!--button at the bottom: Open options-->
                         <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Grid.Row="2" Height="35" Margin="0 10 0 0">
                             <DockPanel>
@@ -254,7 +287,7 @@
                     </Grid>
 
                     <!--chart -->
-                    <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="3" 
+                    <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="2" 
                                          Visibility="{Binding ChartIsLoading, Converter={StaticResource InverseBoolToVisConverter}}">
                         <lvc:CartesianChart Series="{Binding ChartSeries}" LegendLocation="Top" FontSize="15" Margin="7">
                             <lvc:CartesianChart.DataTooltip>
