@@ -382,6 +382,11 @@ namespace SensFortress.View.Main.ViewModel
                                 foreach (var node in RootNodes)
                                     DeleteItemFromParentChildren(SelectedTreeViewItem, node);
                         }
+                        else // If its a leaf, it cannot be a root. So just delete it from its parent
+                        {
+                            foreach (var node in RootNodes)
+                                DeleteItemFromParentChildren(SelectedTreeViewItem, node);
+                        }
                     }
                     else
                     {
@@ -474,6 +479,8 @@ namespace SensFortress.View.Main.ViewModel
             {
                 Application.Current.Dispatcher.Invoke(() => currentNode.Children.Remove(deletableItem));
                 DataAccessService.Instance.DeleteOneFromMemoryDC(deletableItem.CurrentViewModel.Model);
+                Application.Current.Dispatcher.Invoke(() => TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted.")); // Inform logger
+                Application.Current.Dispatcher.Invoke(() => ChangesTracker++); // Track changes
             }
         }
 

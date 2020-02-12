@@ -44,6 +44,11 @@ namespace SensFortress.View.Main.Views
             ((HomeViewModel)DataContext).ShowLockCard = false;
         }
 
+        /// <summary>
+        /// Unlocks the fortress if the masterkey has been entered correctly
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UnlockFortress_Button_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -113,11 +118,21 @@ namespace SensFortress.View.Main.Views
             }
         }
 
+        /// <summary>
+        /// Searching through the treeView on the left
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Search_Textbox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ((HomeViewModel)DataContext).SearchThroughNodesCommand.Execute(Search_Textbox.Text);
         }
 
+        /// <summary>
+        /// Searching through the treeView on the left
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Search_Textbox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
