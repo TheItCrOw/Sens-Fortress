@@ -6,6 +6,7 @@ using SensFortress.Security;
 using SensFortress.Security.AES;
 using SensFortress.Security.Testing;
 using SensFortress.Utility;
+using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.Utility.Testing;
 using SensFortress.View.Helper;
@@ -41,23 +42,36 @@ namespace SensFortress.View
 
         void Start()
         {
-            Logger.log.Info("Building the gates...");
-            InitializeComponent();
+            try
+            {
+                Logger.log.Info("Building the gates...");
+                InitializeComponent();
 
-            // For some reason, VS is firing an exceptionn when trying to do this in XAML...
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                // For some reason, VS is firing an exceptionn when trying to do this in XAML...
+                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            // Give the NavigationHelper access to the views.
-            Navigation.MainFrame = MainFrame;
-            Navigation.MainWindowInstance = this;
+                // Give the NavigationHelper access to the views.
+                Navigation.MainFrame = MainFrame;
+                Navigation.MainWindowInstance = this;
 
-            // Load the Password_Blacklist into appdata.
-            IOPathHelper.CreateDirectory(IOPathHelper.GetListsDirectory());
-            if (!File.Exists(IOPathHelper.GetPasswordBlackListFile()))
-                File.Copy(IOPathHelper.GetAppLocation() + $"\\{TermHelper.GetPasswordBlackListName()}", IOPathHelper.GetPasswordBlackListFile());
+                // Load the Password_Blacklist into appdata.
+                IOPathHelper.CreateDirectory(IOPathHelper.GetListsDirectory());
+                if (!File.Exists(IOPathHelper.GetPasswordBlackListFile()))
+                {
+                    File.Copy(IOPathHelper.GetAppLocation() + $"\\{TermHelper.GetPasswordBlackListName()}", IOPathHelper.GetPasswordBlackListFile());
+                    Logger.log.Info("Default-Settings have been written!");
+                }
 
-            Logger.log.Info("Gates have been built but remain closed.");
-            Testing();
+                Logger.log.Info("Gates have been built but remain closed.");
+                Testing();
+            }
+            catch (Exception ex)
+            {
+                ex.SetUserMessage($"A problem occured while trying to build Sen's Fortress. Make sure the program has access to write and read files on and from your harddrive.");
+                Logger.log.Error($"Error while trying to load MainWindow :{ex}");
+                Communication.InformUserAboutError(ex);
+            }
+
         }
 
         private void Testing()
