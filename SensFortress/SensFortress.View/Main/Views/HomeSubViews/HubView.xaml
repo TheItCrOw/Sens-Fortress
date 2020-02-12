@@ -288,7 +288,7 @@
                     </Grid>
 
                     <!--chart -->
-                    <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="2" 
+                    <!--<materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="2" 
                                          Visibility="{Binding ChartIsLoading, Converter={StaticResource InverseBoolToVisConverter}}">
                         <lvc:CartesianChart Series="{Binding ChartSeries}" LegendLocation="Top" FontSize="15" Margin="7">
                             <lvc:CartesianChart.DataTooltip>
@@ -301,7 +301,7 @@
                                 <lvc:Axis FontSize="15" Foreground="White" MinValue="{Binding ChartMinValue}" MaxValue="{Binding ChartMaxValue}"></lvc:Axis>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
-                    </materialDesign:Card>
+                    </materialDesign:Card>-->
 
                     <!--Loading symbol if charts need some time to load-->
                     <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="50" Height="100" Width="100" Grid.ColumnSpan="3" FontStretch="UltraCondensed" Foreground="White" 
