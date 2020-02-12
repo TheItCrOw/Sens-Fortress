@@ -7,7 +7,7 @@
              xmlns:vms="clr-namespace:SensFortress.View.Opening_Dialogs.ViewModels"
              xmlns:extensions="clr-namespace:SensFortress.View.Extensions"
              mc:Ignorable="d" 
-             d:DesignHeight="900" d:DesignWidth="1100"           
+             d:DesignHeight="900" d:DesignWidth="1100"        
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -19,7 +19,7 @@
     <Grid>
         <!--Background Image-->
         <Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Images/Opening-Gate.jpg"/>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Opening-Gate.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
 
         <Grid.RowDefinitions>

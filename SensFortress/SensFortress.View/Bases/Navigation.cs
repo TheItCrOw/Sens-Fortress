@@ -19,6 +19,10 @@ namespace SensFortress.View.Helper
         public static LoginViewModel LoginManagementInstance { get; set; }
         public static HomeViewModel HomeManagementInstance { get; set; }
         /// <summary>
+        /// The view that contains the MainFrame and where all others views are being showed in.
+        /// </summary>
+        public static MainWindow MainWindowInstance { get; set; }
+        /// <summary>
         /// Navigates to the given view.
         /// </summary>
         /// <param name="view"></param>
@@ -35,6 +39,7 @@ namespace SensFortress.View.Helper
                         HomeView.DataContext = homeVm;
                     }
                     MainFrame.Content = HomeView;
+                    MainWindowInstance.WindowState = System.Windows.WindowState.Maximized;
                     ((HomeViewModel)HomeView.DataContext).Initialize();
                     return true;
                 default:

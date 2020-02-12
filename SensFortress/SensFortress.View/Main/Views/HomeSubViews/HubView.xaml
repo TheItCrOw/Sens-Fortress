@@ -34,7 +34,7 @@
             </Grid.RowDefinitions>
 
             <!--Title-->
-            <materialDesign:Card VerticalAlignment="Stretch" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57">
+            <materialDesign:Card VerticalAlignment="Stretch" Margin="1 0 0 0" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57">
                 <TextBlock Text="Home-Hub" Style="{StaticResource InformationTextblockStyle}" Foreground="White"/>
             </materialDesign:Card>
 
@@ -164,7 +164,7 @@
                     </Grid.RowDefinitions>
                    
                     <!--Buttons - start password analyis-->
-                    <Grid Grid.Column="0" Margin="0 0 20 0" Grid.ColumnSpan="2">
+                    <Grid Grid.Column="0" Margin="10 0 20 0" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>

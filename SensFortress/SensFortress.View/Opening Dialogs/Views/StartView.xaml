@@ -17,7 +17,7 @@
     <Grid>
         <!--Background Image-->
         <Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Images/Fortress-Bridge.jpg"/>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Fortress-Bridge.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
 
         <Grid.RowDefinitions>

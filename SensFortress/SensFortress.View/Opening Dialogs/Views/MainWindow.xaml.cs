@@ -49,6 +49,7 @@ namespace SensFortress.View
 
             // Give the NavigationHelper access to the views.
             Navigation.MainFrame = MainFrame;
+            Navigation.MainWindowInstance = this;
 
             // Load the Password_Blacklist into appdata.
             IOPathHelper.CreateDirectory(IOPathHelper.GetListsDirectory());
