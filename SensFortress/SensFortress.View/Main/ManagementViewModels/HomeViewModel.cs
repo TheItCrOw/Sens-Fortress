@@ -171,11 +171,11 @@ namespace SensFortress.View.Main.ViewModel
             {
                 if (searchTerm == string.Empty)
                 {
-                    UpdateRootNodes();
+                    UpdateRootNodes(false, false, false, true);
                     return;
                 }
 
-                searchTerm.ToLower();
+                searchTerm = searchTerm.ToLower();
 
                 foreach (var node in RootNodes)
                 {
@@ -545,11 +545,11 @@ namespace SensFortress.View.Main.ViewModel
         /// <summary>
         /// Updates Properties of all items in the TreeView
         /// </summary>
-        private void UpdateRootNodes(bool isSelected = false, bool isEditable = false, bool resetIsDirty = false)
+        private void UpdateRootNodes(bool isSelected = false, bool isEditable = false, bool resetIsDirty = false, bool resetIsExpanded = false)
         {
             foreach (var item in RootNodes)
             {
-                UpdateRootNodes(item, resetIsDirty);
+                UpdateRootNodes(item, resetIsDirty, resetIsExpanded);
             }
 
             if (SelectedTreeViewItem == null)
@@ -563,9 +563,11 @@ namespace SensFortress.View.Main.ViewModel
                 SelectedTreeViewItem.MayHaveChildren = true;
             if (resetIsDirty)
                 SelectedTreeViewItem.IsDirty = false;
+            if (resetIsExpanded)
+                SelectedTreeViewItem.IsExpanded = false;
         }
 
-        private void UpdateRootNodes(TreeItemViewModel currentItem, bool resetIsDirty)
+        private void UpdateRootNodes(TreeItemViewModel currentItem, bool resetIsDirty, bool resetIsExpanded)
         {
             currentItem.IsSelected = false;
             currentItem.IsEditable = false;
@@ -573,6 +575,9 @@ namespace SensFortress.View.Main.ViewModel
             currentItem.IsHighlighted = false;
             if (resetIsDirty)
                 currentItem.IsDirty = false;
+            if (resetIsExpanded)
+                currentItem.IsExpanded = false;
+
             if (currentItem.Children.Count > 0)
                 foreach (var child in currentItem.Children)
                 {
@@ -582,8 +587,10 @@ namespace SensFortress.View.Main.ViewModel
                     child.IsHighlighted = false;
                     if (resetIsDirty)
                         child.IsDirty = false;
+                    if (resetIsExpanded)
+                        child.IsExpanded = false;
 
-                    UpdateRootNodes(child, resetIsDirty);
+                    UpdateRootNodes(child, resetIsDirty, resetIsExpanded);
                 }
         }
 

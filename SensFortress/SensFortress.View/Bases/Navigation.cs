@@ -39,7 +39,6 @@ namespace SensFortress.View.Helper
                         HomeView.DataContext = homeVm;
                     }
                     MainFrame.Content = HomeView;
-                    MainWindowInstance.WindowState = System.Windows.WindowState.Maximized;
                     ((HomeViewModel)HomeView.DataContext).Initialize();
                     return true;
                 default:

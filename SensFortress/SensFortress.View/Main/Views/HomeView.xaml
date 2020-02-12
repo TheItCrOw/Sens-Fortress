@@ -133,7 +133,7 @@
             </Grid.ColumnDefinitions>
 
             <!--left side Tree View here-->
-            <Expander ExpandDirection="Right" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+            <Expander ExpandDirection="Left" FlowDirection="LeftToRight" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Foreground="Black">
                 <Expander.Background>
                     <SolidColorBrush Color="White" Opacity="1"/>
                 </Expander.Background>
@@ -147,8 +147,8 @@
                         </TextBlock>
                     </StackPanel>
                 </Expander.Header>
-                <!--Little gap to the right views with Margin here-->
-                <Grid Width="400" Margin="0 0 8 0">
+                <!--Little gap to the left with Margin here-->
+                <Grid Width="400" Margin="6 0 0 6">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -158,21 +158,21 @@
                     <!--Title-->
                     <materialDesign:Card>
                         <StackPanel>
-                            <Expander IsExpanded="True" Background="Black">
+                            <Expander IsExpanded="True" Background="Black" Foreground="White">
                                 <Expander.Header>
                                     <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Storage"/>
                                 </Expander.Header>
                                 <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
                                     <materialDesign:PackIcon Kind="Search" VerticalAlignment="Top" Height="25" Width="25"/>
                                     <TextBox x:Name="Search_Textbox" FontStyle="Italic" FontSize="16" FontWeight="ExtraLight" HorizontalAlignment="Stretch" Margin="5 -15 0 10" 
-                                         materialDesign:HintAssist.Hint="search..." TextChanged="Search_Textbox_TextChanged" materialDesign:HintAssist.IsFloating="True"/>
+                                         materialDesign:HintAssist.Hint="search..." TextChanged="Search_Textbox_TextChanged" PreviewKeyDown="Search_Textbox_PreviewKeyDown" materialDesign:HintAssist.IsFloating="True"/>
                                 </DockPanel>
                             </Expander>
                         </StackPanel>
                     </materialDesign:Card>
 
                     <!--Storage chamber list-->
-                    <materialDesign:Card Grid.Row="1" materialDesign:ShadowAssist.ShadowDepth="Depth5" VerticalAlignment="Stretch">
+                    <materialDesign:Card Grid.Row="1" materialDesign:ShadowAssist.ShadowDepth="Depth5" VerticalAlignment="Stretch" Margin="0 5 0 0">
                         <extensions:ExtendedTreeView x:Name="RootNodes_TreeView" ItemsSource="{Binding RootNodes}" 
                                                      SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                      BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="Black">
@@ -294,8 +294,9 @@
                     </materialDesign:Card>
 
                     <!--Add root => Name is used in code!-->
-                    <Button Grid.Row="2" Background="Black" x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="10" Command="{Binding AddTreeItemCommand}" 
-                        CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}" materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                    <Button Grid.Row="2" Background="Black" x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                            Margin="0 10 0 10" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}" 
+                            materialDesign:ShadowAssist.ShadowDepth="Depth2">
                         <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>
 

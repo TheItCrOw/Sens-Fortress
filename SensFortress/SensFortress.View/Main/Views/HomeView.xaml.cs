@@ -117,5 +117,11 @@ namespace SensFortress.View.Main.Views
         {
             ((HomeViewModel)DataContext).SearchThroughNodesCommand.Execute(Search_Textbox.Text);
         }
+
+        private void Search_Textbox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+                ((HomeViewModel)DataContext).SearchThroughNodesCommand.Execute(Search_Textbox.Text);
+        }
     }
 }
