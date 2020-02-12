@@ -29,7 +29,17 @@ namespace SensFortress.Utility
         /// </summary>
         private static Dictionary<string, SettingType> _wellKnownSettings = new Dictionary<string, SettingType>
         {
-            { "B_LockingIncludeQuickBar", SettingType.B }, { "B_AutomaticBackup", SettingType.B }, { "DI_AutomaticBackupIntervall", SettingType.DI },
+            { "B_LockingIncludeQuickBar", SettingType.B }, {"B_LockingIncludeHomeHub", SettingType.B}, {"B_LockingIncludeAll", SettingType.B},
+            {"B_MasterkeyAskForConfigSettings", SettingType.B }, {"B_MasterkeyAskForSaving", SettingType.B},
+            { "B_AutomaticBackup", SettingType.B }, { "DI_AutomaticBackupIntervall", SettingType.DI },
+        };
+
+        /// <summary>
+        /// Contains all SettingTypes with its return values.
+        /// </summary>
+        private static Dictionary<SettingType, Type> _wellKnownSettingTypes = new Dictionary<SettingType, Type>
+        {
+            { SettingType.B, typeof(bool)}, {SettingType.D, typeof(DateTime)}, {SettingType.DI, typeof(string)}, {SettingType.DIP, typeof(string)}
         };
 
         /// <summary>
@@ -37,7 +47,9 @@ namespace SensFortress.Utility
         /// </summary>
         private static Dictionary<string, string> _defaultSettings = new Dictionary<string, string>
         {
-            { "B_LockingIncludeQuickBar", "False"}, {"B_AutomaticBackup", "True"}, { "DI_AutomaticBackupIntervall", "Void"}
+            { "B_LockingIncludeQuickBar", "False" }, {"B_LockingIncludeHomeHub", "False"}, {"B_LockingIncludeAll", "False"},
+            {"B_MasterkeyAskForConfigSettings", "False" }, {"B_MasterkeyAskForSaving", "True"},
+            {"B_AutomaticBackup", "True"}, { "DI_AutomaticBackupIntervall", "Void"}
         };
 
         /// <summary>
@@ -93,14 +105,15 @@ namespace SensFortress.Utility
         }
 
         /// <summary>
-        /// Gets the value of the given setting name. Returns null if not found or invalid. Returns Void if setting has no value right now.
+        /// Gets the value of the given setting name. Returns null if setting has no value right now => Void.
+        /// Throws <see cref="FileLoadException"/> if a setting doesnt exist.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static string GetSettingValue(string name)
+        public static T? GetSettingValue<T>(string name) where T : unmanaged
         {
             if (!_wellKnownSettings.ContainsKey(name))
-                return null;
+                throw new FileLoadException($"The given setting does not exist: {name}");
 
             var setDoc = XDocument.Load(IOPathHelper.GetSettingsFile());
             var setDocElements = setDoc.Root.Elements();
@@ -110,10 +123,14 @@ namespace SensFortress.Utility
                 if (element.Name == name)
                 {
                     if (element.Value == "Void")
-                        return "Void";
+                        return null;
 
                     if (ValidateSetting(name, element.Value))
-                        return element.Value;
+                    {
+                        // Cast the value to the right type that is being given by the settingType
+                        var normalString = element.Value.ToString();
+                        return (T)Convert.ChangeType(normalString, typeof(T));
+                    }
                 }
             }
             return null;
@@ -155,11 +172,11 @@ namespace SensFortress.Utility
             {
                 // SettingType.B can only be true or false.
                 case SettingType.B:
-                    if (value != "True" || value != "False")
+                    if (value == "True" || value == "False")
                     {
-                        return false;
+                        return true; // If we reach here => setting is valid
                     }
-                    return true; // If we reach here => setting is valid
+                    return false;
 
                 // SettingType.D can only be one exact date
                 case SettingType.D:

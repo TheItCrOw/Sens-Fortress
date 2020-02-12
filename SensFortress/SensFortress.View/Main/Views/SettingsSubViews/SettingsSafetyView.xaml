@@ -20,6 +20,9 @@
             <SolidColorBrush Color="Black" Opacity="0.6"/>
         </Grid.Background>            
         
+        <!--Names of checkboxes and buttons are the same as the setting that is being saved in the end. When changing any names in here, be careful!--> 
+        <!--you could destroy saving of settings logic-->
+        
         <!--List all possible configurations-->
         <ScrollViewer>
             <StackPanel Margin="10 20 10 20">
@@ -35,7 +38,7 @@
                 <CheckBox Margin="0 8 0 8">
                     <DockPanel>
                         <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Lock automatically after"/>
-                        <TextBox Style="{StaticResource FillInSettingsTextbox}" Text="{Binding AuomaticLockTime}" Height="25" Width="50"/>
+                        <TextBox Style="{StaticResource FillInSettingsTextbox}" Text="{Binding AuomaticLockTime}" Height="25" Width="50" x:Name="LockAfterHourse_Textbox"/>
                         <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="hours."/>
                     </DockPanel>
                 </CheckBox>
@@ -44,21 +47,21 @@
                 <materialDesign:Card>
                     <TextBlock Text="Upon locking include..." Style="{StaticResource CategoryTextblockStyle}" Margin="0 5 0 5"/>
                 </materialDesign:Card>
-                <CheckBox Margin="0 8 0 8">
+                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_LockingIncludeQuickBar}">
                     <DockPanel>
                         <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Home-Hub Quickbar."/>
                     </DockPanel>
                 </CheckBox>
 
                 <!--Lock whole Home-->
-                <CheckBox Margin="0 8 0 8">
+                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_LockingIncludeHomeHub}">
                     <DockPanel>
                         <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Whole Home-Hub."/>
                     </DockPanel>
                 </CheckBox>
 
                 <!--Lock everything-->
-                <CheckBox Margin="0 8 0 8">
+                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_LockingIncludeAll}">
                     <DockPanel>
                         <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Everything."/>
                     </DockPanel>
@@ -79,14 +82,14 @@
                     <TextBlock Text="Ask for masterkey when..." Style="{StaticResource CategoryTextblockStyle}" Margin="0 5 0 5"/>
                 </materialDesign:Card>
                 <!--Saving-->
-                <CheckBox Margin="0 8 0 8">
+                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_MasterkeyAskForSaving}">
                     <DockPanel>
                         <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Trying to save."/>
                     </DockPanel>
                 </CheckBox>
                 
                 <!--config settings-->
-                <CheckBox Margin="0 8 0 8">
+                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_MasterkeyAskForConfigSettings}">
                     <DockPanel>
                         <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Configure settings."/>
                     </DockPanel>

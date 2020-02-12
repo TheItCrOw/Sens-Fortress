@@ -21,6 +21,7 @@ namespace SensFortress.View.Main.ViewModel
         private SettingsSafetyView _safetyView;
         private SettingsDataBackupView _dataBackup;
         private string _currentTitle;
+
         public DelegateCommand<string> NavigateToSettingCategoryCommand => new DelegateCommand<string>(NavigateToSettingCategory);
         public override bool IsLocked
         {
@@ -50,6 +51,7 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
 
+
         /// <summary>
         /// Like a ctor, but we want to explicitly control when this is called.
         /// </summary>
@@ -61,6 +63,7 @@ namespace SensFortress.View.Main.ViewModel
                 {
                     _safetyView = new SettingsSafetyView();
                     _safetyView.DataContext = new SettingsSafetyViewModel();
+                    ((SettingsSafetyViewModel)_safetyView.DataContext).Initialize();
                 }
                 if (_dataBackup == null)
                 {
