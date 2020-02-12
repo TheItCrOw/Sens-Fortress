@@ -1,20 +1,51 @@
-﻿<Window x:Class="SensFortress.View.Main.Views.SettingsView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SensFortress.View.Main.Views"
-        mc:Ignorable="d"
-        Title="SettingsView" Height="450" Width="800"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal"
-        TextOptions.TextRenderingMode="Auto"
-        Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}">
+﻿<UserControl x:Class="SensFortress.View.Main.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SensFortress.View.Main.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal"
+            TextOptions.TextRenderingMode="Auto"
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+           
+        <!--Title depending of selected settings-->
+        <materialDesign:Card Grid.ColumnSpan="2" Margin="5 0 0 5">
+            <TextBlock Text="{Binding CurrentTitel}" Margin="0 10 0 10" Style="{StaticResource InformationTextblockStyle}"/>
+        </materialDesign:Card>
+
+        <!--left side button menu-->
+        <!--be careful => Button ahve command parameters which are being used in the ViewModel-->
+        <StackPanel Grid.Row="1">
+            <!--savety configurations-->
+            <Button Margin="5 5 5 5" Style="{StaticResource SettingsButtonStyle}" x:Name="Safety_Button" Command="{Binding NavigateToSettingCategoryCommand}" CommandParameter="Safety">
+                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Safety"/>
+            </Button>
+            
+            <!--data backup configs-->
+            <Button Margin="5" Grid.Row="1" Style="{StaticResource SettingsButtonStyle}" x:Name="DataBackup_Button" Command="{Binding NavigateToSettingCategoryCommand}" CommandParameter="DataBackup">
+                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Data backup"/>
+            </Button>
+
+        </StackPanel>
         
+        <!--right side contetn => actual settings-->
+        <Frame Grid.Column="1" Grid.Row="1" Content="{Binding SelectedContent}"/>
+
     </Grid>
-</Window>
+</UserControl>

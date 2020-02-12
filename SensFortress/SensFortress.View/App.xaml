@@ -49,6 +49,15 @@
                 <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
                 <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
+            
+            <!--A small Textblock for settings-->
+            <Style TargetType="{x:Type TextBlock}" x:Key="SettingsTextblockStyle">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+            </Style>
 
             <!--A Textblock for Category text-->
             <Style TargetType="{x:Type TextBlock}" x:Key="CategoryTextblockStyle">
@@ -81,7 +90,18 @@
                 <Setter Property="Foreground" Value="White"/>
             </Style>
             
-            
+            <!--A textbox for the treeview-->
+            <Style TargetType="{x:Type TextBox}" x:Key="FillInSettingsTextbox">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="Background" Value="GhostWhite"/>
+                <Setter Property="Margin" Value="5 0 5 0"/>
+            </Style>
+
             <!--Buttons-->
 
             <!--A Button for going back in a menu-->
@@ -96,6 +116,12 @@
             <Style TargetType="{x:Type Button}" x:Key="TreeViewButtonStyle" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
                 <Setter Property="Height" Value="20"/>
                 <Setter Property="Width" Value="20"/>
+            </Style>
+
+            <!--A Setting button for interacting in the SettingsView-->
+            <Style TargetType="{x:Type Button}" x:Key="SettingsButtonStyle" BasedOn="{StaticResource MaterialDesignRaisedDarkButton}">
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
             </Style>
 
             <!--A triangle button-->

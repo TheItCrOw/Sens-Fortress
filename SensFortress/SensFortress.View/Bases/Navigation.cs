@@ -15,6 +15,8 @@ namespace SensFortress.View.Helper
     public static class Navigation
     {
         public static HomeView HomeView;
+
+        public static SettingsView Settings;
         public static Frame MainFrame { get; set; }
         public static LoginViewModel LoginManagementInstance { get; set; }
         public static HomeViewModel HomeManagementInstance { get; set; }
@@ -41,6 +43,15 @@ namespace SensFortress.View.Helper
                     MainFrame.Content = HomeView;
                     ((HomeViewModel)HomeView.DataContext).Initialize();
                     return true;
+                case NavigationViews.Settings:
+                    if(Settings == null)
+                    {
+                        Settings = new SettingsView();
+                        Settings.DataContext = new SettingsViewModel();
+                    }
+                    ((SettingsViewModel)Settings.DataContext).Initialize();
+                    HomeManagementInstance.SelectedContent = Settings;
+                    return true;
                 default:
                     return false;
             }
@@ -54,5 +65,6 @@ namespace SensFortress.View.Helper
     public enum NavigationViews
     {
         HomeView,
+        Settings
     }
 }

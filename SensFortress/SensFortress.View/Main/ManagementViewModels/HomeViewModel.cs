@@ -9,6 +9,7 @@ using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
+using SensFortress.View.Helper;
 using SensFortress.View.Main.ViewModel.HomeSubVms;
 using SensFortress.View.Main.Views;
 using SensFortress.View.Main.Views.HomeSubViews;
@@ -50,6 +51,7 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand SaveTreeChangesCommand => new DelegateCommand(SaveFortress);
         public DelegateCommand LockUnlockFortressCommand => new DelegateCommand(LockUnlockFortress);
         public DelegateCommand NavigateToHomeHubCommand => new DelegateCommand(NavigateToHomeHub);
+        public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
         public DelegateCommand<string> SearchThroughNodesCommand => new DelegateCommand<string>(SearchThroughNodes);
 
         /// <summary>
@@ -408,6 +410,10 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
 
+        /// <summary>
+        /// Deletes a root TreeItem right
+        /// </summary>
+        /// <param name="root"></param>
         private void DeleteRootNode(TreeItemViewModel root)
         {
             DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model); // Delete from cache

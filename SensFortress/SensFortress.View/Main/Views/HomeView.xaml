@@ -110,7 +110,7 @@
                     </Button>
                 </materialDesign:Badged>
                 <!--Export passwords Button-->
-                <Button Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding NavigateToHomeHubCommand}">
+                <Button Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding OpenSettingsCommand}">
                     <materialDesign:PackIcon Kind="Settings" Height="30" Width="30" VerticalAlignment="Center"/>
                 </Button>
             </DockPanel>

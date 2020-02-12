@@ -11,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SensFortress.View.Main.Views
+namespace SensFortress.View.Main.Views.SettingsSubViews
 {
     /// <summary>
-    /// Interaktionslogik für SettingsView.xaml
+    /// Interaktionslogik für SettingsDataBackupView.xaml
     /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class SettingsDataBackupView : UserControl
     {
-        public SettingsView()
+        public SettingsDataBackupView()
         {
             InitializeComponent();
         }
