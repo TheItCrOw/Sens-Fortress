@@ -29,7 +29,7 @@
         </Grid.Background>
         
         <!--Title-->
-        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
+        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="{StaticResource ThemeDarkBlueBlack}" Margin="1 0 0 0">
             <TextBlock Style="{StaticResource InformationTextblockStyle}" Foreground="White" Text="{Binding CurrentItem.Name}" Margin="10 10 10 15"/>
         </materialDesign:Card>
 

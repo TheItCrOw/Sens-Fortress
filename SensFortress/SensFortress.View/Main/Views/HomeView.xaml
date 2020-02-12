@@ -97,7 +97,7 @@
         </DockPanel>
 
         <!--Header Title-->
-        <materialDesign:Card Height="50">
+        <materialDesign:Card Height="50" Background="{StaticResource ThemeDarkBlueBlack}">
             <DockPanel HorizontalAlignment="Left" Margin="80 0 20 0" VerticalAlignment="Center" LastChildFill="False">
                 <!--Home Button-->
                 <Button  Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding NavigateToHomeHubCommand}">
@@ -158,7 +158,7 @@
                     <!--Title-->
                     <materialDesign:Card>
                         <StackPanel>
-                            <Expander IsExpanded="True" Background="Black" Foreground="White">
+                            <Expander IsExpanded="True" Background="{StaticResource ThemeDarkBlueBlack}" Foreground="White">
                                 <Expander.Header>
                                     <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Storage"/>
                                 </Expander.Header>
@@ -175,7 +175,7 @@
                     <materialDesign:Card Grid.Row="1" materialDesign:ShadowAssist.ShadowDepth="Depth5" VerticalAlignment="Stretch" Margin="0 5 0 0">
                         <extensions:ExtendedTreeView x:Name="RootNodes_TreeView" ItemsSource="{Binding RootNodes}" 
                                                      SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                     BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="Black">
+                                                     BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="{StaticResource ThemeDarkBlueBlack}">
                         <extensions:ExtendedTreeView.ItemContainerStyle>
                             <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemContainerStyle}">
                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -294,14 +294,14 @@
                     </materialDesign:Card>
 
                     <!--Add root => Name is used in code!-->
-                    <Button Grid.Row="2" Background="Black" x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                    <Button Grid.Row="2" Background="{StaticResource ThemeDarkBlueBlack}" x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" 
                             Margin="0 10 0 10" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}" 
                             materialDesign:ShadowAssist.ShadowDepth="Depth2">
                         <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>
 
                     <!--Log here-->
-                    <materialDesign:Card Grid.Row="3" VerticalAlignment="Stretch" Background="Black">
+                    <materialDesign:Card Grid.Row="3" VerticalAlignment="Stretch" Background="{StaticResource ThemeDarkBlueBlack}">
                         <ScrollViewer extensions:AutoScrollBehavior.AutoScroll="{Binding ScrollToBottom}" HorizontalScrollBarVisibility="Hidden">
                             <StackPanel>
                                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">

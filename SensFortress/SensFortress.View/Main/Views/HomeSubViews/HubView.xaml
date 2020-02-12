@@ -34,7 +34,8 @@
             </Grid.RowDefinitions>
 
             <!--Title-->
-            <materialDesign:Card VerticalAlignment="Stretch" Margin="1 0 0 0" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57">
+            <materialDesign:Card VerticalAlignment="Stretch" Margin="1 0 0 0" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57" 
+                                 Background="{StaticResource ThemeDarkBlueBlack}">
                 <TextBlock Text="Home-Hub" Style="{StaticResource InformationTextblockStyle}" Foreground="White"/>
             </materialDesign:Card>
 

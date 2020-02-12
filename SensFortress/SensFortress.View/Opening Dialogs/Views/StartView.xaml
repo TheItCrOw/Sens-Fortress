@@ -17,7 +17,7 @@
     <Grid>
         <!--Background Image-->
         <Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Images/Fortress-Bridge.jpg" Stretch="UniformToFill"/>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Fortress-Path.jpg" Stretch="UniformToFill" Opacity="0.7"/>
         </Grid.Background>
 
         <Grid.RowDefinitions>
@@ -28,7 +28,7 @@
         </Grid.RowDefinitions>
 
         <!--Header Title-->
-        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
+        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="Transparent">
             <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Welcome to Sen's Fortress."/>
         </materialDesign:Card>
 

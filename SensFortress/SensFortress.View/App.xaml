@@ -27,7 +27,8 @@
             <Style TargetType="{x:Type TextBlock}" x:Key="TitleHeaderTextblockStyle">
                 <Setter Property="FontSize" Value="65" />
                 <Setter Property="FontWeight" Value="Regular" />
-                <Setter Property="Margin" Value="80 55 80 55"/>
+                <Setter Property="Margin" Value="0 55 0 55"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
 
@@ -142,6 +143,10 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
+            <!--Colors-->
+            <SolidColorBrush x:Key="ThemeDarkBlueBlack" Color="#171b1c"/>
+
             <!--Converters-->
             
             <!--Bool to vis converter-->

@@ -19,7 +19,7 @@
     <Grid>
         <!--Background Image-->
         <Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Images/Opening-Gate.jpg" Stretch="UniformToFill"/>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Centurion.jpg" Stretch="UniformToFill" Opacity="0.8"/>
         </Grid.Background>
 
         <Grid.RowDefinitions>
@@ -30,7 +30,7 @@
         </Grid.RowDefinitions>
 
         <!--Header Title-->
-        <materialDesign:Card>
+        <materialDesign:Card Background="Transparent" Foreground="White">
             <TextBlock Style="{StaticResource TitleHeaderTextblockStyle}" Text="Speak friend and enter."/>
         </materialDesign:Card>
 
@@ -54,10 +54,6 @@
                         <!--Identification Button-->
                         <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" MaxWidth="400" Height="40"
                                         Content="Identify yourself" BorderBrush="Black" BorderThickness="1" FontSize="20" Foreground="Black" FontFamily="Microsoft YaHei Light"/>
-                        <!--Enter the fortress-->
-                        <Button x:Name="Login_Button" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="0 10 0 0" Click="Login_Button_Click" MaxWidth="400" Height="40"
-                                        Content="Enter the fortress" BorderBrush="Black" BorderThickness="1" FontSize="20" Foreground="GhostWhite" FontFamily="Microsoft YaHei Light"
-                                        Cursor="Hand"/>
                     </StackPanel>
                 </Grid>
             </materialDesign:Flipper.FrontContent>
@@ -68,16 +64,19 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <!--Back Button and Who knocks?-->
-                    <materialDesign:ColorZone Mode="Dark" Padding="10">
+                    <materialDesign:ColorZone Background="GhostWhite" Padding="10">
                         <StackPanel Orientation="Horizontal">
                             <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
-                                <materialDesign:PackIcon Kind="ArrowLeftBold" HorizontalAlignment="Stretch"/>
+                                <materialDesign:PackIcon Kind="ArrowLeftBold" HorizontalAlignment="Stretch" Height="30" Width="30" Foreground="Black"/>
                             </Button>
-                            <TextBlock Margin="8 0 0 0" Style="{StaticResource InformationTextblockStyle}" VerticalAlignment="Center" Text="Who is knocking?"/>
+                            <TextBlock Margin="8 0 0 0" Style="{StaticResource InformationTextblockStyle}" VerticalAlignment="Center" Foreground="Black" Text="Who is knocking?"/>
                         </StackPanel>
                     </materialDesign:ColorZone>
                     <!--Enter Data Grid-->
                     <materialDesign:Card Grid.Row="1">
+                        <materialDesign:Card.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.9"/>
+                        </materialDesign:Card.Background>
                         <Grid Margin="15">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -126,15 +125,12 @@
                                     </ScrollViewer>
                                 </StackPanel>
                             </Border>
-                            <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 12 0 0" HorizontalAlignment="Right">
-                                        <TextBlock VerticalAlignment="Center" Text="Remember me."/>
-                                        <ToggleButton Margin="8 0 0 0"/>
-                                    </StackPanel>-->
                             <!--select a fortress button-->
                             <Border Grid.Row="3">
-                                <Button Style="{StaticResource MaterialDesignRaisedLightButton}" VerticalAlignment="Stretch" ToolTip="Select a fortress" Command="{Binding LinkExternalFortressCommand}">
-                                    <materialDesign:PackIcon Kind="Add" Height="30" Width="30" VerticalAlignment="Center"/>
-                                </Button>
+                                <!--Enter the fortress-->
+                                <Button x:Name="Login_Button" Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="0 10 0 0" Click="Login_Button_Click" Height="40" Background="GhostWhite"
+                                        Content="Enter the fortress" BorderBrush="Black" BorderThickness="1" FontSize="20" Foreground="Black" FontFamily="Microsoft YaHei Light"
+                                        Cursor="Hand"/>
                             </Border>
                         </Grid>
                     </materialDesign:Card>
