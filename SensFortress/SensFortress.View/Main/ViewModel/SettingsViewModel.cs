@@ -69,6 +69,7 @@ namespace SensFortress.View.Main.ViewModel
                 {
                     _dataBackup = new SettingsDataBackupView();
                     _dataBackup.DataContext = new SettingsDataBackupViewModel();
+                    ((SettingsDataBackupViewModel)_dataBackup.DataContext).Initialize();
                 }
 
                 // default view = safety

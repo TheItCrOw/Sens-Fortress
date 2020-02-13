@@ -19,7 +19,7 @@
     <Grid>
         <!--Background Image-->
         <Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Images/Centurion.jpg" Stretch="UniformToFill" Opacity="0.8"/>
+            <ImageBrush ImageSource="pack://application:,,,/Images/Fortress-Bridge.jpg" Stretch="UniformToFill" Opacity="0.8"/>
         </Grid.Background>
 
         <Grid.RowDefinitions>

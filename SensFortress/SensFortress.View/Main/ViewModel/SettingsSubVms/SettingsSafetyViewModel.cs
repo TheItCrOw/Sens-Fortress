@@ -1,4 +1,5 @@
-﻿using SensFortress.Utility;
+﻿using Prism.Commands;
+using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.View.Bases;
 using System;
@@ -18,6 +19,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private bool _b_LockingIncludeAll;
         private bool _b_MasterkeyAskForSaving;
         private bool _b_MasterkeyAskForConfigSettings;
+        public DelegateCommand SaveSettingsCommand => new DelegateCommand(SaveSettings);
 
         /// <summary>
         /// Naming conventions here are adjusted to the settings name conventions.
@@ -34,7 +36,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                     B_LockingIncludeHomeHub = false;
                     B_LockingIncludeAll = false;
                 }
-                Settings.SaveSetting(nameof(B_LockingIncludeQuickBar), value.ToString());
             }
         }
         public bool B_LockingIncludeHomeHub
@@ -48,7 +49,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                     B_LockingIncludeQuickBar = false;
                     B_LockingIncludeAll = false;
                 }
-                Settings.SaveSetting(nameof(B_LockingIncludeHomeHub), value.ToString());
             }
         }
         public bool B_LockingIncludeAll
@@ -62,7 +62,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                     B_LockingIncludeQuickBar = false;
                     B_LockingIncludeHomeHub = false;
                 }
-                Settings.SaveSetting(nameof(B_LockingIncludeAll), value.ToString());
             }
         }
 
@@ -72,7 +71,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _b_MasterkeyAskForSaving, value);
-                Settings.SaveSetting(nameof(B_MasterkeyAskForSaving), value.ToString());
             }
         }
         public bool B_MasterkeyAskForConfigSettings
@@ -81,7 +79,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _b_MasterkeyAskForConfigSettings, value);
-                Settings.SaveSetting(nameof(B_MasterkeyAskForConfigSettings), value.ToString());
             }
         }
 
@@ -100,25 +97,35 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         {
             LoadSettings();
         }
+
         /// <summary>
         /// Loads the settings initally from the file.
         /// </summary>
         private void LoadSettings()
         {
-            B_LockingIncludeQuickBar = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeQuickBar)).HasValue ?
-                Settings.GetSettingValue<bool>(nameof(B_LockingIncludeQuickBar)).Value : false;
+            //Locking
+            B_LockingIncludeQuickBar = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeQuickBar));
+            B_LockingIncludeHomeHub = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeHomeHub));
+            B_LockingIncludeAll = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeAll));
 
-            B_LockingIncludeHomeHub = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeHomeHub)).HasValue ?
-                Settings.GetSettingValue<bool>(nameof(B_LockingIncludeHomeHub)).Value : false;
+            //Masterkey
+            B_MasterkeyAskForSaving = Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForSaving));
+            B_MasterkeyAskForConfigSettings = Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForConfigSettings));
+        }
 
-            B_LockingIncludeAll = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeAll)).HasValue ?
-                Settings.GetSettingValue<bool>(nameof(B_LockingIncludeAll)).Value : false;
+        /// <summary>
+        /// Saves the settings into the config file
+        /// </summary>
+        private void SaveSettings()
+        {
+            //Locking
+            Settings.SaveSetting(nameof(B_LockingIncludeQuickBar), B_LockingIncludeQuickBar.ToString());
+            Settings.SaveSetting(nameof(B_LockingIncludeHomeHub), B_LockingIncludeHomeHub.ToString());
+            Settings.SaveSetting(nameof(B_LockingIncludeAll), B_LockingIncludeAll.ToString());
 
-            B_MasterkeyAskForSaving = Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForSaving)).HasValue ?
-                Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForSaving)).Value : false;
-
-            B_MasterkeyAskForConfigSettings = Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForConfigSettings)).HasValue ?
-                Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForConfigSettings)).Value : false;
+            //Masterkey
+            Settings.SaveSetting(nameof(B_MasterkeyAskForSaving), B_MasterkeyAskForSaving.ToString());
+            Settings.SaveSetting(nameof(B_MasterkeyAskForConfigSettings), B_MasterkeyAskForConfigSettings.ToString());
         }
     }
 }

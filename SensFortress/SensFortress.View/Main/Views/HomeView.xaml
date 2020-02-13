@@ -28,11 +28,13 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Margin="5 0 5 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="35" MinHeight="35"/>
         </Grid.RowDefinitions>
 
         <!--lock button-->
@@ -148,7 +150,7 @@
                     </StackPanel>
                 </Expander.Header>
                 <!--Little gap to the left with Margin here-->
-                <Grid Width="400" Margin="6 0 0 6">
+                <Grid Width="400" Margin="0 0 0 6">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -304,35 +306,34 @@
                             materialDesign:ShadowAssist.ShadowDepth="Depth2">
                         <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>
-
-                    <!--Log here-->
-                    <!--<materialDesign:Card Grid.Row="3" VerticalAlignment="Stretch" Background="{StaticResource ThemeDarkBlueBlack}">
-                        <ScrollViewer extensions:AutoScrollBehavior.AutoScroll="{Binding ScrollToBottom}" HorizontalScrollBarVisibility="Hidden">
-                            <StackPanel>
-                                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                                </materialDesign:Card>
-                                <ListView ItemsSource="{Binding TaskLogs}" HorizontalContentAlignment="Stretch">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <DockPanel Height="20">
-                                                <materialDesign:PackIcon Kind="ChangeHistory" VerticalAlignment="Center"/>
-                                                <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" AllowDrop="True" Style="{StaticResource SmallTextblockStyle}"/>
-                                            </DockPanel>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </materialDesign:Card>-->
                 </Grid>
             </Expander>
-
-            <!--Gridsplitter 1-->
-            <!--<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="Black"/>-->
-
+            
             <!--Middle menu content-->
             <Frame x:Name="SelectedView_Frame" Grid.Column="1" Content="{Binding SelectedContent}"/>
-
         </Grid>
+
+        <!--Gridsplitter 1-->
+        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Background="White"/>
+
+        <!--Log here-->
+        <materialDesign:Card Grid.Row="4" VerticalAlignment="Stretch" Background="{StaticResource ThemeDarkBlueBlack}">
+            <ScrollViewer extensions:AutoScrollBehavior.AutoScroll="{Binding ScrollToBottom}" HorizontalScrollBarVisibility="Hidden">
+                <StackPanel>
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                    </materialDesign:Card>
+                    <ListView ItemsSource="{Binding TaskLogs}" HorizontalContentAlignment="Stretch">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Height="20">
+                                    <materialDesign:PackIcon Kind="ChangeHistory" VerticalAlignment="Center"/>
+                                    <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" AllowDrop="True" Style="{StaticResource SmallTextblockStyle}"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </ScrollViewer>
+        </materialDesign:Card>
     </Grid>
 </UserControl>

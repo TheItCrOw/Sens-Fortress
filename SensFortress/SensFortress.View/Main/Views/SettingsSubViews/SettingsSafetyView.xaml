@@ -18,8 +18,13 @@
     <Grid>
         <Grid.Background>
             <SolidColorBrush Color="Black" Opacity="0.6"/>
-        </Grid.Background>            
-        
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
         <!--Names of checkboxes and buttons are the same as the setting that is being saved in the end. When changing any names in here, be careful!--> 
         <!--you could destroy saving of settings logic-->
         
@@ -96,9 +101,16 @@
                 </CheckBox>
 
 
-
             </StackPanel>
         </ScrollViewer>
-            
+
+        <!--Save Button-->
+        <Button Margin="10" Grid.Row="1" HorizontalAlignment="Stretch" Height="35" Command="{Binding SaveSettingsCommand}" Background="{StaticResource ThemeDarkBlueBlack}">
+            <DockPanel>
+                <TextBlock Text="Save" Style="{StaticResource SettingsTextblockStyle}" Foreground="White"/>
+                <materialDesign:PackIcon Kind="ContentSave" Foreground="White" Height="25" Width="25" Margin="5 0 0 0"/>
+            </DockPanel>
+        </Button>
+
     </Grid>
 </UserControl>

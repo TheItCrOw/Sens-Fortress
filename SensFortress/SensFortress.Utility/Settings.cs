@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SensFortress.Utility.Log;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -31,7 +32,7 @@ namespace SensFortress.Utility
         {
             { "B_LockingIncludeQuickBar", SettingType.B }, {"B_LockingIncludeHomeHub", SettingType.B}, {"B_LockingIncludeAll", SettingType.B},
             {"B_MasterkeyAskForConfigSettings", SettingType.B }, {"B_MasterkeyAskForSaving", SettingType.B},
-            { "B_AutomaticBackup", SettingType.B }, { "DI_AutomaticBackupIntervall", SettingType.DI },
+            { "B_AutomaticBackup", SettingType.B }, { "DIP_AutomaticBackupIntervall", SettingType.DIP },
         };
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace SensFortress.Utility
         {
             { "B_LockingIncludeQuickBar", "False" }, {"B_LockingIncludeHomeHub", "False"}, {"B_LockingIncludeAll", "False"},
             {"B_MasterkeyAskForConfigSettings", "False" }, {"B_MasterkeyAskForSaving", "True"},
-            {"B_AutomaticBackup", "True"}, { "DI_AutomaticBackupIntervall", "Void"}
+            {"B_AutomaticBackup", "True"}, { "DIP_AutomaticBackupIntervall", "Void"}
         };
 
         /// <summary>
@@ -105,12 +106,12 @@ namespace SensFortress.Utility
         }
 
         /// <summary>
-        /// Gets the value of the given setting name. Returns null if setting has no value right now => Void.
+        /// Gets the value of the given setting name. Returns defautl(T) if setting has no value right now => Void.
         /// Throws <see cref="FileLoadException"/> if a setting doesnt exist.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static T? GetSettingValue<T>(string name) where T : unmanaged
+        public static T GetSettingValue<T>(string name)
         {
             if (!_wellKnownSettings.ContainsKey(name))
                 throw new FileLoadException($"The given setting does not exist: {name}");
@@ -123,7 +124,7 @@ namespace SensFortress.Utility
                 if (element.Name == name)
                 {
                     if (element.Value == "Void")
-                        return null;
+                        return default(T);
 
                     if (ValidateSetting(name, element.Value))
                     {
@@ -133,7 +134,7 @@ namespace SensFortress.Utility
                     }
                 }
             }
-            return null;
+            return default(T);
         }
 
         /// <summary>
@@ -168,67 +169,62 @@ namespace SensFortress.Utility
         /// <returns></returns>
         private static bool SettingTypeMatchesValue(SettingType settingType, string value)
         {
-            switch (settingType)
+            try
             {
-                // SettingType.B can only be true or false.
-                case SettingType.B:
-                    if (value == "True" || value == "False")
-                    {
+                switch (settingType)
+                {
+                    // SettingType.B can only be true or false.
+                    case SettingType.B:
+                        if (value == "True" || value == "False")
+                        {
+                            return true; // If we reach here => setting is valid
+                        }
+                        return false;
+
+                    // SettingType.D can only be one exact date
+                    case SettingType.D:
+                        if (!DateTime.TryParseExact(value, "g", new CultureInfo("en-US"), DateTimeStyles.None, out var date))
+                        {
+                            return false;
+                        }
                         return true; // If we reach here => setting is valid
-                    }
-                    return false;
 
-                // SettingType.D can only be one exact date
-                case SettingType.D:
-                    if (!DateTime.TryParseExact(value, "g", new CultureInfo("en-US"), DateTimeStyles.None, out var date))
-                    {
+                    // SettingType.DI can only be a date followed by a SettingInterval
+                    case SettingType.DI:
+                        var splited = value.Split(',');
+                        if (!DateTime.TryParse(splited[0], out var date2))
+                        {
+                            return false;
+                        }
+
+                        if (!Enum.TryParse(splited[1], out SettingInterval interval))
+                            return false;
+
+                        return true; // If we reach here => setting is valid
+
+                    // SettingType.DIP can only be date followed by settingInterval finished by an absolute path.
+                    case SettingType.DIP:
+                        var splited2 = value.Split(',');
+                        if (!DateTime.TryParse(splited2[0], out var date3))
+                        {
+                            return false;
+                        }
+
+                        if (!Enum.TryParse(splited2[1], out SettingInterval interval2))
+                            return false;
+
+                        Path.GetFullPath(splited2[2]); // A bit hacky => If splited2[2] is not a valid path it will throw an exception.
+
+                        return true; // If we reach here => setting is valid
+
+                    default:
                         return false;
-                    }
-                    return true; // If we reach here => setting is valid
-
-                // SettingType.DI can only be a date followed by a SettingInterval
-                case SettingType.DI:
-                    var splited = value.Split(',');
-                    if (!DateTime.TryParseExact(splited[0], "g", new CultureInfo("en-US"), DateTimeStyles.None, out var date2))
-                    {
-                        return false;
-                    }
-
-                    if (splited[1] != SettingInterval.Hourly.ToString() ||
-                        splited[1] != SettingInterval.Daily.ToString() ||
-                        splited[1] != SettingInterval.Weekly.ToString() ||
-                        splited[1] != SettingInterval.Monthly.ToString() ||
-                        splited[1] != SettingInterval.Yearly.ToString())
-                    {
-                        return false;
-                    }
-                    return true; // If we reach here => setting is valid
-
-                // SettingType.DIP can only be date followed by settingInterval finished by an absolute path.
-                case SettingType.DIP:
-                    var splited2 = value.Split(',');
-                    if (!DateTime.TryParseExact(splited2[0], "g", new CultureInfo("en-US"), DateTimeStyles.None, out var date3))
-                    {
-                        return false;
-                    }
-
-                    if (splited2[1] != SettingInterval.Hourly.ToString() ||
-                        splited2[1] != SettingInterval.Daily.ToString() ||
-                        splited2[1] != SettingInterval.Weekly.ToString() ||
-                        splited2[1] != SettingInterval.Monthly.ToString() ||
-                        splited2[1] != SettingInterval.Yearly.ToString())
-                    {
-                        return false;
-                    }
-
-                    if (!Uri.IsWellFormedUriString(splited2[2], UriKind.Absolute))
-                    {
-                        return false;
-                    }
-                    return true; // If we reach here => setting is valid
-
-                default:
-                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Error in Settings Validation: {ex}");
+                return false;
             }
         }
     }
