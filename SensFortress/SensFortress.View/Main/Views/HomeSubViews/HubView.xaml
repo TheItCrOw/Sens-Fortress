@@ -56,60 +56,58 @@
                     </Grid.ColumnDefinitions>
                     
                     <!--Quickbar-->
-                    <StackPanel Grid.ColumnSpan="2">
-                        <TextBlock Text="Quickbar" Style="{StaticResource InformationTextblockStyle}" Margin="0 20 0 20" HorizontalAlignment="Center"/>
-                        <materialDesign:Card Background="Transparent">
-                            <DockPanel Margin="10 0 0 0" Height="155">
-                                <materialDesign:Card Background="White" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
+                    <DockPanel Height="168" Grid.ColumnSpan="2" Margin="10 0 0 0">
+                        <materialDesign:Card Background="White" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
                                              VerticalAlignment="Center" Height="110" Width="130" Margin="0 -22 10 0" Panel.ZIndex="1" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
-                                        <materialDesign:PackIcon Kind="AddBox" Height="50" Width="50" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Here" Foreground="Black"/>
-                                    </StackPanel>
-                                </materialDesign:Card>
-                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                                    <StackPanel>
-                                        <ListBox x:Name="Quickbar_ListBox" ItemsSource="{Binding QuickBar}">
-                                            <ListBox.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel IsItemsHost="True" />
-                                                </ItemsPanelTemplate>
-                                            </ListBox.ItemsPanel>
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <materialDesign:Card Background="GhostWhite" Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                                                        <StackPanel Height="110" MinWidth="150">
-                                                            <TextBlock Text="{Binding Name}" Style="{StaticResource CategoryTextblockStyle}" Foreground="Black" Margin="5 3 5 0"/>
-                                                            <DockPanel Margin="5 40 5 5" LastChildFill="False" HorizontalAlignment="Center">
-                                                                <!--copy password button-->
-                                                                <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password" Height="30" Width="30" Command="{Binding CopyPasswordCommand}">
-                                                                    <materialDesign:PackIcon Kind="Key" Width="22" Height="22"/>
-                                                                </Button>
-                                                                <!--copy username button-->
-                                                                <Button Style="{StaticResource GoBackButtonStyle}" Margin="5 0 5 0" ToolTip="Copy username" Height="30" Width="30" Command="{Binding CopyUsernameCommand}">
-                                                                    <materialDesign:PackIcon Kind="User" Width="22" Height="22"/>
-                                                                </Button>
-                                                                <!--open linked page button-->
-                                                                <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website" Height="30" Width="30">
-                                                                    <materialDesign:PackIcon Kind="Login" Width="22" Height="22"/>
-                                                                </Button>
-                                                                <!--Delete from quickbar-->
-                                                                <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Delete from quickbar" Margin="5 0 0 0" Height="30" Width="30" Command="{Binding DeleteFromQuickbarCommand}">
-                                                                    <materialDesign:PackIcon Kind="Delete" Width="22" Height="22"/>
-                                                                </Button>
-                                                            </DockPanel>
-                                                        </StackPanel>
-                                                    </materialDesign:Card>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </DockPanel>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
+                                <materialDesign:PackIcon Kind="AddBox" Height="50" Width="50" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Here" Foreground="Black"/>
+                            </StackPanel>
                         </materialDesign:Card>
-                    </StackPanel>
-                    
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                            <ListBox x:Name="Quickbar_ListBox" ItemsSource="{Binding QuickBar}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <materialDesign:Badged BadgeBackground="Transparent" BadgePlacementMode="TopRight" Margin="0 10 10 0">
+                                            <materialDesign:Badged.Badge>
+                                                <!--Delete from quickbar-->
+                                                <Button Style="{StaticResource GoBackButtonStyle}" Background="{StaticResource ThemeDarkBlueBlack}" BorderThickness="0" BorderBrush="Transparent" ToolTip="Delete from quickbar" 
+                                                                    Height="24" Width="24" Command="{Binding DeleteFromQuickbarCommand}">
+                                                    <materialDesign:PackIcon Kind="Close" Foreground="White" Width="22" Height="22"/>
+                                                </Button>
+                                            </materialDesign:Badged.Badge>
+                                            <materialDesign:Card Height="110" MinWidth="150" Background="GhostWhite">
+                                                <!--there is a visual bug with cards and badges where weird lines pop up. We avoid that, by adjusting the stackpanel background and setting margin = 1-->
+                                                <StackPanel Background="GhostWhite" Margin="1">
+                                                    <TextBlock Text="{Binding Name}" Style="{StaticResource SubCategoryTextblockStyle}" Foreground="Black" Margin="5 3 5 0"/>
+                                                    <DockPanel Margin="5 30 5 3" LastChildFill="False" HorizontalAlignment="Center">
+                                                        <!--copy password button-->
+                                                        <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password" Height="30" Width="30" Command="{Binding CopyPasswordCommand}">
+                                                            <materialDesign:PackIcon Kind="Key" Width="22" Height="22"/>
+                                                        </Button>
+                                                        <!--copy username button-->
+                                                        <Button Style="{StaticResource GoBackButtonStyle}" Margin="5 0 5 0" ToolTip="Copy username" Height="30" Width="30" Command="{Binding CopyUsernameCommand}">
+                                                            <materialDesign:PackIcon Kind="User" Width="22" Height="22"/>
+                                                        </Button>
+                                                        <!--open linked page button-->
+                                                        <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website" Height="30" Width="30">
+                                                            <materialDesign:PackIcon Kind="Login" Width="22" Height="22"/>
+                                                        </Button>
+                                                    </DockPanel>
+                                                </StackPanel>
+                                            </materialDesign:Card>
+                                        </materialDesign:Badged>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                    </DockPanel>
                     <!--locked status-->
                     <!--Lock/Unlock image and text-->
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2">
@@ -175,42 +173,43 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <!--Start password analysis button-->
-                        <Button Background="Transparent" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Command="{Binding StartPasswordAnalysisCommand}"
+                        <Button Background="Transparent" Style="{StaticResource MaterialDesignRaisedButton}" Grid.ColumnSpan="2" Height="35" Command="{Binding StartPasswordAnalysisCommand}"
                                 materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding PWAnalysisIsLoading}">
                             <TextBlock Text="Start password analysis" Style="{StaticResource SubCategoryTextblockStyle}" Foreground="White"/>
                         </Button>
                         <materialDesign:Card VerticalAlignment="Stretch" Grid.Row="1" Margin="0 5 0 0">
                             <materialDesign:Card.Background>
-                            <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                <SolidColorBrush Color="Transparent" Opacity="0.6"/>
                             </materialDesign:Card.Background>
                             <!--placeholder text-->
                             <ListView ItemsSource="{Binding AnalyseResults}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                <ListView.View>
-                                    <GridView>
-                                        <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category"/>
-                                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                                        <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="% PW-Strength"/>
-                                        <GridViewColumn Header="Bar">
-                                            <GridViewColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <ProgressBar IsIndeterminate="False" Foreground="{Binding Color}" MinWidth="150" Value="{Binding PasswordStrength}"/>
-                                                </DataTemplate>
-                                            </GridViewColumn.CellTemplate>
-                                        </GridViewColumn>
-                                        <GridViewColumn>
-                                            <GridViewColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <!--Inspect button-->
-                                                    <Button Style="{StaticResource TreeViewButtonStyle}" Width="15" Height="15" ToolTip="Inspect" Command="{Binding InspectResultCommand}">
-                                                        <materialDesign:PackIcon Kind="InfoOutline" Width="25" Height="25" 
+                                <!--Adjust the scrollviewer to the left side-->
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                                            <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="% PW-Strength"/>
+                                            <GridViewColumn Header="Bar">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ProgressBar IsIndeterminate="False" Foreground="{Binding Color}" MinWidth="150" Value="{Binding PasswordStrength}"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <!--Inspect button-->
+                                                        <Button Style="{StaticResource TreeViewButtonStyle}" Width="15" Height="15" ToolTip="Inspect" Command="{Binding InspectResultCommand}">
+                                                            <materialDesign:PackIcon Kind="InfoOutline" Width="25" Height="25" 
                                                                                  VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                    </Button>
-                                                </DataTemplate>
-                                            </GridViewColumn.CellTemplate>
-                                        </GridViewColumn>
-                                    </GridView>
-                                </ListView.View>
-                            </ListView>
+                                                        </Button>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
                         </materialDesign:Card>
 
                         <!--Total password strength-->

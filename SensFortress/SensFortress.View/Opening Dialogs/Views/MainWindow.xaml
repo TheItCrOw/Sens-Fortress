@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SensFortress.View.Opening_Dialogs.Views"
         xmlns:mainViews="clr-namespace:SensFortress.View.Main.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="850" Width="1200" MinWidth="1200"
+        Title="MainWindow" Height="850" Width="1250" MinWidth="1250"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
