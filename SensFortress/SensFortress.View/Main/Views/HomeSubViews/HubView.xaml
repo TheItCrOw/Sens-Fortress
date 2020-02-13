@@ -86,7 +86,8 @@
                                                 <!--there is a visual bug with cards and badges where weird lines pop up. We avoid that, by adjusting the stackpanel background and setting margin = 1-->
                                                 <StackPanel Background="GhostWhite" Margin="1">
                                                     <TextBlock Text="{Binding Name}" Style="{StaticResource SubCategoryTextblockStyle}" Foreground="Black" Margin="5 3 5 0"/>
-                                                    <DockPanel Margin="5 30 5 3" LastChildFill="False" HorizontalAlignment="Center">
+                                                    <materialDesign:PackIcon Margin="0 2 0 5" Kind="ShieldKey" Height="40" Width="40" Foreground="Black" HorizontalAlignment="Center"/>
+                                                    <DockPanel Margin="5 0 5 3" LastChildFill="False" HorizontalAlignment="Center">
                                                         <!--copy password button-->
                                                         <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Copy password" Height="30" Width="30" Command="{Binding CopyPasswordCommand}">
                                                             <materialDesign:PackIcon Kind="Key" Width="22" Height="22"/>
