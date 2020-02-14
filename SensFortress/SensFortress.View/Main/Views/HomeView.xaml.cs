@@ -102,19 +102,45 @@ namespace SensFortress.View.Main.Views
         }
 
         //Start Drag and Drop
-        private void TreeItem_Icon_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void TreeItem_Card_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.Source.GetType().Name.Equals("PackIcon"))
+            try
             {
-                // The source is the object that is being touched to drag
-                var item = (PackIcon)e.Source;
-                // This is the data behind
-                var treeItem = ((PackIcon)sender).DataContext;
-
-                if (item != null)
+                // The dragging can be started from the card itself, the textbox name and the icon
+                if (e.Source.GetType().Name.Equals("Card"))
                 {
-                    DragDrop.DoDragDrop(item, treeItem, DragDropEffects.Move);
+                    InitializeDragDrop<Card>(sender, e);
                 }
+                else if (e.Source.GetType().Name.Equals("TextBox"))
+                {
+                    InitializeDragDrop<TextBox>(sender, e);
+                }
+                else if (e.Source.GetType().Name.Equals("PackIcon"))
+                {
+                    InitializeDragDrop<PackIcon>(sender, e);
+                }
+            }
+            catch (Exception ex)
+            {
+                // For now, we do not want to inform the user about possible small mistakes in here.
+                Logger.log.Error($"Error while trying to start dragging: {ex}");
+            }
+        }
+
+        private void InitializeDragDrop<T>(object sender, MouseButtonEventArgs e) where T : DependencyObject
+        {
+            // The source is the object that is being touched to drag
+            var item = (T)e.Source;
+            // This is the data behind
+            var treeItem = ((Card)sender).DataContext;
+            // If the textbox is currently being edited - we do not want to drag.
+            if (((TreeItemViewModel)treeItem).IsEditable)
+                return;
+
+            if (item != null)
+            {
+                DragDrop_Popup.IsOpen = true;
+                DragDrop.DoDragDrop(item, treeItem, DragDropEffects.Move);
             }
         }
 
@@ -137,6 +163,16 @@ namespace SensFortress.View.Main.Views
         {
             if(e.Key == Key.Enter)
                 ((HomeViewModel)DataContext).SearchThroughNodesCommand.Execute(Search_Textbox.Text);
+        }
+
+        private void DragDrop_Popup_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if(DragDrop_Popup.IsOpen)
+            {
+                var mousePos = e.GetPosition(this.DragDrop_Popup);
+                DragDrop_Popup.HorizontalOffset = mousePos.X;
+                DragDrop_Popup.VerticalOffset = mousePos.Y;
+            }
         }
     }
 }

@@ -222,7 +222,6 @@
                                 <TextBlock Text="%" Style="{StaticResource CategoryTextblockStyle}"/>
                             </DockPanel>
                         </StackPanel>
-
                     </Grid>
                     
                     <!--right side configurations-->
