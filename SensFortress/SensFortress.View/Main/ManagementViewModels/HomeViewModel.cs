@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using SensFortress.Data.Database;
+using SensFortress.Guardian;
 using SensFortress.Models.BaseClasses;
 using SensFortress.Models.Fortress;
 using SensFortress.Models.ViewModels;
@@ -141,13 +142,20 @@ namespace SensFortress.View.Main.ViewModel
                 TaskLogs.CollectionChanged += TaskLogs_CollectionChanges;
                 TaskLogger.Instance.SetHomeView(this);
                 LoadTreeView();
-                TaskLogger.Instance.Track("Fortress has been built!");
+                TaskLogger.Instance.Track($"Got the {TermHelper.GetDatabaseTerm()}!");
+                Settings.Initialize();
+                TaskLogger.Instance.Track($"Configurations have been set up!");
+                var guardianSettings = Settings.GetSettingsForGuardian();
+                GuardianController.LaunchGuardian(guardianSettings, BuildGuardianParams());
+                TaskLogger.Instance.Track($"Guardian has been launched!");
                 NavigateToHomeHub();
+
+                TaskLogger.Instance.Track($"{CurrentFortressData.FortressName} has been built!");
             }
             catch (Exception ex)
             {
                 Logger.log.Error($"Error while loading HomeView: {ex}");
-                ex.SetUserMessage("Ann erorr occured while trying to load data. Some entries may be missing.");
+                ex.SetUserMessage("An erorr occured while trying to load data. Some entries may be missing.");
                 Communication.InformUserAboutError(ex);
             }
         }
@@ -163,6 +171,18 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         /// <returns></returns>
         public List<TreeItemViewModel> GetRootNodesSnapshot() => RootNodes.ToList();
+
+        /// <summary>
+        /// Builds a parameter package the guardian can work with
+        /// </summary>
+        /// <returns></returns>
+        private object[] BuildGuardianParams()
+        {
+            return new object[1]
+            {
+                CurrentFortressData.FullPath
+            };
+        }
 
         /// <summary>
         /// Searches through the nodes, expanding and highlighting the matches

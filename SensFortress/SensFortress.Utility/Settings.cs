@@ -1,4 +1,7 @@
-﻿using SensFortress.Utility.Log;
+﻿using SensFortress.Guardian;
+using SensFortress.Guardian.Bases;
+using SensFortress.Guardian.Models;
+using SensFortress.Utility.Log;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +19,9 @@ using System.Xml.Linq;
  * 
  * Convention for setting entry:                Name                           Value (must match SettingType)
  *                              [SettingType.ToString()]_[PascalCase] | part1, part2, part3
- * If the value of a setting is 'Void', it has not yet a value, which is fine.                              
+ * If the value of a setting is 'Void', it has not yet a value, which is fine.           
+ * 
+ * When adding a new setting - think about the following: _wellKnowSettings, _defaultSettings, SettingsView, HandleTask in GuardianController
  * */
 namespace SensFortress.Utility
 {
@@ -32,11 +37,11 @@ namespace SensFortress.Utility
         {
             { "B_LockingIncludeQuickBar", SettingType.B }, {"B_LockingIncludeHomeHub", SettingType.B}, {"B_LockingIncludeAll", SettingType.B},
             {"B_MasterkeyAskForConfigSettings", SettingType.B }, {"B_MasterkeyAskForSaving", SettingType.B},
-            { "B_AutomaticBackup", SettingType.B }, { "DIP_AutomaticBackupIntervall", SettingType.DIP },
+            { "DIP_AutomaticBackupIntervall", SettingType.DIP }, { "DI_AutomaticScans", SettingType.DI }, { "DI_AutomaticSaves", SettingType.DI }
         };
 
         /// <summary>
-        /// Contains all SettingTypes with its return values.
+        /// Contains all SettingTypes with its expected return values.
         /// </summary>
         private static Dictionary<SettingType, Type> _wellKnownSettingTypes = new Dictionary<SettingType, Type>
         {
@@ -50,7 +55,7 @@ namespace SensFortress.Utility
         {
             { "B_LockingIncludeQuickBar", "False" }, {"B_LockingIncludeHomeHub", "False"}, {"B_LockingIncludeAll", "False"},
             {"B_MasterkeyAskForConfigSettings", "False" }, {"B_MasterkeyAskForSaving", "True"},
-            {"B_AutomaticBackup", "True"}, { "DIP_AutomaticBackupIntervall", "Void"}
+            { "DIP_AutomaticBackupIntervall", "Void"}, { "DI_AutomaticScans", "Void" }, { "DI_AutomaticSaves", "Void" }
         };
 
         /// <summary>
@@ -58,6 +63,74 @@ namespace SensFortress.Utility
         /// </summary>
         public static void Initialize()
         {
+            ResetConfigs();
+        }
+
+        /// <summary>
+        /// Returns a list of settings for the guardian to work with.
+        /// </summary>
+        /// <returns></returns>
+        public static HashSet<GuardianTask> GetSettingsForGuardian()
+        {
+            var scheduledConfigs = new HashSet<GuardianTask>();
+
+            foreach (var pair in _wellKnownSettings)
+            {
+                // SettingType B is not a scheduled task => so we can ingore it here.
+                if (pair.Value == SettingType.B)
+                    break;
+                else
+                {
+                    var values = GetSettingValue<string>(pair.Key).Split(',');
+                    // If the config is empty, there is no point in adding it to the list.
+                    if (values[0] == "Void")
+                        break;
+
+                    ScheduledConfig newModel = null;
+
+                    if (pair.Value == SettingType.DI && DateTime.TryParse(values[0], out var date))
+                    {
+                        var param = new object[2]
+                        {
+                            date,
+                            values[1] // interval
+                        };
+
+                        newModel = new ScheduledConfig(date)
+                        {
+                            Name = pair.Key,
+                            Parameters = param
+                        };
+                    }
+                    else if (pair.Value == SettingType.DIP && DateTime.TryParse(values[0], out var date2))
+                    {
+                        var param = new object[3]
+                        {
+                            date2,
+                            values[1], // interval
+                            values[2] // path
+                        };
+                        newModel = new ScheduledConfig(date2)
+                        {
+                            Name = pair.Key,
+                            Parameters = param
+                        };
+                    }
+                    scheduledConfigs.Add(newModel);
+                }
+            }
+            return scheduledConfigs;
+        }
+
+        /// <summary>
+        /// Writes the default config file. If overwrite = true, it resets the old one.
+        /// </summary>
+        /// <param name="overwrite"></param>
+        public static void ResetConfigs(bool overwrite = false)
+        {
+            if (overwrite && File.Exists(IOPathHelper.GetSettingsFile()))
+                File.Delete(IOPathHelper.GetSettingsFile());
+
             if (!File.Exists(IOPathHelper.GetSettingsFile()))
             {
                 // Write the default settings file.
@@ -89,7 +162,10 @@ namespace SensFortress.Utility
         {
             // Do something later if the setting is not valid. An empty value is fine.
             if (value != "Void" && !ValidateSetting(name, value))
+            {
+                Communication.InformUser("An irregularity was detected while trying to save your configuration.");
                 return;
+            }
 
             var setDoc = XDocument.Load(IOPathHelper.GetSettingsFile());
             var setDocElements = setDoc.Root.Elements();
@@ -131,6 +207,13 @@ namespace SensFortress.Utility
                         // Cast the value to the right type that is being given by the settingType
                         var normalString = element.Value.ToString();
                         return (T)Convert.ChangeType(normalString, typeof(T));
+                    }
+                    else
+                    {
+                        Communication.InformUser
+                            ("An irregularity was detected in your configuration file. " +
+                            "If you are not aware of ever having changed that file directly, the Guardian suggests starting a scan within the fortress and your Antivirus-Software, " +
+                            $"for it is possible that something malicious crawled through your files. The {TermHelper.GetDatabaseTerm()} however remains save.");
                     }
                 }
             }
@@ -241,7 +324,7 @@ namespace SensFortress.Utility
     /// <summary>
     /// Enum that contains all types of settings
     /// </summary>
-    internal enum SettingType
+    public enum SettingType
     {
         [Description("BOOLEAN value")]
         B,

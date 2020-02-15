@@ -17,6 +17,12 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private SettingInterval _i_AutomaticBackupIntervall;
         private DateTime _d_AutomaticBackupIntervall;
         private string _p_AutomaticBackupIntervall;
+        private bool _b_AutomaticScans;
+        private SettingInterval _i_AutomaticScans;
+        private DateTime _d_AutomaticScans;
+        private bool _b_AutomaticSaves;
+        private SettingInterval _i_AutomaticSaves;
+
         public DelegateCommand SaveSettingsCommand => new DelegateCommand(SaveSettings);
         public DelegateCommand ChooseBackupPathCommand => new DelegateCommand(ChooseBackupPath);
         /// <summary>
@@ -73,6 +79,66 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         }
         // <=
 
+        // These 4 are one setting: Scan at given itnerval
+        public bool B_AutomaticScans
+        {
+            get => _b_AutomaticScans;
+            set
+            {
+                SetProperty(ref _b_AutomaticScans, value);
+            }
+        }
+        public SettingInterval I_AutomaticScans
+        {
+            get => _i_AutomaticScans;
+            set
+            {
+                SetProperty(ref _i_AutomaticScans, value);
+            }
+        }
+        public DateTime D_AutomaticScans
+        {
+            get => _d_AutomaticScans;
+            set
+            {
+                SetProperty(ref _d_AutomaticScans, value);
+            }
+        }
+        private string DI_AutomaticScans()
+        {
+            if (!B_AutomaticScans)
+                return "Void";
+            else
+                return $"{D_AutomaticScans}, {I_AutomaticScans}";
+        }
+        // <=
+
+        // These 3 are on setting: Auto saves
+        public bool B_AutomaticSaves
+        {
+            get => _b_AutomaticSaves;
+            set
+            {
+                SetProperty(ref _b_AutomaticSaves, value);
+            }
+        }
+        public SettingInterval I_AutomaticSaves
+        {
+            get => _i_AutomaticSaves;
+            set
+            {
+                SetProperty(ref _i_AutomaticSaves, value);
+            }
+        }
+        private string DI_AutomaticSaves()
+        {
+            if (!B_AutomaticSaves)
+                return "Void";
+            else // for atuo saving, we do not need a date. So jsut use the empty dateTime.
+                return $"{DateTime.MinValue}, {I_AutomaticSaves}";
+        }
+        // <=
+
         public override bool IsLocked
         {
             get => _isLocked;
@@ -92,6 +158,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private void ChooseBackupPath()
         {
             var dlg = new SaveFileDialog();
+            dlg.Filter = $"Fortress|*{TermHelper.GetZippedFileEnding()}";
             dlg.ShowDialog();
 
             if (dlg.FileName == string.Empty)
@@ -107,6 +174,8 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         {
             // Save automatic backup
             Settings.SaveSetting("DIP_AutomaticBackupIntervall", DIP_AutomaticBackupIntervall());
+            Settings.SaveSetting("DI_AutomaticScans", DI_AutomaticScans());
+            Settings.SaveSetting("DI_AutomaticSaves", DI_AutomaticSaves());
         }
 
         /// <summary>
@@ -114,8 +183,14 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         /// </summary>
         private void LoadSettings()
         {
+            LoadDIPAutomaticBackup();
+            LoadDIAutomaticScans();
+            LoadDIAutomaticSaves();
+        }
+        private void LoadDIPAutomaticBackup()
+        {
             // Backup
-            string dip_AutomaticBackup = Settings.GetSettingValue<string>("DIP_AutomaticBackupIntervall");
+            var dip_AutomaticBackup = Settings.GetSettingValue<string>("DIP_AutomaticBackupIntervall");
 
             if (dip_AutomaticBackup == default)
             {
@@ -134,6 +209,42 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 P_AutomaticBackupIntervall = splited[2];
             }
         }
-
+        private void LoadDIAutomaticScans()
+        {
+            //Scan
+            var di_AutomaticScans = Settings.GetSettingValue<string>("DI_AutomaticScans");
+            if (di_AutomaticScans == default)
+            {
+                B_AutomaticScans = false;
+                I_AutomaticScans = SettingInterval.Daily;
+                D_AutomaticScans = DateTime.Now;
+            }
+            else
+            {
+                B_AutomaticScans = true;
+                var splited = di_AutomaticScans.Split(',');
+                D_AutomaticScans = Convert.ToDateTime(splited[0]);
+                if (Enum.TryParse(splited[1], out SettingInterval interval))
+                    I_AutomaticScans = interval;
+            }
+        }
+        private void LoadDIAutomaticSaves()
+        {
+            //Scan
+            var di_AutomaticSaves = Settings.GetSettingValue<string>("DI_AutomaticSaves");
+            if (di_AutomaticSaves == default)
+            {
+                B_AutomaticSaves = false;
+                I_AutomaticSaves = SettingInterval.Hourly;
+            }
+            else
+            {
+                B_AutomaticSaves = true;
+                var splited = di_AutomaticSaves.Split(',');
+                //D_AutomaticScans = Convert.ToDateTime(splited[0]); We do not need a date for autoamtic saving.
+                if (Enum.TryParse(splited[1], out SettingInterval interval))
+                    I_AutomaticSaves = interval;
+            }
+        }
     }
 }

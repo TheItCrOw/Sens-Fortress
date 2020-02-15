@@ -139,7 +139,6 @@ namespace SensFortress.View.Main.Views
 
             if (item != null)
             {
-                DragDrop_Popup.IsOpen = true;
                 DragDrop.DoDragDrop(item, treeItem, DragDropEffects.Move);
             }
         }
@@ -161,18 +160,9 @@ namespace SensFortress.View.Main.Views
         /// <param name="e"></param>
         private void Search_Textbox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
                 ((HomeViewModel)DataContext).SearchThroughNodesCommand.Execute(Search_Textbox.Text);
         }
 
-        private void DragDrop_Popup_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if(DragDrop_Popup.IsOpen)
-            {
-                var mousePos = e.GetPosition(this.DragDrop_Popup);
-                DragDrop_Popup.HorizontalOffset = mousePos.X;
-                DragDrop_Popup.VerticalOffset = mousePos.Y;
-            }
-        }
     }
 }
