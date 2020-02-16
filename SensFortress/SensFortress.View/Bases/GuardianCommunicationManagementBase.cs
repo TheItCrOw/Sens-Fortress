@@ -1,4 +1,5 @@
-﻿using SensFortress.Guardian;
+﻿using SensFortress.Data.Database;
+using SensFortress.Guardian;
 using SensFortress.Guardian.Bases;
 using SensFortress.Guardian.Models;
 using SensFortress.Utility;
@@ -63,9 +64,9 @@ namespace SensFortress.View.Bases
         /// <param name="ex"></param>
         protected void Guardian_ThrewExecption(Exception ex)
         {
+            Logger.log.Error($"Guardian threw an exception: {ex}");
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Logger.log.Error($"Guardian threw an exception: {ex}");
                 // Testing
                 Communication.InformUser(ex.Message);
             });

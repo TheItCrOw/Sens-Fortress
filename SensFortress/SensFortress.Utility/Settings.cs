@@ -80,10 +80,11 @@ namespace SensFortress.Utility
                 // SettingType B is not a scheduled task => so we can ingore it here.
                 if (pair.Value != SettingType.B)
                 {
-                    var values = GetSettingValue<string>(pair.Key).Split(',');
                     // If the config is empty, there is no point in adding it to the list.
-                    if (values[0] == "Void")
-                        break;
+                    var values = (GetSettingValue<string>(pair.Key) == default) ? default : GetSettingValue<string>(pair.Key).Split(',');
+
+                    if (values == default)
+                        continue;
 
                     ScheduledConfig newModel = null;
 

@@ -45,7 +45,7 @@
         </StackPanel>
         
         <!--right side contetn => actual settings-->
-        <Frame Grid.Column="1" Grid.Row="1" Content="{Binding SelectedContent}"/>
+        <Frame Grid.Column="1" Grid.Row="1" Content="{Binding SelectedContent}" NavigationUIVisibility="Hidden"/>
 
     </Grid>
 </UserControl>
