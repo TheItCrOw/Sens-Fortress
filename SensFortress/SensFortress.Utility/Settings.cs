@@ -21,7 +21,8 @@ using System.Xml.Linq;
  *                              [SettingType.ToString()]_[PascalCase] | part1, part2, part3
  * If the value of a setting is 'Void', it has not yet a value, which is fine.           
  * 
- * When adding a new setting - think about the following: _wellKnowSettings, _defaultSettings, SettingsView, HandleTask in GuardianController
+ * When adding a new setting - think about the following: _wellKnowSettings, _defaultSettings, SettingsView, HandleTask in GuardianController.
+ * When adding a new SettingInterval: Think about GuardianController IsUpcomingDate
  * */
 namespace SensFortress.Utility
 {
@@ -77,9 +78,7 @@ namespace SensFortress.Utility
             foreach (var pair in _wellKnownSettings)
             {
                 // SettingType B is not a scheduled task => so we can ingore it here.
-                if (pair.Value == SettingType.B)
-                    break;
-                else
+                if (pair.Value != SettingType.B)
                 {
                     var values = GetSettingValue<string>(pair.Key).Split(',');
                     // If the config is empty, there is no point in adding it to the list.
@@ -96,10 +95,9 @@ namespace SensFortress.Utility
                             values[1] // interval
                         };
 
-                        newModel = new ScheduledConfig(date)
+                        newModel = new ScheduledConfig(date, param)
                         {
-                            Name = pair.Key,
-                            Parameters = param
+                            Name = pair.Key
                         };
                     }
                     else if (pair.Value == SettingType.DIP && DateTime.TryParse(values[0], out var date2))
@@ -110,10 +108,9 @@ namespace SensFortress.Utility
                             values[1], // interval
                             values[2] // path
                         };
-                        newModel = new ScheduledConfig(date2)
+                        newModel = new ScheduledConfig(date2, param)
                         {
-                            Name = pair.Key,
-                            Parameters = param
+                            Name = pair.Key
                         };
                     }
                     scheduledConfigs.Add(newModel);

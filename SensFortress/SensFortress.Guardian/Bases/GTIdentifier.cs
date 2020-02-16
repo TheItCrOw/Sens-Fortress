@@ -9,14 +9,15 @@ namespace SensFortress.Guardian.Bases
     /// </summary>
     public class GTIdentifier
     {
-        public GTIdentifier(DateTime exceutionDate)
+        public GTIdentifier(DateTime exceutionDate, string interval)
         {
             Id = Guid.NewGuid();
             ExecutionDate = exceutionDate;
+            Interval = interval;
         }
         public string Value { get => $"{Id}-{ExecutionDate}"; }
         public Guid Id { get; }
         public DateTime ExecutionDate { get; }
-
+        public string Interval { get; }
     }
 }

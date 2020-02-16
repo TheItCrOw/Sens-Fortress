@@ -14,9 +14,10 @@ namespace SensFortress.Guardian.Models
         /// </summary>
         public object[] Parameters { get; set; }
 
-        public ScheduledConfig(DateTime executionDate)
+        public ScheduledConfig(DateTime executionDate, object[] param)
         {
-            Gtid = new GTIdentifier(executionDate);
+            Gtid = new GTIdentifier(executionDate, param[1]?.ToString());
+            Parameters = param;
             Type = typeof(GuardianTask);
         }
 

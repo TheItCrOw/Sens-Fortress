@@ -2,6 +2,8 @@
 using Prism.Mvvm;
 using SensFortress.Data.Database;
 using SensFortress.Guardian;
+using SensFortress.Guardian.Bases;
+using SensFortress.Guardian.Models;
 using SensFortress.Models.BaseClasses;
 using SensFortress.Models.Fortress;
 using SensFortress.Models.ViewModels;
@@ -27,14 +29,13 @@ using System.Windows;
 
 namespace SensFortress.View.Main.ViewModel
 {
-    public class HomeViewModel : ViewModelManagementBase
+    public class HomeViewModel : GuardianCommunicationManagementBase
     {
         private TreeItemViewModel _selectedTreeViewItem;
         private bool _isLoading;
         private int _changesTracker;
         private bool _scrollToBottom;
         private object _selectedContent;
-        private bool _isLocked;
         private bool _showLockCard;
         private HubView _hubView;
 
@@ -126,20 +127,14 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _showLockCard, value);
             }
         }
-        public override bool IsLocked
-        {
-            get => _isLocked;
-            set
-            {
-                SetProperty(ref _isLocked, value);
-            }
-        }
 
         public void Initialize()
         {
             try
             {
+                // Event subscription
                 TaskLogs.CollectionChanged += TaskLogs_CollectionChanges;
+
                 TaskLogger.Instance.SetHomeView(this);
                 LoadTreeView();
                 TaskLogger.Instance.Track($"Got the {TermHelper.GetDatabaseTerm()}!");

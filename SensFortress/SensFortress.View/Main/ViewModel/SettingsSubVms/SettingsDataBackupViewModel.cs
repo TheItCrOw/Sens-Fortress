@@ -22,6 +22,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private DateTime _d_AutomaticScans;
         private bool _b_AutomaticSaves;
         private SettingInterval _i_AutomaticSaves;
+        private DateTime _t_AutomaticBackupIntervall;
 
         public DelegateCommand SaveSettingsCommand => new DelegateCommand(SaveSettings);
         public DelegateCommand ChooseBackupPathCommand => new DelegateCommand(ChooseBackupPath);
@@ -62,6 +63,14 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 SetProperty(ref _d_AutomaticBackupIntervall, value);
             }
         }
+        public DateTime T_AutomaticBackupIntervall
+        {
+            get => _t_AutomaticBackupIntervall;
+            set
+            {
+                SetProperty(ref _t_AutomaticBackupIntervall, value);
+            }
+        }
         public string P_AutomaticBackupIntervall
         {
             get => _p_AutomaticBackupIntervall;
@@ -75,7 +84,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             if (!B_AutomaticBackupIntervall)
                 return "Void";
             else
-                return $"{D_AutomaticBackupIntervall}, {I_AutomaticBackupIntervall}, {P_AutomaticBackupIntervall}";
+                return $"{D_AutomaticBackupIntervall},{I_AutomaticBackupIntervall},{P_AutomaticBackupIntervall}";
         }
         // <=
 
@@ -109,7 +118,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             if (!B_AutomaticScans)
                 return "Void";
             else
-                return $"{D_AutomaticScans}, {I_AutomaticScans}";
+                return $"{D_AutomaticScans},{I_AutomaticScans}";
         }
         // <=
 
@@ -135,7 +144,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             if (!B_AutomaticSaves)
                 return "Void";
             else // for atuo saving, we do not need a date. So jsut use the empty dateTime.
-                return $"{DateTime.MinValue}, {I_AutomaticSaves}";
+                return $"{DateTime.MinValue},{I_AutomaticSaves}";
         }
         // <=
 

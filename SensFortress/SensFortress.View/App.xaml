@@ -157,6 +157,7 @@
             <converters:SpecificMultiBooleanToVisibilityConverter x:Key="MultiSpecificBoolToMultiCoverter"/>
             
             <!--Other-->
+            <!--ScrollViewer that is attached on the left side-->
             <Style x:Key="LeftScrollViewer" TargetType="{x:Type ScrollViewer}">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
                 <Setter Property="Template">
@@ -193,7 +194,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
+            
         </ResourceDictionary>
     </Application.Resources>
     

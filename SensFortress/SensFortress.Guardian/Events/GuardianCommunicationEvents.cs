@@ -6,9 +6,7 @@ namespace SensFortress.Guardian.Events
 {
     public static class GuardianCommunicationEvents
     {
-        public delegate void GuardianHandledTaskEvent();
 
-        public static event GuardianHandledTaskEvent GuardianHandledTask;
 
     }
 }

@@ -1,5 +1,4 @@
 ﻿using SensFortress.Guardian.Bases;
-using SensFortress.Guardian.Events;
 using SensFortress.Guardian.Exceptions;
 using SensFortress.Guardian.Models;
 using System;
@@ -7,8 +6,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
+using System.Windows;
 
 namespace SensFortress.Guardian
 {
@@ -16,14 +15,14 @@ namespace SensFortress.Guardian
     /// The CronJob that handles configs, settings, scans, etc. It always runs in the background.
     /// </summary>
     public static class GuardianController
-    {        
-        public delegate void GuardianHandledTaskEvent();
+    {
+        public delegate void GuardianHandledTaskEvent(GuardianTask handledTask);
         /// <summary>
         /// Fires, when the guardian has handled a task.
         /// </summary>
         public static event GuardianHandledTaskEvent GuardianHandledTask;
         /// <summary>
-        ///stores, how much time may differ between now and  a task to be handled. e.g. 10 equals: 
+        /// Stores, how much time may differ between now and a task to be handled. e.g. 10 equals: 
         /// We already prepare to handle the task that is being scheduled in 10 Minutes.
         /// </summary>
         private const int HANDLE_NEXT_TASK_MINUTES = 10;
@@ -91,8 +90,8 @@ namespace SensFortress.Guardian
 
                     if (_upcomingTasks.Count > 0)
                     {
-                        // Take the next possible task which
-                        var nextTask = _upcomingTasks.FirstOrDefault(t => t.ExecutionDate == DateTime.Now);
+                        // Take the next possible task
+                        var nextTask = _upcomingTasks.FirstOrDefault(t => t.ExecutionDate <= DateTime.Now);
                         if (nextTask != default)
                         {
                             //Handle the task now!
@@ -124,14 +123,17 @@ namespace SensFortress.Guardian
                 {
                     case "DIP_AutomaticBackupIntervall":
                         if (File.Exists(UtilityParameters.FortressPath))
-                            File.Copy(UtilityParameters.FortressPath, (string)config.Parameters[2]);
-                        GuardianHandledTask?.Invoke();
+                            File.Copy(UtilityParameters.FortressPath, (string)config.Parameters[2], true);
+                        _taskPool.Remove(config.Gtid, out var xd);
+                        GuardianHandledTask?.Invoke(config);
                         break;
                     case "DI_AutomaticScans":
                         //not yet implemented
                         break;
                     case "DI_AutomaticSaves":
                         // not yet implemented
+                        _upcomingTasks.Remove(config.Gtid);
+                        _taskPool.Remove(config.Gtid, out var xd2);
                         break;
                     default:
                         break;
@@ -145,7 +147,7 @@ namespace SensFortress.Guardian
         private static void CheckUpcomingTasks()
         {
             // This gets the Ids from the task pool that are being scheduled in the next HANDLE_NEXT_TASK_MINUTES (e.g. 10) minutes or less.
-            var nextTasksIds = _taskPool.Keys.Where(k => IsUpcomingDate(k.ExecutionDate)).Select(t => t);
+            var nextTasksIds = _taskPool.Keys.Where(k => IsUpcomingDate(k)).Select(t => t);
             // INFORM THE USER THAT A CONFIG IS BEING SCHEDULED IN THE NEXT 10 MINUTES!
             // Add them to new upcoming tasks list.
             foreach (var taskId in nextTasksIds)
@@ -153,17 +155,46 @@ namespace SensFortress.Guardian
         }
 
         /// <summary>
-        /// Takes in a scheduled date and returns true, if that date is scheduled within the next HANDLE_NEXT_TASK_MINUTES.
+        /// Filters the exectuion date: Foreach interval the day must be today. Then see if the exectuionTime is still less than today, even when the interval has been added.
         /// </summary>
         /// <param name="executionDate"></param>
         /// <returns></returns>
-        private static bool IsUpcomingDate(DateTime executionDate)
+        private static bool IsUpcomingDate(GTIdentifier task)
         {
-            if (executionDate.Year == DateTime.Now.Year &&
-                executionDate.Month == DateTime.Now.Month &&
-                executionDate.Day == DateTime.Now.Day &&
-                executionDate.Minute - DateTime.Now.Minute < HANDLE_NEXT_TASK_MINUTES)
-                return true;
+            if (task.ExecutionDate <= DateTime.Now)
+            {
+                switch (task.Interval.Trim())
+                {
+                    case "Hourly":
+                        if (task.ExecutionDate.TimeOfDay <= DateTime.Now.TimeOfDay)
+                            return true;
+                        return false;
+                    case "Daily":
+                        if (task.ExecutionDate.TimeOfDay <= DateTime.Now.TimeOfDay)
+                            return true;
+                        return false;
+                    case "Weekly":
+                        if (task.ExecutionDate.Date < DateTime.Now.Date)
+                            return true;
+                        else if (task.ExecutionDate.Date == DateTime.Now.Date && task.ExecutionDate.TimeOfDay <= DateTime.Now.TimeOfDay)
+                            return true;
+                        return false;
+                    case "Monthly":
+                        if (task.ExecutionDate.Date < DateTime.Now)
+                            return true;
+                        else if (task.ExecutionDate.Date == DateTime.Now.Date && task.ExecutionDate.TimeOfDay <= DateTime.Now.TimeOfDay)
+                            return true;
+                        return false;
+                    case "Yearly":
+                        if (task.ExecutionDate.Date < DateTime.Now)
+                            return true;
+                        else if (task.ExecutionDate.Date == DateTime.Now.Date && task.ExecutionDate.TimeOfDay <= DateTime.Now.TimeOfDay)
+                            return true;
+                        return false;
+                    default:
+                        return false;
+                }
+            }
             return false;
         }
 

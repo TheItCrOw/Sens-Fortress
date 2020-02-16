@@ -49,28 +49,31 @@
                             </DockPanel>
                         </CheckBox>
                     </Expander.Header>
-                    <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
-                        <!--Choose interval-->
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Margin="5 0 5 0" Style="{StaticResource SettingsTextblockStyle}" Text="Backup"/>
-                            <!--I know that you can bind enumeration directly to an ItemSource...didnt work here.-->
-                            <ComboBox Margin="5 0 5 0" Background="Transparent" Width="100" TextBlock.FontSize="17" ItemsSource="{Binding SettingIntervals}"
+                    <StackPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
+                            <!--Choose interval-->
+                            <DockPanel LastChildFill="False">
+                                <TextBlock Margin="5 0 5 0" Style="{StaticResource SettingsTextblockStyle}" Text="Backup"/>
+                                <!--I know that you can bind enumeration directly to an ItemSource...didnt work here.-->
+                                <ComboBox Margin="5 0 5 0" Background="Transparent" Width="100" TextBlock.FontSize="17" ItemsSource="{Binding SettingIntervals}"
                                       SelectedItem="{Binding I_AutomaticBackupIntervall}"/>
-                        </DockPanel>
-                        <!--choose start date-->
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Margin="5 0 5 0" Style="{StaticResource SettingsTextblockStyle}" Text="starting at"/>
-                            <DatePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedDate="{Binding D_AutomaticBackupIntervall}"/>
+                            </DockPanel>
+                            <!--choose start date-->
+                            <DockPanel LastChildFill="False">
+                                <TextBlock Margin="5 0 5 0" Style="{StaticResource SettingsTextblockStyle}" Text="starting at"/>
+                                <DatePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedDate="{Binding D_AutomaticBackupIntervall}"/>
+                                <materialDesign:TimePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedTime="{Binding D_AutomaticBackupIntervall}"/>
+                            </DockPanel>
                         </DockPanel>
                         <!--where to-->
-                        <DockPanel LastChildFill="True">
+                        <DockPanel LastChildFill="False" Margin="30 15 30 0 ">
                             <TextBlock Margin="5 0 5 0" Style="{StaticResource SettingsTextblockStyle}" Text="into"/>
+                            <TextBlock Margin="5 0 5 0" Style="{StaticResource SmallTextblockStyle}" TextAlignment="Left" HorizontalAlignment="Left" Text="{Binding P_AutomaticBackupIntervall}"/>
                             <Button Margin="5 0 5 0" Style="{StaticResource SettingsButtonStyle}" Command="{Binding ChooseBackupPathCommand}">
                                 <materialDesign:PackIcon Kind="FolderOpen" Width="25" Height="25"/>
                             </Button>
-                            <TextBlock Margin="5 0 5 0" Style="{StaticResource SmallTextblockStyle}" TextAlignment="Left" HorizontalAlignment="Left" Text="{Binding P_AutomaticBackupIntervall}"/>
                         </DockPanel>
-                    </DockPanel>
+                    </StackPanel>
                 </Expander>
 
                 <!--Scans-->
@@ -100,6 +103,7 @@
                         <DockPanel LastChildFill="False">
                             <TextBlock Margin="5 0 5 0" Style="{StaticResource SettingsTextblockStyle}" Text="starting at"/>
                             <DatePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedDate="{Binding D_AutomaticScans}"/>
+                            <materialDesign:TimePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedTime="{Binding D_AutomaticScans}"/>
                         </DockPanel>
                     </DockPanel>
                 </Expander>
