@@ -2,6 +2,8 @@
 using SensFortress.Guardian.Bases;
 using SensFortress.Guardian.Models;
 using SensFortress.Utility;
+using SensFortress.Utility.Log;
+using SensFortress.View.Helper;
 using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
@@ -29,6 +31,8 @@ namespace SensFortress.View.Bases
         public GuardianCommunicationManagementBase()
         {
             GuardianController.GuardianHandledTask += Guardian_HandledTask;
+            GuardianController.GuardianThrewException += Guardian_ThrewExecption;
+            GuardianController.GuardianRequest += Guardian_Request;
         }
 
         /// <summary>
@@ -40,14 +44,41 @@ namespace SensFortress.View.Bases
             // Always use dispatcher when handling tasks from outside => you cant know what thread the caller is on.
             Application.Current.Dispatcher.Invoke(() =>
             {
-                TaskLogger.Instance.Track($"Test: {handledTask.Gtid} has been handled!");
-                // Testing
+                TaskLogger.Instance.Track($"{handledTask.Name} has been handled!");
+                Logger.log.Info($"{handledTask.Name} has been executed at {DateTime.Now}.");
+
                 if (handledTask is ScheduledConfig config)
                 {
-                    var value = $"{((DateTime)config.Parameters[0]).AddHours(1)}, {config.Parameters[1]},{config.Parameters[2]}";
-                    Settings.SaveSetting(config.Name, value);
+                    var raisedTask = Settings.RaiseHandledSetting(handledTask);
+                    Navigation.SettingsMangementInstance.ReloadSettings();
+                    // Add the raisedTask. The old version has already been removed by the guardian when he handled the task.
+                    GuardianController.AddTask(raisedTask);
                 }
             });
+        }
+
+        /// <summary>
+        /// Event that raises when the guardian threw an exception.
+        /// </summary>
+        /// <param name="ex"></param>
+        protected void Guardian_ThrewExecption(Exception ex)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Logger.log.Error($"Guardian threw an exception: {ex}");
+                // Testing
+                Communication.InformUser(ex.Message);
+            });
+        }
+
+        /// <summary>
+        /// Event that raises when the Guardian wants a request to be executed.
+        /// </summary>
+        /// <param name="request"></param>
+        protected void Guardian_Request(RequestTypes request)
+        {
+            if (request == RequestTypes.Save)
+                Navigation.HomeManagementInstance.SaveTreeChangesCommand.Execute();
         }
     }
 }

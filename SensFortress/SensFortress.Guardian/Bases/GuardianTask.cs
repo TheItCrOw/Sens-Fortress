@@ -9,6 +9,8 @@ namespace SensFortress.Guardian.Bases
     /// </summary>
     public class GuardianTask
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
         public GTIdentifier Gtid { get; set; }
         public Type Type { get; set; }
     }

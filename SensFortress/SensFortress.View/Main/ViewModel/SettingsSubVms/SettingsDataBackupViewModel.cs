@@ -37,6 +37,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             SettingInterval.Monthly,
             SettingInterval.Yearly
         };
+        public bool HasUnsavedChanges { get; set; }
 
         /// => These 5 are one setting: Backup at given interval to path
         public bool B_AutomaticBackupIntervall
@@ -45,6 +46,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _b_AutomaticBackupIntervall, value);
+                HasUnsavedChanges = true;
             }
         }
         public SettingInterval I_AutomaticBackupIntervall
@@ -53,6 +55,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _i_AutomaticBackupIntervall, value);
+                HasUnsavedChanges = true;
             }
         }
         public DateTime D_AutomaticBackupIntervall
@@ -61,6 +64,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _d_AutomaticBackupIntervall, value);
+                HasUnsavedChanges = true;
             }
         }
         public DateTime T_AutomaticBackupIntervall
@@ -69,6 +73,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _t_AutomaticBackupIntervall, value);
+                HasUnsavedChanges = true;
             }
         }
         public string P_AutomaticBackupIntervall
@@ -77,6 +82,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _p_AutomaticBackupIntervall, value);
+                HasUnsavedChanges = true;
             }
         }
         private string DIP_AutomaticBackupIntervall()
@@ -95,6 +101,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _b_AutomaticScans, value);
+                HasUnsavedChanges = true;
             }
         }
         public SettingInterval I_AutomaticScans
@@ -103,6 +110,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _i_AutomaticScans, value);
+                HasUnsavedChanges = true;
             }
         }
         public DateTime D_AutomaticScans
@@ -111,6 +119,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _d_AutomaticScans, value);
+                HasUnsavedChanges = true;
             }
         }
         private string DI_AutomaticScans()
@@ -129,6 +138,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _b_AutomaticSaves, value);
+                HasUnsavedChanges = true;
             }
         }
         public SettingInterval I_AutomaticSaves
@@ -137,6 +147,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _i_AutomaticSaves, value);
+                HasUnsavedChanges = true;
             }
         }
         private string DI_AutomaticSaves()
@@ -156,7 +167,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 SetProperty(ref _isLocked, value);
             }
         }
-
         public void Initialize()
         {
             LoadSettings();
@@ -185,6 +195,8 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             Settings.SaveSetting("DIP_AutomaticBackupIntervall", DIP_AutomaticBackupIntervall());
             Settings.SaveSetting("DI_AutomaticScans", DI_AutomaticScans());
             Settings.SaveSetting("DI_AutomaticSaves", DI_AutomaticSaves());
+
+            HasUnsavedChanges = false;
         }
 
         /// <summary>
@@ -195,6 +207,8 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             LoadDIPAutomaticBackup();
             LoadDIAutomaticScans();
             LoadDIAutomaticSaves();
+
+            HasUnsavedChanges = false;
         }
         private void LoadDIPAutomaticBackup()
         {

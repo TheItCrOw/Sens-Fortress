@@ -7,8 +7,6 @@ namespace SensFortress.Guardian.Models
 {
     public class ScheduledConfig : GuardianTask
     {
-        public string Name { get; set; }
-
         /// <summary>
         /// 0 = DateTime, 1 = interval, 2 = path (maybe)
         /// </summary>

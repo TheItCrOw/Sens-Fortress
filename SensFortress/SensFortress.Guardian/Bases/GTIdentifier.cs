@@ -17,7 +17,7 @@ namespace SensFortress.Guardian.Bases
         }
         public string Value { get => $"{Id}-{ExecutionDate}"; }
         public Guid Id { get; }
-        public DateTime ExecutionDate { get; }
+        public DateTime ExecutionDate { get; set; }
         public string Interval { get; }
     }
 }

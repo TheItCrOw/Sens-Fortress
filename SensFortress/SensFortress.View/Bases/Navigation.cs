@@ -20,6 +20,7 @@ namespace SensFortress.View.Helper
         public static Frame MainFrame { get; set; }
         public static LoginViewModel LoginManagementInstance { get; set; }
         public static HomeViewModel HomeManagementInstance { get; set; }
+        public static SettingsViewModel SettingsMangementInstance { get; set; }
         /// <summary>
         /// The view that contains the MainFrame and where all others views are being showed in.
         /// </summary>
@@ -47,7 +48,8 @@ namespace SensFortress.View.Helper
                     if(Settings == null)
                     {
                         Settings = new SettingsView();
-                        Settings.DataContext = new SettingsViewModel();
+                        SettingsMangementInstance = new SettingsViewModel();
+                        Settings.DataContext = SettingsMangementInstance;
                     }
                     ((SettingsViewModel)Settings.DataContext).Initialize();
                     HomeManagementInstance.SelectedContent = Settings;

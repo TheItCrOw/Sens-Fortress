@@ -141,9 +141,12 @@ namespace SensFortress.View.Main.ViewModel
                 Settings.Initialize();
                 TaskLogger.Instance.Track($"Configurations have been set up!");
                 var guardianSettings = Settings.GetSettingsForGuardian();
+                // Load the settings once.
+                OpenSettingsCommand.Execute();
+                NavigateToHomeHub();
+
                 GuardianController.LaunchGuardian(guardianSettings, BuildGuardianParams());
                 TaskLogger.Instance.Track($"Guardian has been launched!");
-                NavigateToHomeHub();
 
                 TaskLogger.Instance.Track($"{CurrentFortressData.FortressName} has been built!");
             }

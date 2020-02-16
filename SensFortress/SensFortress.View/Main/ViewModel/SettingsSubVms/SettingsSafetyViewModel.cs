@@ -25,6 +25,8 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         /// Naming conventions here are adjusted to the settings name conventions.
         /// </summary>
         #region settingsProperties
+        public bool HasUnsavedChanges { get; set; }
+
         public bool B_LockingIncludeQuickBar
         {
             get => _b_LockingIncludeQuickBar;
@@ -36,6 +38,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                     B_LockingIncludeHomeHub = false;
                     B_LockingIncludeAll = false;
                 }
+                HasUnsavedChanges = true;
             }
         }
         public bool B_LockingIncludeHomeHub
@@ -49,6 +52,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                     B_LockingIncludeQuickBar = false;
                     B_LockingIncludeAll = false;
                 }
+                HasUnsavedChanges = true;
             }
         }
         public bool B_LockingIncludeAll
@@ -62,6 +66,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                     B_LockingIncludeQuickBar = false;
                     B_LockingIncludeHomeHub = false;
                 }
+                HasUnsavedChanges = true;
             }
         }
 
@@ -71,6 +76,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _b_MasterkeyAskForSaving, value);
+                HasUnsavedChanges = true;
             }
         }
         public bool B_MasterkeyAskForConfigSettings
@@ -79,6 +85,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             set
             {
                 SetProperty(ref _b_MasterkeyAskForConfigSettings, value);
+                HasUnsavedChanges = true;
             }
         }
 
@@ -111,6 +118,8 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             //Masterkey
             B_MasterkeyAskForSaving = Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForSaving));
             B_MasterkeyAskForConfigSettings = Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForConfigSettings));
+
+            HasUnsavedChanges = false;
         }
 
         /// <summary>
@@ -126,6 +135,8 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             //Masterkey
             Settings.SaveSetting(nameof(B_MasterkeyAskForSaving), B_MasterkeyAskForSaving.ToString());
             Settings.SaveSetting(nameof(B_MasterkeyAskForConfigSettings), B_MasterkeyAskForConfigSettings.ToString());
+
+            HasUnsavedChanges = false;
         }
     }
 }

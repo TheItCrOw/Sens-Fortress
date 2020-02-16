@@ -151,7 +151,55 @@ namespace SensFortress.Utility
         }
 
         /// <summary>
-        /// Takes in a setting name plus value and either updates an existing one or creates it as a new setting.
+        /// When a scheduled setting (DI/DIP) has been executed, the time for it's next execution will be updated here.
+        /// </summary>
+        public static GuardianTask RaiseHandledSetting(GuardianTask task)
+        {
+            var splited = task.Name.Split('_');
+            if (splited[0] != "DI" && splited[0] != "DIP")
+                throw new FileFormatException($"{task.Name} could not be raised after being executed - SettingInterval does not match.");
+
+            if (task is ScheduledConfig config)
+            {
+                switch (config.Gtid.Interval.Trim())
+                {
+                    case "Hourly":
+                        while (config.Gtid.ExecutionDate.TimeOfDay < DateTime.Now.TimeOfDay)
+                            config.Gtid.ExecutionDate = config.Gtid.ExecutionDate.AddHours(1);
+                        break;
+                    case "Daily":
+                        while (config.Gtid.ExecutionDate.Date <= DateTime.Now.Date)
+                            config.Gtid.ExecutionDate = config.Gtid.ExecutionDate.AddDays(1);
+                        break;
+                    case "Weekly":
+                        while (config.Gtid.ExecutionDate.Date <= DateTime.Now.Date)
+                            config.Gtid.ExecutionDate = config.Gtid.ExecutionDate.AddDays(7);
+                        break;
+                    case "Monthly":
+                        while (config.Gtid.ExecutionDate.Date <= DateTime.Now.Date)
+                            config.Gtid.ExecutionDate = config.Gtid.ExecutionDate.AddMonths(1);
+                        break;
+                    case "Yearly":
+                        while (config.Gtid.ExecutionDate.Date <= DateTime.Now.Date)
+                            config.Gtid.ExecutionDate = config.Gtid.ExecutionDate.AddYears(1);
+                        break;
+                    default:
+                        throw new FileFormatException($"{config.Name} could not be raised after being executed.");
+                }
+
+                var newValue = (splited[0] == "DI") ? $"{(task.Gtid.ExecutionDate)},{config.Parameters[1]}" :
+                                                $"{(task.Gtid.ExecutionDate)},{config.Parameters[1]},{config?.Parameters[2]}";
+
+                SaveSetting(task.Name, newValue);
+                Logger.log.Info($"{config.Name} has been raised to {config.Gtid.ExecutionDate}.");
+                return task;
+            }
+            else
+                throw new FileFormatException($"{task.Name} was not a raisable setting.");
+        }
+
+        /// <summary>
+        /// Takes in a setting name plus value and updates an existing one.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>

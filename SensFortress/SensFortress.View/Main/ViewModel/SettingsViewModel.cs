@@ -3,6 +3,7 @@ using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
+using SensFortress.View.Helper;
 using SensFortress.View.Main.ViewModel.SettingsSubVms;
 using SensFortress.View.Main.Views.SettingsSubViews;
 using System;
@@ -19,7 +20,9 @@ namespace SensFortress.View.Main.ViewModel
         private bool _isLocked;
         private object _selectedContent;
         private SettingsSafetyView _safetyView;
-        private SettingsDataBackupView _dataBackup;
+        private SettingsSafetyViewModel _safetyVm;
+        private SettingsDataBackupView _dataBackupView;
+        private SettingsDataBackupViewModel _dataBackupVm;
         private string _currentTitle;
 
         public DelegateCommand<string> NavigateToSettingCategoryCommand => new DelegateCommand<string>(NavigateToSettingCategory);
@@ -51,7 +54,6 @@ namespace SensFortress.View.Main.ViewModel
             }
         }
 
-
         /// <summary>
         /// Like a ctor, but we want to explicitly control when this is called.
         /// </summary>
@@ -62,14 +64,16 @@ namespace SensFortress.View.Main.ViewModel
                 if (_safetyView == null)
                 {
                     _safetyView = new SettingsSafetyView();
-                    _safetyView.DataContext = new SettingsSafetyViewModel();
+                    _safetyVm = new SettingsSafetyViewModel();
+                    _safetyView.DataContext = _safetyVm;
                     ((SettingsSafetyViewModel)_safetyView.DataContext).Initialize();
                 }
-                if (_dataBackup == null)
+                if (_dataBackupView == null)
                 {
-                    _dataBackup = new SettingsDataBackupView();
-                    _dataBackup.DataContext = new SettingsDataBackupViewModel();
-                    ((SettingsDataBackupViewModel)_dataBackup.DataContext).Initialize();
+                    _dataBackupView = new SettingsDataBackupView();
+                    _dataBackupVm = new SettingsDataBackupViewModel();
+                    _dataBackupView.DataContext = _dataBackupVm;
+                    ((SettingsDataBackupViewModel)_dataBackupView.DataContext).Initialize();
                 }
 
                 // default view = safety
@@ -83,6 +87,28 @@ namespace SensFortress.View.Main.ViewModel
             }
 
         }
+
+        /// <summary>
+        /// Reloads all settings from the config file.
+        /// </summary>
+        public void ReloadSettings()
+        {
+            if(_safetyVm.HasUnsavedChanges || _dataBackupVm.HasUnsavedChanges)
+            {
+                // If he wants to save unsaved changes, do so.
+                if(Communication.AskForAnswer("The guardian must update your settings, but there are still unsaved changes. " +
+                    "Save changes before updating? Unsaved changes will be lost."))
+                {
+                    _safetyVm.SaveSettingsCommand.Execute();
+                    _dataBackupVm.SaveSettingsCommand.Execute();
+                }
+            }
+
+            _safetyView = null;
+            _dataBackupView = null;
+            Initialize();
+        }
+
         /// <summary>
         /// Changes the selected view after it's selected category
         /// </summary>
@@ -96,8 +122,8 @@ namespace SensFortress.View.Main.ViewModel
                     CurrentTitel = "Safety configurations";
                     break;
                 case "DataBackup":
-                    if (_dataBackup != null)
-                        SelectedContent = _dataBackup;
+                    if (_dataBackupView != null)
+                        SelectedContent = _dataBackupView;
                     CurrentTitel = "Data backup configurations";
                     break;
                 default:

@@ -12,15 +12,27 @@ using System.Windows;
 namespace SensFortress.Guardian
 {
     /// <summary>
+    /// List of all possible request types the guardian may ask the View
+    /// </summary>
+    public enum RequestTypes
+    {
+        Save,
+    }
+    /// <summary>
     /// The CronJob that handles configs, settings, scans, etc. It always runs in the background.
     /// </summary>
-    public static class GuardianController
+    public static class GuardianController 
     {
         public delegate void GuardianHandledTaskEvent(GuardianTask handledTask);
+        public delegate void GuardianThrewExceptionEvent(Exception ex);
+        public delegate void GuardianRequestEvent (RequestTypes request);
         /// <summary>
         /// Fires, when the guardian has handled a task.
         /// </summary>
         public static event GuardianHandledTaskEvent GuardianHandledTask;
+        public static event GuardianThrewExceptionEvent GuardianThrewException;
+        public static event GuardianRequestEvent GuardianRequest;
+
         /// <summary>
         /// Stores, how much time may differ between now and a task to be handled. e.g. 10 equals: 
         /// We already prepare to handle the task that is being scheduled in 10 Minutes.
@@ -43,6 +55,19 @@ namespace SensFortress.Guardian
 
             if (!_taskPool.TryAdd(task.Gtid, task))
                 throw new GuardianException($"Given task can not be added into the task-pool. The Gtid must be unique.");
+        }
+
+        /// <summary>
+        /// Removes a task from the <see cref="_taskPool"/>
+        /// </summary>
+        /// <param name="taskId"></param>
+        public static void RemoveTask(GTIdentifier taskId)
+        {
+            if (_taskPool == null)
+                throw new GuardianException($"The guardian has not been launched yet!");
+
+            if (!_taskPool.TryRemove(taskId, out var task))
+                throw new GuardianException($"Given task can not be removed from the task-pool.");
         }
 
         /// <summary>
@@ -73,6 +98,7 @@ namespace SensFortress.Guardian
             }
             catch (Exception ex)
             {
+                GuardianThrewException?.Invoke(ex);
                 return false;
             }
         }
@@ -107,6 +133,7 @@ namespace SensFortress.Guardian
             }
             catch (Exception ex)
             {
+                GuardianThrewException?.Invoke(ex);
             }
         }
 
@@ -124,20 +151,20 @@ namespace SensFortress.Guardian
                     case "DIP_AutomaticBackupIntervall":
                         if (File.Exists(UtilityParameters.FortressPath))
                             File.Copy(UtilityParameters.FortressPath, (string)config.Parameters[2], true);
-                        _taskPool.Remove(config.Gtid, out var xd);
-                        GuardianHandledTask?.Invoke(config);
                         break;
                     case "DI_AutomaticScans":
                         //not yet implemented
                         break;
                     case "DI_AutomaticSaves":
-                        // not yet implemented
-                        _upcomingTasks.Remove(config.Gtid);
-                        _taskPool.Remove(config.Gtid, out var xd2);
+                        GuardianRequest?.Invoke(RequestTypes.Save);
                         break;
                     default:
-                        break;
+                        throw new GuardianException($"{task.Name} could not be handled.");
                 }
+                // Task has been handled => Inform the View and delete this instance.
+                _taskPool.Remove(config.Gtid, out var obsolete);
+                _upcomingTasks.Remove(config.Gtid);
+                GuardianHandledTask?.Invoke(config);
             }
         }
 
