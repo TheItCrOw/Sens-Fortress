@@ -106,7 +106,6 @@ namespace SensFortress.View.Main.ViewModel
 
             _safetyView = null;
             _dataBackupView = null;
-            Initialize();
         }
 
         /// <summary>

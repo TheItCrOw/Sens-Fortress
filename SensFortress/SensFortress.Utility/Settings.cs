@@ -50,6 +50,14 @@ namespace SensFortress.Utility
         };
 
         /// <summary>
+        /// We cant use names like B_LockingInlcudeQuickbar in UI for the user to see. So we write our own description. Key is the official name
+        /// </summary>
+        private static Dictionary<string, string> _wellKnownHandledSettingDescriptions = new Dictionary<string, string>
+        {
+            { "DIP_AutomaticBackupIntervall", "Your scheduled backup has been executed!"}, { "DI_AutomaticScans", "Automatic scan has been executed!" }, { "DI_AutomaticSaves", "Not sure." }
+        };
+
+        /// <summary>
         /// The default settings that are being written when the setting dont exist
         /// </summary>
         private static Dictionary<string, string> _defaultSettings = new Dictionary<string, string>
@@ -98,7 +106,8 @@ namespace SensFortress.Utility
 
                         newModel = new ScheduledConfig(date, param)
                         {
-                            Name = pair.Key
+                            Name = pair.Key,
+                            Description = _wellKnownHandledSettingDescriptions[pair.Key]
                         };
                     }
                     else if (pair.Value == SettingType.DIP && DateTime.TryParse(values[0], out var date2))
@@ -111,7 +120,8 @@ namespace SensFortress.Utility
                         };
                         newModel = new ScheduledConfig(date2, param)
                         {
-                            Name = pair.Key
+                            Name = pair.Key,
+                            Description = _wellKnownHandledSettingDescriptions[pair.Key]
                         };
                     }
                     scheduledConfigs.Add(newModel);

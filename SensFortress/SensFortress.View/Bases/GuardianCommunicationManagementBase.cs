@@ -45,13 +45,13 @@ namespace SensFortress.View.Bases
             // Always use dispatcher when handling tasks from outside => you cant know what thread the caller is on.
             Application.Current.Dispatcher.Invoke(() =>
             {
-                TaskLogger.Instance.Track($"{handledTask.Name} has been handled!");
+                TaskLogger.Instance.Track(handledTask.Description);
                 Logger.log.Info($"{handledTask.Name} has been executed at {DateTime.Now}.");
 
                 if (handledTask is ScheduledConfig config)
                 {
+                    Navigation.SettingsMangementInstance.ReloadSettings(); // Call this before raising the task!
                     var raisedTask = Settings.RaiseHandledSetting(handledTask);
-                    Navigation.SettingsMangementInstance.ReloadSettings();
                     // Add the raisedTask. The old version has already been removed by the guardian when he handled the task.
                     GuardianController.AddTask(raisedTask);
                 }

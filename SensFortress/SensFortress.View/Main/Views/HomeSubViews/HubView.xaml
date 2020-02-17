@@ -58,11 +58,11 @@
                     <!--Quickbar-->
                     <DockPanel Height="168" Grid.ColumnSpan="2" Margin="10 0 0 0">
                         <materialDesign:Card Background="White" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
-                                             VerticalAlignment="Center" Height="110" Width="130" Margin="0 -22 10 0" Panel.ZIndex="1" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                                             VerticalAlignment="Center" Height="110" Width="120" Margin="0 -22 10 0" Panel.ZIndex="1" materialDesign:ShadowAssist.ShadowDepth="Depth5">
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
+                                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Drag" Foreground="Black"/>
                                 <materialDesign:PackIcon Kind="AddBox" Height="50" Width="50" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Here" Foreground="Black"/>
+                                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Here" Foreground="Black"/>
                             </StackPanel>
                         </materialDesign:Card>
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
@@ -82,10 +82,10 @@
                                                     <materialDesign:PackIcon Kind="Close" Foreground="White" Width="22" Height="22"/>
                                                 </Button>
                                             </materialDesign:Badged.Badge>
-                                            <materialDesign:Card Height="110" MinWidth="150" Background="GhostWhite">
+                                            <materialDesign:Card Height="110" MinWidth="125" Background="GhostWhite">
                                                 <!--there is a visual bug with cards and badges where weird lines pop up. We avoid that, by adjusting the stackpanel background and setting margin = 1-->
                                                 <StackPanel Background="GhostWhite" Margin="1">
-                                                    <TextBlock Text="{Binding Name}" Style="{StaticResource SubCategoryTextblockStyle}" Foreground="Black" Margin="5 3 5 0"/>
+                                                    <TextBlock Text="{Binding Name}" Style="{StaticResource SmallTextblockStyle}" Foreground="Black" Margin="5 3 5 0"/>
                                                     <materialDesign:PackIcon Margin="0 2 0 5" Kind="ShieldKey" Height="40" Width="40" Foreground="Black" HorizontalAlignment="Center"/>
                                                     <DockPanel Margin="5 0 5 3" LastChildFill="False" HorizontalAlignment="Center">
                                                         <!--copy password button-->
@@ -111,7 +111,21 @@
                     </DockPanel>
                     <!--locked status-->
                     <!--Lock/Unlock image and text-->
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Margin="5">
+                        <TextBlock>
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CategoryTextblockStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                            <Setter Property="Text" Value="Fortress is locked."/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsLocked}" Value="False">
+                                            <Setter Property="Text" Value="Fortress isn't locked."/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <materialDesign:PackIcon Height="150" HorizontalAlignment="Center" Width="150" Foreground="White">
                             <materialDesign:PackIcon.Style>
                                 <Style TargetType="materialDesign:PackIcon">
@@ -126,20 +140,6 @@
                                 </Style>
                             </materialDesign:PackIcon.Style>
                         </materialDesign:PackIcon>
-                        <TextBlock>
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource InformationTextblockStyle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsLocked}" Value="True">
-                                            <Setter Property="Text" Value="Fortress is locked."/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsLocked}" Value="False">
-                                            <Setter Property="Text" Value="Fortress isn't locked."/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
                     </StackPanel>
                 </Grid>
 

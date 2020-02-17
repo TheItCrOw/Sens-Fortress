@@ -75,7 +75,7 @@
                     <!--Enter Data Grid-->
                     <materialDesign:Card Grid.Row="1">
                         <materialDesign:Card.Background>
-                            <SolidColorBrush Color="Black" Opacity="0.9"/>
+                            <SolidColorBrush Color="Black" Opacity="0.6"/>
                         </materialDesign:Card.Background>
                         <Grid Margin="15">
                             <Grid.RowDefinitions>
