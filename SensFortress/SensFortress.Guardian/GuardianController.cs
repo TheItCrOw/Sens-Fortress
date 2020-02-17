@@ -40,6 +40,7 @@ namespace SensFortress.Guardian
         private const int HANDLE_NEXT_TASK_MINUTES = 10;
         private static Thread _guardianThread;
         private static bool _guardianIsRunning;
+        private static readonly object _lock = new object();
 
         private static ConcurrentDictionary<GTIdentifier, GuardianTask> _taskPool;
         private static HashSet<GTIdentifier> _upcomingTasks;
@@ -104,37 +105,59 @@ namespace SensFortress.Guardian
         }
 
         /// <summary>
-        /// The continous thread that stays in the background and completes task after task.
+        /// Makes the guardian reloads it's task pool with the given List
         /// </summary>
-        private static void GuardianThread()
+        public static void ReloadTasks(HashSet<GuardianTask> initialTasks)
         {
             try
             {
-                while (_guardianIsRunning)
-                {
-                    CheckUpcomingTasks();
+                _taskPool.Clear();
 
-                    if (_upcomingTasks.Count > 0)
-                    {
-                        // Take the next possible task
-                        var nextTask = _upcomingTasks.FirstOrDefault(t => t.ExecutionDate <= DateTime.Now);
-                        if (nextTask != default)
-                        {
-                            //Handle the task now!
-                            if (_taskPool.TryGetValue(nextTask, out var task))
-                                HandleTask(task);
-                            else
-                                ;// Inform someone that a task is missing.
-                        }
-                    }
-                    // Maybe let the user decide the frequency of the Guardian later.
-                    Thread.Sleep(500);
-                }
+                foreach (var task in initialTasks)
+                    AddTask(task);
             }
             catch (Exception ex)
             {
                 GuardianThrewException?.Invoke(ex);
             }
+        }
+
+        /// <summary>
+        /// The continous thread that stays in the background and completes task after task.
+        /// </summary>
+        private static void GuardianThread()
+        {
+            lock(_lock)
+            {
+                try
+                {
+                    while (_guardianIsRunning)
+                    {
+                        CheckUpcomingTasks();
+
+                        if (_upcomingTasks.Count > 0)
+                        {
+                            // Take the next possible task
+                            var nextTask = _upcomingTasks.FirstOrDefault(t => t.ExecutionDate <= DateTime.Now);
+                            if (nextTask != default)
+                            {
+                                //Handle the task now!
+                                if (_taskPool.TryGetValue(nextTask, out var task))
+                                    HandleTask(task);
+                                else
+                                    ;// Inform someone that a task is missing.
+                            }
+                        }
+                        // Maybe let the user decide the frequency of the Guardian later.
+                        Thread.Sleep(500);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    GuardianThrewException?.Invoke(ex);
+                }
+            }
+
         }
 
         /// <summary>

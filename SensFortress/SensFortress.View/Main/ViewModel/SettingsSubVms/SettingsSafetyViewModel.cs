@@ -2,6 +2,7 @@
 using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.View.Bases;
+using SensFortress.View.Helper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -136,7 +137,9 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             Settings.SaveSetting(nameof(B_MasterkeyAskForSaving), B_MasterkeyAskForSaving.ToString());
             Settings.SaveSetting(nameof(B_MasterkeyAskForConfigSettings), B_MasterkeyAskForConfigSettings.ToString());
 
+            //Inform the home about saved settings.
             HasUnsavedChanges = false;
+            Navigation.HomeManagementInstance.ReloadGuardianTasks();
         }
     }
 }

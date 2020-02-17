@@ -85,7 +85,6 @@ namespace SensFortress.View.Main.ViewModel
                 Logger.log.Error($"Error while loading the settings: {ex}");
                 Communication.InformUserAboutError(ex);
             }
-
         }
 
         /// <summary>

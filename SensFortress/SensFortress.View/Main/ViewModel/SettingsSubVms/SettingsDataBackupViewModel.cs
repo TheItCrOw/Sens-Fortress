@@ -2,6 +2,7 @@
 using Prism.Commands;
 using SensFortress.Utility;
 using SensFortress.View.Bases;
+using SensFortress.View.Helper;
 using System;
 using System.Collections.ObjectModel;
 
@@ -23,6 +24,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private bool _b_AutomaticSaves;
         private SettingInterval _i_AutomaticSaves;
         private DateTime _t_AutomaticBackupIntervall;
+        private DateTime _t_AutomaticScans;
 
         public DelegateCommand SaveSettingsCommand => new DelegateCommand(SaveSettings);
         public DelegateCommand ChooseBackupPathCommand => new DelegateCommand(ChooseBackupPath);
@@ -58,6 +60,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 HasUnsavedChanges = true;
             }
         }
+        // Date
         public DateTime D_AutomaticBackupIntervall
         {
             get => _d_AutomaticBackupIntervall;
@@ -67,6 +70,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 HasUnsavedChanges = true;
             }
         }
+        // Time
         public DateTime T_AutomaticBackupIntervall
         {
             get => _t_AutomaticBackupIntervall;
@@ -90,7 +94,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             if (!B_AutomaticBackupIntervall)
                 return "Void";
             else
-                return $"{D_AutomaticBackupIntervall},{I_AutomaticBackupIntervall},{P_AutomaticBackupIntervall}";
+                return $"{DateTimeHelper.CreateNew(D_AutomaticBackupIntervall, T_AutomaticBackupIntervall)},{I_AutomaticBackupIntervall},{P_AutomaticBackupIntervall}";
         }
         // <=
 
@@ -122,12 +126,21 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 HasUnsavedChanges = true;
             }
         }
+        public DateTime T_AutomaticScans
+        {
+            get => _t_AutomaticScans;
+            set
+            {
+                SetProperty(ref _t_AutomaticScans, value);
+                HasUnsavedChanges = true;
+            }
+        }
         private string DI_AutomaticScans()
         {
             if (!B_AutomaticScans)
                 return "Void";
             else
-                return $"{D_AutomaticScans},{I_AutomaticScans}";
+                return $"{DateTimeHelper.CreateNew(D_AutomaticScans, T_AutomaticScans)},{I_AutomaticScans}";
         }
         // <=
 
@@ -196,7 +209,9 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             Settings.SaveSetting("DI_AutomaticScans", DI_AutomaticScans());
             Settings.SaveSetting("DI_AutomaticSaves", DI_AutomaticSaves());
 
+            //Inform the home about saved settings.
             HasUnsavedChanges = false;
+            Navigation.HomeManagementInstance.ReloadGuardianTasks();
         }
 
         /// <summary>
@@ -227,6 +242,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 B_AutomaticBackupIntervall = true;
                 var splited = dip_AutomaticBackup.Split(',');
                 D_AutomaticBackupIntervall = Convert.ToDateTime(splited[0]);
+                T_AutomaticBackupIntervall = Convert.ToDateTime(splited[0]);
                 if (Enum.TryParse(splited[1], out SettingInterval interval))
                     I_AutomaticBackupIntervall = interval;
                 P_AutomaticBackupIntervall = splited[2];
@@ -247,6 +263,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 B_AutomaticScans = true;
                 var splited = di_AutomaticScans.Split(',');
                 D_AutomaticScans = Convert.ToDateTime(splited[0]);
+                T_AutomaticScans = Convert.ToDateTime(splited[0]);
                 if (Enum.TryParse(splited[1], out SettingInterval interval))
                     I_AutomaticScans = interval;
             }

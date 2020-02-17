@@ -62,7 +62,7 @@
                             <DockPanel LastChildFill="False">
                                 <TextBlock Margin="5 0 5 0" Style="{StaticResource SettingsTextblockStyle}" Text="scheduled next time on"/>
                                 <DatePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedDate="{Binding D_AutomaticBackupIntervall}"/>
-                                <materialDesign:TimePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedTime="{Binding D_AutomaticBackupIntervall}"/>
+                                <materialDesign:TimePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedTime="{Binding T_AutomaticBackupIntervall}"/>
                             </DockPanel>
                         </DockPanel>
                         <!--where to-->
@@ -103,7 +103,7 @@
                         <DockPanel LastChildFill="False">
                             <TextBlock Margin="5 0 5 0" Style="{StaticResource SettingsTextblockStyle}" Text="scheduled next time on"/>
                             <DatePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedDate="{Binding D_AutomaticScans}"/>
-                            <materialDesign:TimePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedTime="{Binding D_AutomaticScans}"/>
+                            <materialDesign:TimePicker Margin="5 0 5 0" Width="150" FontSize="17" SelectedTime="{Binding T_AutomaticScans}"/>
                         </DockPanel>
                     </DockPanel>
                 </Expander>

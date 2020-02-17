@@ -37,6 +37,12 @@ namespace SensFortress.View.Bases
         }
 
         /// <summary>
+        /// Makes the guardian reload the settings for updated properties.
+        /// </summary>
+        /// <param name="tasks"></param>
+        public void ReloadGuardianTasks() => GuardianController.ReloadTasks(Settings.GetSettingsForGuardian());
+
+        /// <summary>
         /// Event that raises, when a task has been handled by the guardian.
         /// </summary>
         /// <param name="handledTask"></param>
