@@ -5,6 +5,7 @@ using SensFortress.Guardian.Models;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
 using SensFortress.View.Helper;
+using SensFortress.View.Main.ViewModel.HomeSubVms;
 using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace SensFortress.View.Bases
             // Always use dispatcher when handling tasks from outside => you cant know what thread the caller is on.
             Application.Current.Dispatcher.Invoke(() =>
             {
-                TaskLogger.Instance.Track(handledTask.Description);
+                TaskLogger.Instance.Track($"{handledTask.Description}: Has been executed at {DateTime.Now}");
                 Logger.log.Info($"{handledTask.Name} has been executed at {DateTime.Now}.");
 
                 if (handledTask is ScheduledConfig config)

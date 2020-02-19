@@ -32,6 +32,13 @@ namespace SensFortress.Utility
     public static class Settings
     {
         /// <summary>
+        /// Fires, when a setting value has been raised to a new one.
+        /// </summary>
+        /// <param name="handledTask"></param>
+        public delegate void HandledSettingHasBeenRaisedEvent(ScheduledConfig raisedConfig);
+        public static event HandledSettingHasBeenRaisedEvent HandledSettingHasBeenRaised;
+
+        /// <summary>
         /// Contains all registered settings.
         /// </summary>
         private static Dictionary<string, SettingType> _wellKnownSettings = new Dictionary<string, SettingType>
@@ -54,7 +61,7 @@ namespace SensFortress.Utility
         /// </summary>
         private static Dictionary<string, string> _wellKnownHandledSettingDescriptions = new Dictionary<string, string>
         {
-            { "DIP_AutomaticBackupIntervall", "Your scheduled backup has been executed!"}, { "DI_AutomaticScans", "Automatic scan has been executed!" }, { "DI_AutomaticSaves", "Not sure." }
+            { "DIP_AutomaticBackupIntervall", "Automatically backup fortress"}, { "DI_AutomaticScans", "Automatically scan fortress" }, { "DI_AutomaticSaves", "Not sure." }
         };
 
         /// <summary>
@@ -198,10 +205,14 @@ namespace SensFortress.Utility
                         throw new FileFormatException($"{config.Name} could not be raised after being executed.");
                 }
 
-                var newValue = (splited[0] == "DI") ? $"{(task.Gtid.ExecutionDate)},{config.Parameters[1]}" :
-                                                $"{(task.Gtid.ExecutionDate)},{config.Parameters[1]},{config?.Parameters[2]}";
+                var newValue = (splited[0] == "DI") ? 
+                    $"{(task.Gtid.ExecutionDate)},{config.Parameters[1]}" :
+                    $"{(task.Gtid.ExecutionDate)},{config.Parameters[1]},{config?.Parameters[2]}";
 
-                SaveSetting(task.Name, newValue);
+                // Save setting and inform others that a config has been raised.
+                SaveSetting(config.Name, newValue);
+                HandledSettingHasBeenRaised?.Invoke(config);
+
                 Logger.log.Info($"{config.Name} has been raised to {config.Gtid.ExecutionDate}.");
                 return task;
             }

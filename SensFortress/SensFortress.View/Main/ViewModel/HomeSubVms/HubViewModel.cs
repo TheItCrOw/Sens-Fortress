@@ -3,6 +3,7 @@ using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using Prism.Commands;
 using SensFortress.Data.Database;
+using SensFortress.Guardian.Models;
 using SensFortress.Models.Fortress;
 using SensFortress.Security;
 using SensFortress.Utility;
@@ -35,7 +36,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
-        public ObservableCollection<AnalysedEntryViewModel> Configurations { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
+        public ObservableCollection<ConfigViewModel> Configurations { get; set; } = new ObservableCollection<ConfigViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
         public DelegateCommand StartPasswordAnalysisCommand => new DelegateCommand(StartPasswordAnalysis);
@@ -103,11 +104,13 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             try
             {
+                Settings.HandledSettingHasBeenRaised += Settings_ConfigHasBeenRaised;
+
                 var currentNodes = Navigation.HomeManagementInstance.GetRootNodesSnapshot();
                 _allLeafsVmSnapshot = new HashSet<LeafViewModel>();
+                LoadConfigurations();
                 LoadQuickbar(currentNodes);
                 LoadChart();
-                Testing();
             }
             catch (Exception ex)
             {
@@ -117,19 +120,33 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             }
         }
 
-        private void Testing()
+        /// <summary>
+        /// Loads all scheduled configs of the user
+        /// </summary>
+        public void LoadConfigurations()
         {
             Configurations.Clear();
-            var hashset = new HashSet<string> { "test" };
-            var testVm = new AnalysedEntryViewModel (3.0, hashset) { Category = "Category1", Name = "Saving", PasswordStrength = 3 };
 
-            Configurations.Add(testVm);
-            Configurations.Add(testVm);
-            Configurations.Add(testVm);
-            Configurations.Add(testVm);
-            Configurations.Add(testVm);
-            Configurations.Add(testVm);
-            Configurations.Add(testVm);
+            // Get all ScheudledConfigs and make ViewModels
+            var configs = Settings
+                .GetSettingsForGuardian()
+                .Where(gT => gT is ScheduledConfig config)
+                .Select(c => new ScheduledConfigViewModel((ScheduledConfig)c, this));
+
+            foreach (var config in configs)
+                Configurations.Add(config);                                          
+        }
+
+        /// <summary>
+        /// Triggers, when a scheduledConfig has been raised by <see cref="Settings"/>.
+        /// </summary>
+        /// <param name="config"></param>
+        private void Settings_ConfigHasBeenRaised(ScheduledConfig config)
+        {
+            // Name must always be unique with settings => Id's may change
+            foreach (var c in Configurations)
+                if (c.Name == config.Name && c is ScheduledConfigViewModel scheduledC)
+                    scheduledC.UpdateNextExecution(config.Gtid.ExecutionDate);
         }
 
         /// <summary>

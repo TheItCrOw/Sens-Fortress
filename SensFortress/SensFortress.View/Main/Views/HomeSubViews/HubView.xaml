@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SensFortress.View.Main.Views.HomeSubViews"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-             xmlns:vms="clr-namespace:SensFortress.View.Main.ViewModel.HomeSubVms"
+             xmlns:vms="clr-namespace:SensFortress.View.Main.ViewModel"
              mc:Ignorable="d" 
              AllowDrop="True"
              d:DesignHeight="900" d:DesignWidth="1100"           
@@ -255,7 +255,7 @@
                             </ItemsControl.Template>
                             <!--data template of object-->
                             <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vms:AnalysedEntryViewModel}">
+                                <DataTemplate DataType="{x:Type vms:ScheduledConfigViewModel}">
                                     <Border x:Name="Border" Padding="8" BorderThickness="0 0 0 1" BorderBrush="{DynamicResource MaterialDesignDivider}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -269,8 +269,8 @@
                                             </Button>
                                             <!--Description and name-->
                                             <StackPanel Margin="10 0 0 0" Grid.Column="1">
-                                                <TextBlock FontWeight="Bold" Text="{Binding Name}" FontSize="15" HorizontalAlignment="Left"/>
-                                                <TextBlock Text="{Binding Category}" Margin="0 2 0 0"/>
+                                                <TextBlock FontWeight="Bold" Text="{Binding Description}" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
+                                                <TextBlock Text="{Binding NextExecution}" FontStyle="Italic" Margin="0 2 0 0"/>
                                             </StackPanel>
                                         </Grid>
                                     </Border>
