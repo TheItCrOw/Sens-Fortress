@@ -21,17 +21,19 @@ namespace SensFortress.Guardian
     /// <summary>
     /// The CronJob that handles configs, settings, scans, etc. It always runs in the background.
     /// </summary>
-    public static class GuardianController 
+    public static class GuardianController
     {
         public delegate void GuardianHandledTaskEvent(GuardianTask handledTask);
         public delegate void GuardianThrewExceptionEvent(Exception ex);
-        public delegate void GuardianRequestEvent (RequestTypes request);
+        public delegate void GuardianRequestEvent(RequestTypes request);
+        public delegate void GuardianStoppedEvent(string reason);
         /// <summary>
         /// Fires, when the guardian has handled a task.
         /// </summary>
         public static event GuardianHandledTaskEvent GuardianHandledTask;
         public static event GuardianThrewExceptionEvent GuardianThrewException;
         public static event GuardianRequestEvent GuardianRequest;
+        public static event GuardianStoppedEvent GuardianStopped;
 
         /// <summary>
         /// Stores, how much time may differ between now and a task to be handled. e.g. 10 equals: 
@@ -127,7 +129,7 @@ namespace SensFortress.Guardian
         /// </summary>
         private static void GuardianThread()
         {
-            lock(_lock)
+            lock (_lock)
             {
                 try
                 {
@@ -154,10 +156,11 @@ namespace SensFortress.Guardian
                 }
                 catch (Exception ex)
                 {
-                    GuardianThrewException?.Invoke(ex);
+                    GuardianStopped?.Invoke($"The guardian detected an error and has been shut down. " +
+                        $"After the error has been fixed, try to restart him manually. {Environment.NewLine}" +
+                        $"Error: {ex.Message}");
                 }
             }
-
         }
 
         /// <summary>
@@ -172,8 +175,7 @@ namespace SensFortress.Guardian
                 switch (config.Name)
                 {
                     case "DIP_AutomaticBackupIntervall":
-                        if (File.Exists(UtilityParameters.FortressPath))
-                            File.Copy(UtilityParameters.FortressPath, (string)config.Parameters[2], true);
+                        BackupFortress(config);
                         break;
                     case "DI_AutomaticScans":
                         //not yet implemented
@@ -189,6 +191,22 @@ namespace SensFortress.Guardian
                 _upcomingTasks.Remove(config.Gtid);
                 GuardianHandledTask?.Invoke(config);
             }
+        }
+
+        /// <summary>
+        /// Backups the fortress to the given path of the <see cref="ScheduledConfig"/>
+        /// </summary>
+        /// <param name="config"></param>
+        private static void BackupFortress(ScheduledConfig config)
+        {
+            var copyPath = (string)config.Parameters[2];
+
+            if (!File.Exists(UtilityParameters.FortressPath))
+                throw new GuardianException($"Fortress could not be found - path {UtilityParameters.FortressPath} was invalid.");
+            else if (!File.Exists(copyPath))
+                throw new GuardianException($"Given backup path couldn't be found: {copyPath}");
+
+            File.Copy(UtilityParameters.FortressPath, copyPath, true);
         }
 
         /// <summary>

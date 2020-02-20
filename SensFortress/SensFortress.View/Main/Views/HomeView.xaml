@@ -38,7 +38,7 @@
             <RowDefinition Height="35" MinHeight="35"/>
         </Grid.RowDefinitions>
 
-        <!--lock button-->
+        <!--lock button on the left-->
         <DockPanel Panel.ZIndex="1"  Grid.RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Button Background="Black" Height="70" Width="70" 
                 Margin="10 10 5 10" Command="{Binding LockUnlockFortressCommand}">
@@ -46,10 +46,10 @@
                     <Style BasedOn="{StaticResource MaterialDesignFloatingActionLightButton}" TargetType="Button">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsLocked}" Value="True">
-                                <Setter Property="ToolTip" Value="Unlock the fortress"/>
+                                <Setter Property="ToolTip" Value="Currently locked. Click to unlock."/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding IsLocked}" Value="False">
-                                <Setter Property="ToolTip" Value="Lock the fortress"/>
+                                <Setter Property="ToolTip" Value="Currently unlocked. Click to lock."/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -59,10 +59,10 @@
                         <Style TargetType="materialDesign:PackIcon">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsLocked}" Value="True">
-                                    <Setter Property="Kind" Value="Lock"/>
+                                    <Setter Property="Kind" Value="ShieldCheck"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsLocked}" Value="False">
-                                    <Setter Property="Kind" Value="LockOpen"/>
+                                    <Setter Property="Kind" Value="ShieldOff"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -98,8 +98,8 @@
                 </DockPanel>
             </materialDesign:Card>
         </DockPanel>
-
-        <!--Header Title-->
+        
+    <!--Header Title-->
         <materialDesign:Card Height="50" Background="{StaticResource ThemeDarkBlueBlack}">
             <DockPanel HorizontalAlignment="Left" Margin="80 0 20 0" VerticalAlignment="Center" LastChildFill="False">
                 <!--Home Button-->
@@ -325,9 +325,9 @@
                     <ListView ItemsSource="{Binding TaskLogs}" HorizontalContentAlignment="Stretch">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <DockPanel Height="20">
+                                <DockPanel>
                                     <materialDesign:PackIcon Kind="ChangeHistory" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" AllowDrop="True" Style="{StaticResource SmallTextblockStyle}"/>
+                                    <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" TextWrapping="Wrap" Style="{StaticResource SmallTextblockStyle}"/>
                                 </DockPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

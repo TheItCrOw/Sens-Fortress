@@ -76,5 +76,28 @@ namespace SensFortress.View.Main.Views.HomeSubViews
             ((Card)sender).Background = Brushes.GhostWhite;
         }
         #endregion
+
+        /// <summary>
+        /// When hovering over the border, highlight it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PWStrength_Border_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                border.Background = Brushes.White;
+                border.Opacity = 1;
+            }
+        }
+
+        private void PWStrength_Border_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                border.Background = Brushes.Transparent;
+                border.Opacity = 1;
+            }
+        }
     }
 }

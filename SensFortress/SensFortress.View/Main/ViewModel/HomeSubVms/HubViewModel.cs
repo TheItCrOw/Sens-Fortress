@@ -33,9 +33,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private bool _chartIsLoading;
         private bool _pWAnalysisIsLoading;
         private int _totalPWAnalysisScore;
+        private int _strongPasswords;
+        private int _mediumPasswords;
+        private int _weakPasswords;
+        private int _blacklistedPasswords;
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
-        public ObservableCollection<AnalysedEntryViewModel> AnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
+        public ObservableCollection<AnalysedEntryViewModel> AllAnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
+
         public ObservableCollection<ConfigViewModel> Configurations { get; set; } = new ObservableCollection<ConfigViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
@@ -92,6 +97,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _pWAnalysisIsLoading, value);
             }
         }
+        #region PW analysis
         public int TotalPWAnalysisScore
         {
             get => _totalPWAnalysisScore;
@@ -100,6 +106,39 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _totalPWAnalysisScore, value);
             }
         }
+        public int StrongPasswords
+        {
+            get => _strongPasswords;
+            set
+            {
+                SetProperty(ref _strongPasswords, value);
+            }
+        }
+        public int MediumPasswords
+        {
+            get => _mediumPasswords;
+            set
+            {
+                SetProperty(ref _mediumPasswords, value);
+            }
+        }
+        public int WeakPasswords
+        {
+            get => _weakPasswords;
+            set
+            {
+                SetProperty(ref _weakPasswords, value);
+            }
+        }
+        public int BlacklistedPasswords
+        {
+            get => _blacklistedPasswords;
+            set
+            {
+                SetProperty(ref _blacklistedPasswords, value);
+            }
+        }
+        #endregion
 
         public void Initialize()
         {
@@ -135,7 +174,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 .Select(c => new ScheduledConfigViewModel((ScheduledConfig)c, this));
 
             foreach (var config in configs)
-                Configurations.Add(config);                                          
+                Configurations.Add(config);
         }
 
         /// <summary>
@@ -159,7 +198,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 return;
 
             PWAnalysisIsLoading = true;
-            AnalyseResults.Clear();
+            AllAnalyseResults.Clear();
+            StrongPasswords = 0;
+            MediumPasswords = 0;
+            WeakPasswords = 0;
+            BlacklistedPasswords = 0;
 
             try
             {
@@ -190,12 +233,22 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                                 Category = parent.Name,
                                 Name = leafVm.Name,
                             };
+
+                            if (analysisVm.PasswordStrength >= 70)
+                                Application.Current.Dispatcher.Invoke(() => StrongPasswords++);
+                            else if (analysisVm.PasswordStrength >= 50)
+                                Application.Current.Dispatcher.Invoke(() => MediumPasswords++);
+                            else if (analysisVm.PasswordStrength > 0)
+                                Application.Current.Dispatcher.Invoke(() => WeakPasswords++);
+                            else if (analysisVm.PasswordStrength <= 0)
+                                Application.Current.Dispatcher.Invoke(() => BlacklistedPasswords++);
+
                             // Can be deleted later
-                            Thread.Sleep(350);
+                            Thread.Sleep(50);
                             // add the result to the list
-                            Application.Current.Dispatcher.Invoke(() => AnalyseResults.Add(analysisVm));
+                            Application.Current.Dispatcher.Invoke(() => AllAnalyseResults.Add(analysisVm));
                             // calculate the total score
-                            TotalPWAnalysisScore = (totalPasswordStrength / AnalyseResults.Count);
+                            TotalPWAnalysisScore = (totalPasswordStrength / AllAnalyseResults.Count);
                         }
                     }
 

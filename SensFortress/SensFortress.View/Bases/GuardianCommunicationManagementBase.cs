@@ -35,6 +35,7 @@ namespace SensFortress.View.Bases
             GuardianController.GuardianHandledTask += Guardian_HandledTask;
             GuardianController.GuardianThrewException += Guardian_ThrewExecption;
             GuardianController.GuardianRequest += Guardian_Request;
+            GuardianController.GuardianStopped += Guardian_Stopped;
         }
 
         /// <summary>
@@ -42,6 +43,22 @@ namespace SensFortress.View.Bases
         /// </summary>
         /// <param name="tasks"></param>
         public void ReloadGuardianTasks() => GuardianController.ReloadTasks(Settings.GetSettingsForGuardian());
+
+        /// <summary>
+        /// Events that triggers, when the guardian has been stopped.
+        /// </summary>
+        /// <param name="message"></param>
+        protected void Guardian_Stopped(string message)
+        {
+            // Always use dispatcher when handling tasks from outside => you cant know what thread the caller is on.
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Logger.log.Error($"Guardian has been stopped: {message}");
+                TaskLogger.Instance.Track(message);
+                // Change that later to a guardian info box
+                Communication.InformUser(message);
+            });
+        }
 
         /// <summary>
         /// Event that raises, when a task has been handled by the guardian.
@@ -74,8 +91,8 @@ namespace SensFortress.View.Bases
             Logger.log.Error($"Guardian threw an exception: {ex}");
             Application.Current.Dispatcher.Invoke(() =>
             {
-                // Testing
-                Communication.InformUser(ex.Message);
+                    // Change that later to a guardian info box
+                    Communication.InformUser(ex.Message);
             });
         }
 
