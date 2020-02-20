@@ -46,3 +46,4 @@ Start
 ## About
 ![SensFortress View_pDeIwpXF7K](https://user-images.githubusercontent.com/49918134/74945349-dd1e4f00-53f7-11ea-8166-ff8fe99ddfd2.jpg)
 
+Sen's fortress currently is completly offline. Against the trend of many other password managers, there are no future plans in implementing a cloud structure - instead a local synchronisation progress with other instances (PC's, Mobile-apps) in a closed network (Home WiFi) will be featured. 
