@@ -26,6 +26,12 @@ Make sure the application has the rights to read and write files from and onto y
 * [Live Charts.Wpf](https://www.nuget.org/packages/LiveCharts.Wpf/) - Charts / Graphs library
 * [Material Design](https://material.io/resources/) - UI designing language 
 
+```
+Pull the project, start the solution.
+Make sure all Nuget packages and externally added libraries are referenced. (VS should do this by itself - if not, it will tell you what's missing. You must then download these packages yourself.)
+Build the solution.
+Start
+```
 
 ### Technologies
 
