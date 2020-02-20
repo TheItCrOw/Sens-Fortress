@@ -12,7 +12,8 @@ Sen's fortress is a desktop based, open source and completly free password manag
 * [.NET Core runtime](https://dotnet.microsoft.com/download) - Runtime required for using Sen's fortress
 
 ```
-Give the example
+Download the latest .zip version of the Release folder. and run the SensFortress.View.exe
+Make sure the application has the rights to read and write files from and onto your harddrive.
 ```
 
 #### Developing
