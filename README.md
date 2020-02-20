@@ -27,4 +27,13 @@ Make sure the application has the rights to read and write files from and onto y
 * [Material Design](https://material.io/resources/) - UI designing language 
 
 
+### Technologies
+
+* C#
+* .NET Stack / .NET Core 3.0
+* WPF
+* Visual Studio 2019
+* Git
+* Material Design
+
 
