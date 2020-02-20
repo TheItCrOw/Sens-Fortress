@@ -6,13 +6,16 @@ Sen's fortress is a desktop based, open source and completly free password manag
 ## Getting started
 ![SensFortress View_EOMMUfUtlv](https://user-images.githubusercontent.com/49918134/74938684-c0c9e480-53ee-11ea-91e0-4b199d202e70.jpg)
 
-### Prerequisites (Usage)
-
+### Prerequisites
+#### Usage
 * [Windows](https://www.microsoft.com/de-de/software-download/) - Sen's fortress is windows only (for now)
 * [.NET Core runtime](https://dotnet.microsoft.com/download) - Runtime required for using Sen's fortress
 
-### Prerequisites (Developing)
+```
+Give the example
+```
 
+#### Developing
 * [.NET Core 3.0 SDK](https://dotnet.microsoft.com/download) - SDK required for deveolping Sen's fortress
 * [Visual Studio / WPF](https://visualstudio.microsoft.com/de/downloads/) - Graphical framework.
 
@@ -21,4 +24,6 @@ Sen's fortress is a desktop based, open source and completly free password manag
 * [Prism.Wpf](https://www.nuget.org/packages/Prism.Wpf/) - MVVM framework
 * [Live Charts.Wpf](https://www.nuget.org/packages/LiveCharts.Wpf/) - Charts / Graphs library
 * [Material Design](https://material.io/resources/) - UI designing language 
+
+
 
