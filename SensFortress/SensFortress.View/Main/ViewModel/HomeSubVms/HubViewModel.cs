@@ -42,6 +42,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand StartPasswordAnalysisCommand => new DelegateCommand(StartPasswordAnalysis);
         public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
 
+        [Obsolete]
         #region Chart Properties
         public SeriesCollection ChartSeries { get; set; } = new SeriesCollection();
         public List<string> ChartLabels { get; set; } = new List<string>();
@@ -110,7 +111,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 _allLeafsVmSnapshot = new HashSet<LeafViewModel>();
                 LoadConfigurations();
                 LoadQuickbar(currentNodes);
-                LoadChart();
+                //LoadChart();
             }
             catch (Exception ex)
             {
@@ -225,6 +226,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 LoadQuickbar(node);
         }
 
+        /// <summary>
+        /// Currently not supported!
+        /// </summary>
+        [Obsolete]
         private void LoadChart()
         {
             ChartIsLoading = true;

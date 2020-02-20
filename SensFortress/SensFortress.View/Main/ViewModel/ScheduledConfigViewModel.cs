@@ -6,6 +6,9 @@ using System.Text;
 
 namespace SensFortress.View.Main.ViewModel
 {
+    /// <summary>
+    /// ViewModel for scheduledConfigs executed by the guardian
+    /// </summary>
     public class ScheduledConfigViewModel : ConfigViewModel
     {
         private string _nextExecution;

@@ -164,7 +164,7 @@
                     </Grid.RowDefinitions>
                    
                     <!--Buttons - start password analyis-->
-                    <Grid Grid.Column="0" Margin="10 0 20 0" Grid.ColumnSpan="2">
+                    <Grid Grid.Column="0" Margin="10 0 20 0" Grid.ColumnSpan="2" Grid.RowSpan="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
@@ -286,8 +286,10 @@
                         </Button>
                     </Grid>
 
-                    <!--chart -->
-                    <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="2" 
+                    
+                    
+                    <!--chart OBSOLETE FOR NOW-->
+                    <!--<materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="2" 
                                          Visibility="{Binding ChartIsLoading, Converter={StaticResource InverseBoolToVisConverter}}">
                         <lvc:CartesianChart Series="{Binding ChartSeries}" LegendLocation="Top" FontSize="15" Margin="7">
                             <lvc:CartesianChart.DataTooltip>
@@ -300,11 +302,11 @@
                                 <lvc:Axis FontSize="15" Foreground="White" MinValue="{Binding ChartMinValue}" MaxValue="{Binding ChartMaxValue}"></lvc:Axis>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
-                    </materialDesign:Card>
+                    </materialDesign:Card>-->
 
                     <!--Loading symbol if charts need some time to load-->
-                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="50" Height="100" Width="100" Grid.ColumnSpan="3" FontStretch="UltraCondensed" Foreground="White" 
-                                 IsIndeterminate="True" Grid.Row="1" Visibility="{Binding ChartIsLoading, Converter={StaticResource BoolToVisConverter}}"/>
+                    <!--<ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="50" Height="100" Width="100" Grid.ColumnSpan="3" FontStretch="UltraCondensed" Foreground="White" 
+                                 IsIndeterminate="True" Grid.Row="1" Visibility="{Binding ChartIsLoading, Converter={StaticResource BoolToVisConverter}}"/>-->
 
                 </Grid>
 
