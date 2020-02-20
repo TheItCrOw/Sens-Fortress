@@ -31,7 +31,7 @@ Make sure the application has the rights to read and write files from and onto y
 
 * C#
 * .NET Stack / .NET Core 3.0
-* WPF
+* WPF => MVVM
 * Visual Studio 2019
 * Git
 * Material Design
