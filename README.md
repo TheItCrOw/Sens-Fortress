@@ -27,8 +27,9 @@ Make sure the application has the rights to read and write files from and onto y
 * [Material Design](https://material.io/resources/) - UI designing language 
 
 ```
-Pull the project, start the solution.
+Clone the repository.
 Make sure all Nuget packages and externally added libraries are referenced. (VS should do this by itself - if not, it will tell you what's missing. You must then download these packages yourself.)
+Make sure VS has full writing access. (Try starting as admin if it does not work initially.)
 Build the solution.
 Start
 ```
