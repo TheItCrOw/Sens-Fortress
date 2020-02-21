@@ -106,6 +106,9 @@ namespace SensFortress.View.Main.Views
         {
             try
             {
+                // We do not want to start D&D when we press a button.
+                if (e.Source.GetType().Name.Equals("Button"))
+                    return;
                 // The dragging can be started from the card itself, the textbox name and the icon
                 if (e.Source.GetType().Name.Equals("Card"))
                 {

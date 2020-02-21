@@ -15,6 +15,6 @@
             FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
         <!--gets filled in the according ViewModel-->
-        <DocumentViewer x:Name="Preview_Document" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15"/>
+        <DocumentViewer x:Name="Preview_Document" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>

@@ -73,9 +73,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             // We need to build the flowdocument in code behind, otherwise there will be no paging with Lists and UIBlocks....
             var flowDocument = new FlowDocument();
-            flowDocument.PageWidth = 900;
+            flowDocument.PageWidth = 650;
             flowDocument.PageHeight = 900;
-            var title = new Paragraph(new Run("Sen's fortress emergency sheet") { FontSize = 25 });
+            var title = new Paragraph(new Run($"{CurrentFortressData.FortressName} emergency sheet") { FontSize = 25 });
             var subtitle = new Paragraph(new Run("Category => Name => Username => Password") { FontSize = 12 });
 
             flowDocument.Blocks.Add(title);
