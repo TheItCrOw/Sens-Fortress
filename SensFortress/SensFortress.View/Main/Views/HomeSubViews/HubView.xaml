@@ -140,10 +140,10 @@
                                         <materialDesign:PackIcon Kind="Guardian" Foreground="White" Height="75" Width="75"/>
                                     </Button>
 
-                                    <!--start pw analysis-->
+                                    <!--print emergency sheet-->
                                     <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Black" Height="65" Width="65" Margin="0 0 10 0"
-                                             Command="{Binding StartPasswordAnalysisCommand}" ToolTip="Start password analysis">
-                                        <materialDesign:PackIcon Kind="ShieldKey" Foreground="White" Height="50" Width="50"/>
+                                             Command="{Binding PrintEmergencySheetCommand}" ToolTip="Print emergency sheet">
+                                        <materialDesign:PackIcon Kind="Printer" Foreground="White" Height="50" Width="50"/>
                                     </Button>
                                 </DockPanel>
                                 

@@ -11,6 +11,7 @@ using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
 using SensFortress.View.Helper;
+using SensFortress.View.Main.Views.HomeSubViews;
 using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
         public DelegateCommand StartPasswordAnalysisCommand => new DelegateCommand(StartPasswordAnalysis);
         public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
+        public DelegateCommand PrintEmergencySheetCommand => new DelegateCommand(PrintEmergencySheet);
 
         [Obsolete]
         #region Chart Properties
@@ -186,6 +188,15 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             foreach (var c in Configurations)
                 if (c.Name == config.Name && c is ScheduledConfigViewModel scheduledC)
                     scheduledC.UpdateNextExecution(config.Gtid.ExecutionDate);
+        }
+
+        /// <summary>
+        /// Opens a new print view for printing a password emergency sheet
+        /// </summary>
+        private void PrintEmergencySheet()
+        {
+            var printVm = new PrintViewModel();
+            printVm.StartPasswordEntriesPrintProcess(_allLeafsVmSnapshot);
         }
 
         /// <summary>
