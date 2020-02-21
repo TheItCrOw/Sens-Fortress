@@ -20,9 +20,9 @@
              >
     <!--Background Image-->
     <UserControl>
-        <UserControl.Background>
+        <!--<UserControl.Background>
             <ImageBrush ImageSource="pack://application:,,,/Images/Fortress-Bridge.jpg" Stretch="UniformToFill"/>
-        </UserControl.Background>
+        </UserControl.Background>-->
 
         <Grid>
             <Grid.Background>
@@ -113,29 +113,39 @@
 
                     <!--Middle content: password analysis, shields etc.-->
                     <Grid Grid.Row="1" Margin="1 0 0 0" Visibility="Visible">
-                        <Grid.Background>
-                            <LinearGradientBrush StartPoint="0 0" EndPoint="0 4.7">
-                                <LinearGradientBrush.GradientStops>
-                                    <GradientStop Offset="0.05" Color="Transparent" />
-                                    <GradientStop Offset="1" Color="Black" />
-                                </LinearGradientBrush.GradientStops>
-                            </LinearGradientBrush>
-                        </Grid.Background>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="110"/>
-                            <RowDefinition Height="380"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
                         <!--middle content-->
-                        <DockPanel LastChildFill="False" HorizontalAlignment="Center">
-                            <!--Guardian Button -->
-                            <materialDesign:Card Background="Transparent">
-                                <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Black" Height="90" Width="90">
-                                    <materialDesign:PackIcon Kind="Guardian" Foreground="White" Height="75" Width="75"/>
-                                </Button>
-                            </materialDesign:Card>
-                        </DockPanel>
+                        <materialDesign:Card HorizontalAlignment="Stretch" Height="100" Background="Transparent">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
 
+                                <DockPanel Grid.RowSpan="3" Panel.ZIndex="1" LastChildFill="False" HorizontalAlignment="Center">
+
+                                    <!--start pw analysis-->
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Black" Height="65" Width="65" Margin="0 0 10 0"
+                                             Command="{Binding StartPasswordAnalysisCommand}" ToolTip="Start password analysis">
+                                        <materialDesign:PackIcon Kind="ShieldKey" Foreground="White" Height="50" Width="50"/>
+                                    </Button>
+                                    
+                                    <!--Guardian Button -->
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Black" Height="80" Width="80">
+                                        <materialDesign:PackIcon Kind="Guardian" Foreground="White" Height="75" Width="75"/>
+                                    </Button>
+                                </DockPanel>
+                                
+                                <!--white stripe-->
+                                <materialDesign:ColorZone Background="GhostWhite" Grid.Row="1" HorizontalAlignment="Stretch" Height="2"/>
+                            </Grid>
+
+                        </materialDesign:Card>
 
                         <!--lower content-->
                         <Grid Grid.Row="1" Margin="20 0 0 20">
@@ -147,63 +157,104 @@
                             </Grid.ColumnDefinitions>
 
                             <!--Password strength-->
-                            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" VerticalAlignment="Stretch" Background="Transparent">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
+                            <materialDesign:Flipper x:Name="PWAnalysis_Flipper" Height="500" HorizontalAlignment="Stretch" RenderOptions.ClearTypeHint="Enabled">
+                                <materialDesign:Flipper.FrontContent>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
 
-                                    <!--button in the middle-->
-                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="{StaticResource ThemeDarkBlueBlack}" Command="{Binding StartPasswordAnalysisCommand}"
-                                        Grid.RowSpan="2" Panel.ZIndex="1" Grid.ColumnSpan="2"  Height="70" Width="70" ToolTip="Start analysis">
-                                        <materialDesign:PackIcon Kind="ShieldKey" Foreground="White" Height="50" Width="50"/>
-                                    </Button>
+                                        <!--button in the middle-->
+                                        <materialDesign:Card x:Name="TotalPwStrengh_Card" PreviewMouseLeftButtonDown="TotalPwStrengh_Card_PreviewMouseLeftButtonDown" Grid.RowSpan="2" Panel.ZIndex="1" Background="GhostWhite" materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                                         Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <StackPanel Margin="10">
+                                                <materialDesign:PackIcon Kind="ShieldKey" Height="120" Width="120" Foreground="Black"/>
+                                                <DockPanel LastChildFill="False" HorizontalAlignment="Center">
+                                                    <TextBlock Foreground="Black" Text="{Binding TotalPWAnalysisScore}" Style="{StaticResource CategoryTextblockStyle}"/>
+                                                    <TextBlock Foreground="Black" Text="%" Style="{StaticResource CategoryTextblockStyle}"/>
+                                                </DockPanel>
+                                            </StackPanel>
+                                        </materialDesign:Card>
 
-                                    <!--left top-->
-                                    <Border x:Name="PWStrength_Border" BorderThickness="0 0 0.2 0.2" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding StrongPasswords}" Style="{StaticResource TitleHeaderTextblockStyle}" Margin="0" Foreground="Lime"/>
-                                            <TextBlock Text="Strong" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                                        </StackPanel>
-                                    </Border>
+                                        <!--left top-->
+                                        <Border x:Name="PWStrength_Border" BorderThickness="0 0 0.2 0.2" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding StrongPasswords}" Style="{StaticResource CategoryTextblockStyle}" FontSize="60" Foreground="Green"/>
+                                                <TextBlock Text="Strong" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
+                                            </StackPanel>
+                                        </Border>
 
-                                    <!--right top-->
-                                    <Border BorderThickness="0 0 0 0.2" Grid.Column="1" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding MediumPasswords}" Style="{StaticResource TitleHeaderTextblockStyle}" Margin="0" Foreground="Orange"/>
-                                            <TextBlock Text="Medium" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                                        </StackPanel>
-                                    </Border>
+                                        <!--right top-->
+                                        <Border BorderThickness="0 0 0 0.2" Grid.Column="1" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding MediumPasswords}" Style="{StaticResource CategoryTextblockStyle}" FontSize="60" Foreground="DarkOrange"/>
+                                                <TextBlock Text="Medium" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
+                                            </StackPanel>
+                                        </Border>
 
-                                    <!--left bottom-->
-                                    <Border BorderThickness="0 0 0.2 0" Grid.Row="1" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding WeakPasswords}" Style="{StaticResource TitleHeaderTextblockStyle}" Margin="0" Foreground="Red"/>
-                                            <TextBlock Text="Weak" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                                        </StackPanel>
-                                    </Border>
+                                        <!--left bottom-->
+                                        <Border BorderThickness="0 0 0.2 0" Grid.Row="1" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding WeakPasswords}" Style="{StaticResource CategoryTextblockStyle}" FontSize="60" Foreground="DarkRed"/>
+                                                <TextBlock Text="Weak" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
+                                            </StackPanel>
+                                        </Border>
 
-                                    <!--right bottom-->
-                                    <Border Grid.Column="1" Grid.Row="1" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding BlacklistedPasswords}" Style="{StaticResource TitleHeaderTextblockStyle}" Margin="0" Foreground="Black"/>
-                                            <TextBlock Text="Blacklisted" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                                        </StackPanel>
-                                    </Border>
+                                        <!--right bottom-->
+                                        <Border Grid.Column="1" Grid.Row="1" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding BlacklistedPasswords}" Style="{StaticResource CategoryTextblockStyle}" FontSize="60" Foreground="White"/>
+                                                <TextBlock Text="Blacklisted" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
+                                            </StackPanel>
+                                        </Border>
 
+                                    </Grid>
+                                </materialDesign:Flipper.FrontContent>
+                                <materialDesign:Flipper.BackContent>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Button Command="{x:Static materialDesign:Flipper.FlipCommand}" Background="Transparent" Content="Flip back" Foreground="White"/>
+                                        <!--password analysed list-->
+                                        <ListView ItemsSource="{Binding AllAnalyseResults}" Grid.Row="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                            <ListView.View>
+                                                <GridView>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category"/>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                                                    <GridViewColumn DisplayMemberBinding="{Binding PasswordStrength}" Header="% PW-Strength"/>
+                                                    <GridViewColumn Header="Bar">
+                                                        <GridViewColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <ProgressBar IsIndeterminate="False" Foreground="{Binding Color}" MinWidth="150" Value="{Binding PasswordStrength}"/>
+                                                            </DataTemplate>
+                                                        </GridViewColumn.CellTemplate>
+                                                    </GridViewColumn>
+                                                    <GridViewColumn>
+                                                        <GridViewColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <!--Inspect button-->
+                                                                <Button Style="{StaticResource TreeViewButtonStyle}" Width="15" Height="15" ToolTip="Inspect" Command="{Binding InspectResultCommand}">
+                                                                    <materialDesign:PackIcon Kind="InfoOutline" Width="25" Height="25" 
+                                                                                 VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                                </Button>
+                                                            </DataTemplate>
+                                                        </GridViewColumn.CellTemplate>
+                                                    </GridViewColumn>
+                                                </GridView>
+                                            </ListView.View>
+                                        </ListView>
+                                    </Grid>
+                                </materialDesign:Flipper.BackContent>
+                            </materialDesign:Flipper>
 
-                                </Grid>
-                            </materialDesign:Card>
-
-
-
-                            <!--Buttons - start password analyis-->
-                            <!--
+                            <!--Buttons - start password analyis
                         <Grid Grid.Column="0" Margin="10 0 20 0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>

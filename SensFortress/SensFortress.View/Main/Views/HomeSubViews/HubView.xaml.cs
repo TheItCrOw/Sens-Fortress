@@ -86,7 +86,7 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         {
             if (sender is Border border)
             {
-                border.Background = Brushes.White;
+                border.Background = Brushes.Black;
                 border.Opacity = 1;
             }
         }
@@ -98,6 +98,16 @@ namespace SensFortress.View.Main.Views.HomeSubViews
                 border.Background = Brushes.Transparent;
                 border.Opacity = 1;
             }
+        }
+
+        /// <summary>
+        /// Flip the flipper card
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TotalPwStrengh_Card_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Flipper.FlipCommand.Execute(null,PWAnalysis_Flipper);
         }
     }
 }

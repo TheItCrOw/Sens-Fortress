@@ -40,7 +40,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AllAnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
-
         public ObservableCollection<ConfigViewModel> Configurations { get; set; } = new ObservableCollection<ConfigViewModel>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
