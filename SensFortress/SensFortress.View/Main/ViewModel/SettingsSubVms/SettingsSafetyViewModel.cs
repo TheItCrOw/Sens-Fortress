@@ -3,6 +3,7 @@ using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.View.Bases;
 using SensFortress.View.Helper;
+using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -140,6 +141,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             //Inform the home about saved settings.
             HasUnsavedChanges = false;
             Navigation.HomeManagementInstance.ReloadGuardianTasks();
+            TaskLogger.Instance.Track($"Safety settings have been saved.");
         }
     }
 }

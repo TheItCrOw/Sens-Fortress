@@ -3,6 +3,7 @@ using Prism.Commands;
 using SensFortress.Utility;
 using SensFortress.View.Bases;
 using SensFortress.View.Helper;
+using SensFortress.View.TaskLog;
 using System;
 using System.Collections.ObjectModel;
 
@@ -212,6 +213,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             //Inform the home about saved settings.
             HasUnsavedChanges = false;
             Navigation.HomeManagementInstance.ReloadGuardianTasks();
+            TaskLogger.Instance.Track($"Data backup settings have been saved.");
         }
 
         /// <summary>

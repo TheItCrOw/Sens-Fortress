@@ -136,8 +136,14 @@
                                     </Button>
                                     
                                     <!--Guardian Button -->
-                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Black" Height="80" Width="80">
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Black" Height="80" Width="80" Margin="0 0 10 0">
                                         <materialDesign:PackIcon Kind="Guardian" Foreground="White" Height="75" Width="75"/>
+                                    </Button>
+
+                                    <!--start pw analysis-->
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Black" Height="65" Width="65" Margin="0 0 10 0"
+                                             Command="{Binding StartPasswordAnalysisCommand}" ToolTip="Start password analysis">
+                                        <materialDesign:PackIcon Kind="ShieldKey" Foreground="White" Height="50" Width="50"/>
                                     </Button>
                                 </DockPanel>
                                 
@@ -171,7 +177,7 @@
 
                                         <!--button in the middle-->
                                         <materialDesign:Card x:Name="TotalPwStrengh_Card" PreviewMouseLeftButtonDown="TotalPwStrengh_Card_PreviewMouseLeftButtonDown" Grid.RowSpan="2" Panel.ZIndex="1" Background="GhostWhite" materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                                                         Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                         Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" MouseEnter="TotalPwStrengh_Card_MouseEnter" MouseLeave="TotalPwStrengh_Card_MouseLeave">
                                             <StackPanel Margin="10">
                                                 <materialDesign:PackIcon Kind="ShieldKey" Height="120" Width="120" Foreground="Black"/>
                                                 <DockPanel LastChildFill="False" HorizontalAlignment="Center">

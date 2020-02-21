@@ -109,5 +109,26 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         {
             Flipper.FlipCommand.Execute(null,PWAnalysis_Flipper);
         }
+
+        /// <summary>
+        /// Hover over total strength card
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TotalPwStrengh_Card_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if(sender is Card card)
+            {
+                card.Background = Brushes.DarkGray;
+            }
+        }
+
+        private void TotalPwStrengh_Card_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (sender is Card card)
+            {
+                card.Background = Brushes.GhostWhite;
+            }
+        }
     }
 }
