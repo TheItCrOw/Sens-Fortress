@@ -91,7 +91,7 @@
                                                                 <materialDesign:PackIcon Kind="User" Width="22" Height="22"/>
                                                             </Button>
                                                             <!--open linked page button-->
-                                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website" Height="30" Width="30">
+                                                            <Button Style="{StaticResource GoBackButtonStyle}" ToolTip="Log into website" Height="30" Width="30" Command="{Binding OpenUrlCommand}">
                                                                 <materialDesign:PackIcon Kind="Login" Width="22" Height="22"/>
                                                             </Button>
                                                         </DockPanel>
@@ -128,10 +128,13 @@
                                              Command="{Binding StartPasswordAnalysisCommand}" ToolTip="Start password analysis" Background="Transparent">
                                         <materialDesign:PackIcon Kind="ShieldKey" Foreground="White" Height="65" Width="65"/>
                                     </Button>
-                                    
+
                                     <!--Guardian Button -->
-                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Transparent" BorderBrush="Transparent" Height="95" Width="95" Margin="0 0 10 0">
-                                        <materialDesign:PackIcon Kind="Guardian" Foreground="White" Height="90" Width="90" HorizontalAlignment="Center"/>
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Command="{Binding RestartGuardianCommand}" Background="GhostWhite" BorderBrush="Transparent" 
+                                            Height="80" Width="80" Margin="0 0 10 0" materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding GuardianIsRunning}"
+                                            materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IndicatorBackground="Black"
+                                            materialDesign:ButtonProgressAssist.IndicatorForeground="White">
+                                        <materialDesign:PackIcon Kind="Guardian" Foreground="{StaticResource ThemeDarkBlueBlack}" Height="75" Width="75" HorizontalAlignment="Center"/>
                                     </Button>
 
                                     <!--print emergency sheet-->
@@ -140,7 +143,7 @@
                                         <materialDesign:PackIcon Kind="Printer" Foreground="White" Height="65" Width="65"/>
                                     </Button>
                                 </DockPanel>
-                                
+
                                 <!--white stripe-->
                                 <!--<materialDesign:ColorZone Background="GhostWhite" Grid.Row="1" HorizontalAlignment="Stretch" Height="2"/>-->
                             </Grid>
@@ -315,7 +318,7 @@
                                 </Grid>
                             </materialDesign:Card>
                         </Grid>
-                            
+
 
                         <!--chart OBSOLETE FOR NOW-->
                         <!--<materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="2" 

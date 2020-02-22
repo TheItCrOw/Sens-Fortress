@@ -44,6 +44,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private string _passwordStrength;
         private double _passwordStrengthValue;
         private bool _isBlackListed;
+        private bool _guardianIsRunning;
 
         #region Properties
         public ObservableCollection<WebsiteViewModel> Websites { get; set; } = new ObservableCollection<WebsiteViewModel>();
@@ -52,7 +53,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand EditPasswordCommand => new DelegateCommand(EditPassword);
         public DelegateCommand CopyPasswordToClipboardCommand => new DelegateCommand(CopyPasswordToClipboard);
         public DelegateCommand CopyUsernameToClipboardCommand => new DelegateCommand(CopyUsernameToClipboard);
-        public DelegateCommand OpenUrlWithLoginCommand => new DelegateCommand(OpenUrlWithLogin);
+        public DelegateCommand OpenUrlCommand => new DelegateCommand(OpenUrl);
         public Point ShieldEndPoint
         {
             get => _shieldEndPoint;
@@ -207,6 +208,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
            });
         }
 
+        [Obsolete]
         /// <summary>
         /// This is currently not finished. It always opens amazon for now.
         /// </summary>
@@ -216,6 +218,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             var browser = new BrowserView(adress, Username, _encryptedPassword);
             browser.Show();
         }
+
+        /// <summary>
+        /// Opens a browser starting the given url
+        /// </summary>
+        private void OpenUrl() => ((LeafViewModel)CurrentItem.CurrentViewModel).OpenUrlCommand.Execute();
 
         /// <summary>
         /// Copies the password to the clipboard.

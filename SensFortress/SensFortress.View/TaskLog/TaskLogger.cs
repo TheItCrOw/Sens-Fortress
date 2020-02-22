@@ -54,7 +54,6 @@ namespace SensFortress.View.TaskLog
             if (_currentHome == null)
             {
                 Logger.log.Error("CurrentHome of TaskLogger hasn't been set.");
-                Communication.InformUser("An irregularity appeared while trying to work with the Task-Logger. Chances are that some actions may be missing.");
                 return;
             }
 

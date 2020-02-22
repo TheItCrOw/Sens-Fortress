@@ -54,7 +54,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="100"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.Background> 
                 <VisualBrush Stretch="Uniform">
@@ -87,64 +87,57 @@
             </Grid.Background>
 
             <!--Description-->
-            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Margin="20" MaxHeight="250">
-                <materialDesign:Card.Background>
-                    <SolidColorBrush Color="Black" Opacity="0.9"/>
-                </materialDesign:Card.Background>
+            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Margin="20" MaxHeight="250" Background="{StaticResource ThemeDarkBlueBlack}">
                 <StackPanel>
                     <DockPanel LastChildFill="False" HorizontalAlignment="Center">
-                        <TextBlock Text="Description" Style="{StaticResource InformationTextblockStyle}" Margin="25 10 10 0"/>
-                        <Button x:Name="EditDescription_Button" Click="EditDescription_Button_Click" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" Margin="0 10 0 0">
+                        <TextBlock Text="Description" Style="{StaticResource CategoryTextblockStyle}" Margin="25 10 10 0"/>
+                        <Button x:Name="EditDescription_Button" Background="GhostWhite" Click="EditDescription_Button_Click" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" Margin="0 10 0 0">
                             <materialDesign:PackIcon Kind="Edit" Width="15" Height="15"/>
                         </Button>
                     </DockPanel>
-                    <TextBlock x:Name="Description_Textblock" Text="{Binding Description}" FontSize="15" FontWeight="Light" HorizontalAlignment="Center" 
+                    <TextBlock x:Name="Description_Textblock" Text="{Binding Description}" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Center" 
                            Margin="20" AllowDrop="True"/>
                     <TextBox x:Name="Description_Textbox" LostFocus="Description_Textbox_LostFocus" PreviewKeyDown="Description_Textbox_PreviewKeyDown" Text="{Binding Description}" 
                          FontSize="15" FontWeight="Light" HorizontalAlignment="Center" Margin="20" AllowDrop="True" Visibility="Collapsed"/>
                 </StackPanel>
             </materialDesign:Card>
 
-            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="20 20 20 0">
-                
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="20 0 20 0">
                 <!--PW strength lvl-->
                 <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="{Binding PasswordStrength}" Margin="0 -40 0 10"/>
 
                 <!--username-->
-                <materialDesign:Card HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                    <materialDesign:Card.Background>
-                        <SolidColorBrush Color="Black" Opacity="0.9"/>
-                    </materialDesign:Card.Background>
-                    <StackPanel Margin="0 20 0 20">
-                        <TextBlock HorizontalAlignment="Center" Text="Username" Style="{StaticResource InformationTextblockStyle}"/>
+                <materialDesign:Card HorizontalAlignment="Center" Width="275" Height="280" materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                     Background="{StaticResource ThemeDarkBlueBlack}">
+                    <StackPanel Margin="0 20 0 10">
+                        <TextBlock HorizontalAlignment="Center" Text="Username" Style="{StaticResource CategoryTextblockStyle}"/>
                         <materialDesign:PackIcon Kind="User" Width="100" Height="100" HorizontalAlignment="Center"/>
-                        <TextBlock x:Name="Username_Textblock" TextAlignment="Center" MinWidth="200" Text="{Binding Username}"
-                                       Margin="10 0 10 0" FontSize="20"/>
-                        <TextBox x:Name="Username_Textbox" MinWidth="200" Text="{Binding Username}" FontSize="20" TextAlignment="Center" 
+                        <TextBlock x:Name="Username_Textblock" TextAlignment="Center" Width="250" Text="{Binding Username}" Style="{StaticResource SubCategoryTextblockStyle}"
+                                       Margin="10 0 10 0"/>
+                        <TextBox x:Name="Username_Textbox" Width="250" Text="{Binding Username}" Style="{StaticResource FillInValueTextboxStyle}" TextAlignment="Center" 
                                      LostFocus="Username_Textbox_LostFocus" PreviewKeyDown="Username_Textbox_PreviewKeyDown" Margin="10 0 10 0" Visibility="Collapsed"/>
+                        <TextBlock x:Name="Url_Textblock" TextAlignment="Center" Width="250" Text="{Binding Url}" Style="{StaticResource SubCategoryTextblockStyle}"
+                                       Margin="10 5 10 0"/>
                         <!--Handle editing of username in code behind-->
-                        <Button Width="30" Margin="0 10 0 0" Height="30" x:Name="EditUsername_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" 
+                        <Button Margin="0 10 0 0" DockPanel.Dock="Right" Background="GhostWhite" x:Name="EditUsername_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" 
                                     Click="EditUsername_Button_Click">
                             <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
                         </Button>
                     </StackPanel>
                 </materialDesign:Card>
-                
+
                 <!--Password area-->
-                <materialDesign:Card Margin="0 20 0 0" Width="600" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                    <materialDesign:Card.Background>
-                        <SolidColorBrush Color="Black" Opacity="0.9"/>
-                    </materialDesign:Card.Background>
-                    <DockPanel Margin="25 20 10 20" HorizontalAlignment="Center">
+                <materialDesign:Card Margin="0 30 0 0" Width="700" materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="{StaticResource ThemeDarkBlueBlack}">
+                    <DockPanel Margin="25 15 10 15" HorizontalAlignment="Center">
                         <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="70" Height="40" ToolTip="Copy password" 
-                                Command="{Binding CopyPasswordToClipboardCommand}">
+                                Command="{Binding CopyPasswordToClipboardCommand}" Background="{StaticResource ThemeDarkBlueBlack}">
                             <materialDesign:PackIcon Kind="Key" Width="35" Height="35" VerticalAlignment="Center" Foreground="White"/>
                         </Button>
                         <!--password textblock-->
-                        <TextBlock VerticalAlignment="Center" x:Name="Password_Textblock" MinWidth="350"
-                                       TextAlignment="Center" Margin="0 0 10 0" Text="{Binding Password}" FontSize="20">
+                        <TextBlock VerticalAlignment="Center" x:Name="Password_Textblock" MinWidth="500"
+                                       TextAlignment="Center" Text="{Binding Password}">
                             <TextBlock.Style>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource SubCategoryTextblockStyle}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsBlackListed}" Value="True">
                                     <Setter Property="Foreground" Value="Red"/>
@@ -157,41 +150,16 @@
                     </TextBlock.Style>
                         </TextBlock>
                         <Button Width="30" Height="30" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" 
-                                    Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}">
+                                    Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}" Background="GhostWhite">
                             <materialDesign:PackIcon Kind="Show" Width="20" Height="20"/>
                         </Button>
                         <Button Width="30" Height="30" x:Name="EditPassword_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit"
-                                    Command="{Binding EditPasswordCommand}">
+                                    Command="{Binding EditPasswordCommand}" Background="GhostWhite">
                             <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
                         </Button>
                     </DockPanel>
                 </materialDesign:Card>
-                <!--Link a website-->
-                <!--<StackPanel Grid.Row="2">
-                <TextBlock Text="Link a website" Style="{StaticResource InformationTextblockStyle}" HorizontalAlignment="Center" Margin="0 20 0 20"/>
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListView x:Name="Fortress_TreeView" ItemsSource="{Binding Websites}">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"></StackPanel>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemTemplate>
-                            <HierarchicalDataTemplate DataType="{x:Type vms:WebsiteViewModel}">
-                                <materialDesign:Card HorizontalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="GhostWhite">
-                                    <StackPanel Margin="10 20 10 20" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                                        <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" Foreground="Black" Style="{StaticResource CategoryTextblockStyle}"/>
-                                        -->
-                <!--This has to be changed later - for now the logo is always amazon-->
-                <!--
-                                        <Image Source="{Binding LogoSource}" Height="60" Width="60" Margin="0 10 0 0"/>
-                                    </StackPanel>
-                                </materialDesign:Card>
-                            </HierarchicalDataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollViewer>
-            </StackPanel>-->
+
             </StackPanel>
         </Grid>
         

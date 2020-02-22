@@ -1,9 +1,13 @@
 ﻿using Prism.Mvvm;
+using SensFortress.Guardian;
 using SensFortress.Utility;
+using SensFortress.Utility.Log;
 using SensFortress.View.Main.Views;
+using SensFortress.View.TaskLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 
 namespace SensFortress.View.Bases
 {
@@ -17,6 +21,7 @@ namespace SensFortress.View.Bases
         public ViewModelManagementBase()
         {
             CurrentFortressData.FortressLockedStatusChanged += IsLocked_Changed;
+
             IsLocked = CurrentFortressData.IsLocked;
         }
 

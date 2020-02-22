@@ -26,6 +26,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private SettingInterval _i_AutomaticSaves;
         private DateTime _t_AutomaticBackupIntervall;
         private DateTime _t_AutomaticScans;
+        private bool _guardianIsRunning;
 
         public DelegateCommand SaveSettingsCommand => new DelegateCommand(SaveSettings);
         public DelegateCommand ChooseBackupPathCommand => new DelegateCommand(ChooseBackupPath);
@@ -181,6 +182,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 SetProperty(ref _isLocked, value);
             }
         }
+
         public void Initialize()
         {
             LoadSettings();

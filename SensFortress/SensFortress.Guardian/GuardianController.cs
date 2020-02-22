@@ -27,6 +27,7 @@ namespace SensFortress.Guardian
         public delegate void GuardianThrewExceptionEvent(Exception ex);
         public delegate void GuardianRequestEvent(RequestTypes request);
         public delegate void GuardianStoppedEvent(string reason);
+        public delegate void GuardianStartedEvent();
         /// <summary>
         /// Fires, when the guardian has handled a task.
         /// </summary>
@@ -34,6 +35,7 @@ namespace SensFortress.Guardian
         public static event GuardianThrewExceptionEvent GuardianThrewException;
         public static event GuardianRequestEvent GuardianRequest;
         public static event GuardianStoppedEvent GuardianStopped;
+        public static event GuardianStartedEvent GuardianStarted;
 
         /// <summary>
         /// Stores, how much time may differ between now and a task to be handled. e.g. 10 equals: 
@@ -97,6 +99,28 @@ namespace SensFortress.Guardian
                 };
                 _guardianIsRunning = true; // Call this before starting the thread!
                 _guardianThread.Start();
+                GuardianStarted?.Invoke();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                GuardianThrewException?.Invoke(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Stops the gurdian.
+        /// </summary>
+        /// <returns></returns>
+        public static bool StopGuardian()
+        {
+            try
+            {
+                _guardianIsRunning = false;
+                _taskPool.Clear();
+                _upcomingTasks.Clear();
+                GuardianStopped?.Invoke("Guardian has been manually stopped.");
                 return true;
             }
             catch (Exception ex)
@@ -157,7 +181,7 @@ namespace SensFortress.Guardian
                 catch (Exception ex)
                 {
                     GuardianStopped?.Invoke($"The guardian detected an error and has been shut down. " +
-                        $"After the error has been fixed, try to restart him manually. {Environment.NewLine}" +
+                        $"After the error has been fixed, try to restart him manually via the Home-Hub. {Environment.NewLine}" +
                         $"Error: {ex.Message}");
                 }
             }
@@ -199,12 +223,14 @@ namespace SensFortress.Guardian
         /// <param name="config"></param>
         private static void BackupFortress(ScheduledConfig config)
         {
+            // Get only the directory
+            var directory = Path.GetDirectoryName((string)config.Parameters[2]);
             var copyPath = (string)config.Parameters[2];
 
             if (!File.Exists(UtilityParameters.FortressPath))
                 throw new GuardianException($"Fortress could not be found - path {UtilityParameters.FortressPath} was invalid.");
-            else if (!File.Exists(copyPath))
-                throw new GuardianException($"Given backup path couldn't be found: {copyPath}");
+            else if (!Directory.Exists(directory))
+                throw new GuardianException($"Given backup path couldn't be found: {directory}");
 
             File.Copy(UtilityParameters.FortressPath, copyPath, true);
         }

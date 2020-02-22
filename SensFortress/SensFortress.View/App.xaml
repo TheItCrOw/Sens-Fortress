@@ -102,6 +102,18 @@
                 <Setter Property="Background" Value="GhostWhite"/>
                 <Setter Property="Margin" Value="5 0 5 0"/>
             </Style>
+            
+            <!--A Textbox for fill in styles-->
+            <Style TargetType="{x:Type TextBox}" x:Key="FillInValueTextboxStyle">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Microsoft YaHei Light"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderThickness" Value="0 0 0 0.5"/>
+            </Style>
 
             <!--Buttons-->
 
@@ -115,8 +127,10 @@
 
             <!--A Button for interacting in the TreeView-->
             <Style TargetType="{x:Type Button}" x:Key="TreeViewButtonStyle" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
-                <Setter Property="Height" Value="20"/>
-                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="Width" Value="25"/>
+                <Setter Property="Background" Value="#171b1c"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
             </Style>
 
             <!--A Setting button for interacting in the SettingsView-->
@@ -143,8 +157,8 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
-            <!--Colors-->
+
+            <!--Colors: Black/Turkice: #171b1c-->
             <SolidColorBrush x:Key="ThemeDarkBlueBlack" Color="#171b1c"/>
 
             <!--Converters-->

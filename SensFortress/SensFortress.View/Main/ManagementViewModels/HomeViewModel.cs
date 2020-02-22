@@ -140,13 +140,10 @@ namespace SensFortress.View.Main.ViewModel
                 TaskLogger.Instance.Track($"Got the {TermHelper.GetDatabaseTerm()}!");
                 Settings.Initialize();
                 TaskLogger.Instance.Track($"Configurations have been set up!");
-                var guardianSettings = Settings.GetSettingsForGuardian();
                 // Load the settings once.
                 OpenSettingsCommand.Execute();
                 NavigateToHomeHub();
-
-                GuardianController.LaunchGuardian(guardianSettings, BuildGuardianParams());
-                TaskLogger.Instance.Track($"Guardian has been launched!");
+                LaunchGuardian();
 
                 TaskLogger.Instance.Track($"{CurrentFortressData.FortressName} has been built!");
             }
@@ -169,18 +166,6 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         /// <returns></returns>
         public List<TreeItemViewModel> GetRootNodesSnapshot() => RootNodes.ToList();
-
-        /// <summary>
-        /// Builds a parameter package the guardian can work with
-        /// </summary>
-        /// <returns></returns>
-        private object[] BuildGuardianParams()
-        {
-            return new object[1]
-            {
-                CurrentFortressData.FullPath
-            };
-        }
 
         /// <summary>
         /// Searches through the nodes, expanding and highlighting the matches

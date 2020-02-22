@@ -24,6 +24,7 @@ namespace SensFortress.View.Main.ViewModel
         private SettingsDataBackupView _dataBackupView;
         private SettingsDataBackupViewModel _dataBackupVm;
         private string _currentTitle;
+        private bool _guardianIsRunning;
 
         public DelegateCommand<string> NavigateToSettingCategoryCommand => new DelegateCommand<string>(NavigateToSettingCategory);
         public override bool IsLocked
@@ -92,10 +93,10 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         public void ReloadSettings()
         {
-            if(_safetyVm.HasUnsavedChanges || _dataBackupVm.HasUnsavedChanges)
+            if (_safetyVm.HasUnsavedChanges || _dataBackupVm.HasUnsavedChanges)
             {
                 // If he wants to save unsaved changes, do so.
-                if(Communication.AskForAnswer("The guardian must update your settings, but there are still unsaved changes. " +
+                if (Communication.AskForAnswer("The guardian must update your settings, but there are still unsaved changes. " +
                     "Save changes before updating? Unsaved changes will be lost."))
                 {
                     _safetyVm.SaveSettingsCommand.Execute();

@@ -18,6 +18,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
         #region fields
         private FortressViewModel _selectedFortess;
         private bool _isLocked;
+        private bool _guardianIsRunning;
         #endregion
 
         /// <summary>

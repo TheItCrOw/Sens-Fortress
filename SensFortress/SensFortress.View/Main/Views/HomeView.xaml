@@ -276,22 +276,22 @@
                                             <!--Edit button-->
                                             <Button x:Name="EditTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding EditTreeItemCommand}"
                                         Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
-                                                <materialDesign:PackIcon Kind="Edit" ToolTip="Edit"/>
+                                                <materialDesign:PackIcon Kind="Edit" ToolTip="Edit" Foreground="White"/>
                                             </Button>
                                             <!--Add branch button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
                                             <Button x:Name="AddBranch_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddBranch_Button, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
-                                                <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory"/>
+                                                <materialDesign:PackIcon Kind="FolderAdd" ToolTip="Add directory" Foreground="White"/>
                                             </Button>
                                             <!--Add leaf button. The x:Name is passed as a parameter to the TreeItemViewModel - keep that in mind, when changing.-->
                                             <Button x:Name="AddLeaf_Button" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddLeaf_Button, Path=Name}"
                                         Visibility="{Binding Path=MayHaveChildren, Converter={StaticResource BoolToVisConverter}}">
-                                                <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password"/>
+                                                <materialDesign:PackIcon Kind="KeyAdd" ToolTip="Add password" Foreground="White"/>
                                             </Button>
                                             <!--Delete button-->
                                             <Button x:Name="DeleteTreeItemButton" Style="{StaticResource TreeViewButtonStyle}" Grid.Column="1" Margin="5 0 5 0" Command="{Binding DeleteTreeItemCommand}"
                                         Visibility="{Binding Path=IsSelected, Converter={StaticResource BoolToVisConverter}}">
-                                                <materialDesign:PackIcon Kind="Delete" ToolTip="Delete"/>
+                                                <materialDesign:PackIcon Kind="Delete" ToolTip="Delete" Foreground="White"/>
                                             </Button>
                                         </DockPanel>
                                     </materialDesign:Card>

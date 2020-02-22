@@ -21,6 +21,8 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private bool _b_LockingIncludeAll;
         private bool _b_MasterkeyAskForSaving;
         private bool _b_MasterkeyAskForConfigSettings;
+        private bool _guardianIsRunning;
+
         public DelegateCommand SaveSettingsCommand => new DelegateCommand(SaveSettings);
 
         /// <summary>

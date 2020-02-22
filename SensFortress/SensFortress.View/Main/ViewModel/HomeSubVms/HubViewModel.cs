@@ -3,6 +3,7 @@ using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using Prism.Commands;
 using SensFortress.Data.Database;
+using SensFortress.Guardian;
 using SensFortress.Guardian.Models;
 using SensFortress.Models.Fortress;
 using SensFortress.Security;
@@ -38,6 +39,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private int _mediumPasswords;
         private int _weakPasswords;
         private int _blacklistedPasswords;
+        private bool _guardianIsRunning;
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AllAnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
@@ -47,6 +49,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand StartPasswordAnalysisCommand => new DelegateCommand(StartPasswordAnalysis);
         public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
         public DelegateCommand PrintEmergencySheetCommand => new DelegateCommand(PrintEmergencySheet);
+        public DelegateCommand RestartGuardianCommand => new DelegateCommand(RestartGuardian);
 
         [Obsolete]
         #region Chart Properties
@@ -88,6 +91,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             set
             {
                 SetProperty(ref _isLocked, value);
+            }
+        }
+        public bool GuardianIsRunning
+        {
+            get => _guardianIsRunning;
+            set
+            {
+                SetProperty(ref _guardianIsRunning, value);
             }
         }
         public bool PWAnalysisIsLoading
@@ -146,6 +157,8 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             try
             {
                 Settings.HandledSettingHasBeenRaised += Settings_ConfigHasBeenRaised;
+                GuardianController.GuardianStopped += Guardian_Stopped;
+                GuardianController.GuardianStarted += Guardian_Started;
 
                 var currentNodes = Navigation.HomeManagementInstance.GetRootNodesSnapshot();
                 _allLeafsVmSnapshot = new HashSet<LeafViewModel>();
@@ -177,6 +190,19 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             foreach (var config in configs)
                 Configurations.Add(config);
         }
+
+        /// <summary>
+        /// Restars/starts the guardian.
+        /// </summary>
+        private void RestartGuardian()
+        {
+            if (GuardianIsRunning && Communication.AskForAnswer(WellKnownExceptionMessages.StopGuardianMessage()))
+                Navigation.HomeManagementInstance.StopGuardian();
+            else
+                Navigation.HomeManagementInstance.LaunchGuardian();
+        }
+        private void Guardian_Started() => GuardianIsRunning = true;
+        private void Guardian_Stopped(string message) => GuardianIsRunning = false;
 
         /// <summary>
         /// Triggers, when a scheduledConfig has been raised by <see cref="Settings"/>.
@@ -273,11 +299,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             }
         }
 
-        /// <summary>
-        /// Returns a snapshot of the current quickbar.
-        /// </summary>
-        /// <returns></returns>
-        public List<LeafViewModel> GetQuickbarSnapshot() => QuickBar.ToList();
 
         /// <summary>
         /// Recursivly loads the quickbar from the RootNodes in the TreeView.

@@ -37,6 +37,12 @@ namespace SensFortress.Models.Fortress
         public int QuickbarOrder { get; set; }
 
         /// <summary>
+        /// Stores the URL of the possibly conntected page.
+        /// </summary>
+        [DataMember]
+        public string Url { get; set; }
+
+        /// <summary>
         /// Tracks how much this leaf is being used => copied e.g.
         /// </summary>
         [DataMember]

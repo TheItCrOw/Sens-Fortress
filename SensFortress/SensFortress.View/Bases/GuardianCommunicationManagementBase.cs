@@ -36,6 +36,30 @@ namespace SensFortress.View.Bases
             GuardianController.GuardianThrewException += Guardian_ThrewExecption;
             GuardianController.GuardianRequest += Guardian_Request;
             GuardianController.GuardianStopped += Guardian_Stopped;
+            GuardianController.GuardianStarted += Guardian_Started;
+        }
+
+        /// <summary>
+        /// Launches/Restarts the guardian
+        /// </summary>
+        public bool LaunchGuardian() => GuardianController.LaunchGuardian(Settings.GetSettingsForGuardian(), BuildGuardianParams());
+
+        /// <summary>
+        /// Stops the guardian
+        /// </summary>
+        /// <returns></returns>
+        public bool StopGuardian() => GuardianController.StopGuardian();
+
+        /// <summary>
+        /// Builds a parameter package the guardian can work with
+        /// </summary>
+        /// <returns></returns>
+        private object[] BuildGuardianParams()
+        {
+            return new object[1]
+            {
+                CurrentFortressData.FullPath
+            };
         }
 
         /// <summary>
@@ -43,6 +67,7 @@ namespace SensFortress.View.Bases
         /// </summary>
         /// <param name="tasks"></param>
         public void ReloadGuardianTasks() => GuardianController.ReloadTasks(Settings.GetSettingsForGuardian());
+
 
         /// <summary>
         /// Events that triggers, when the guardian has been stopped.
@@ -57,6 +82,20 @@ namespace SensFortress.View.Bases
                 TaskLogger.Instance.Track(message);
                 // Change that later to a guardian info box
                 Communication.InformUser(message);
+            });
+        }
+
+        /// <summary>
+        /// Fires, when the guardian has been started.
+        /// </summary>
+        private void Guardian_Started()
+        {
+            // Always use dispatcher when handling tasks from outside => you cant know what thread the caller is on.
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Logger.log.Error($"Started Guardian.");
+                TaskLogger.Instance.Track("Guardian has been launched.");
+                // Change that later to a guardian info box
             });
         }
 
