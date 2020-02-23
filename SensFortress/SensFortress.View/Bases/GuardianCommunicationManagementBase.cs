@@ -48,7 +48,7 @@ namespace SensFortress.View.Bases
         /// Stops the guardian
         /// </summary>
         /// <returns></returns>
-        public bool StopGuardian() => GuardianController.StopGuardian();
+        public bool StopGuardian(bool supressMessage = false) => GuardianController.StopGuardian(supressMessage);
 
         /// <summary>
         /// Builds a parameter package the guardian can work with

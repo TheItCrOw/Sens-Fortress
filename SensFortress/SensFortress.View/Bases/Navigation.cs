@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Controls;
 using SensFortress.View.Main.Views.HomeSubViews;
 using SensFortress.View.Main.ViewModel.HomeSubVms;
+using SensFortress.View.Opening_Dialogs.Views;
 
 namespace SensFortress.View.Helper
 {
@@ -67,6 +68,6 @@ namespace SensFortress.View.Helper
     public enum NavigationViews
     {
         HomeView,
-        Settings
+        Settings,
     }
 }

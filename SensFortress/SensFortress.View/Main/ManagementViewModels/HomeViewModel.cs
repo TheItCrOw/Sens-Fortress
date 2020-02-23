@@ -54,6 +54,8 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand LockUnlockFortressCommand => new DelegateCommand(LockUnlockFortress);
         public DelegateCommand NavigateToHomeHubCommand => new DelegateCommand(NavigateToHomeHub);
         public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
+        public DelegateCommand LogoutFortressCommand => new DelegateCommand(LogoutFortress);
+        public DelegateCommand ExitFortressCommand => new DelegateCommand(ExitFortress);
         public DelegateCommand<string> SearchThroughNodesCommand => new DelegateCommand<string>(SearchThroughNodes);
 
         /// <summary>
@@ -127,7 +129,6 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _showLockCard, value);
             }
         }
-
         public void Initialize()
         {
             try
@@ -166,6 +167,47 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         /// <returns></returns>
         public List<TreeItemViewModel> GetRootNodesSnapshot() => RootNodes.ToList();
+
+        /// <summary>
+        /// Exit the app right
+        /// </summary>
+        private void ExitFortress()
+        {
+            IsLoading = true;
+
+            Task.Run(() =>
+            {
+                if (ChangesTracker > 0)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        if (Communication.AskForAnswer("There are currently unsaved changes. Save them first?"))
+                        {
+                            SaveFortress();
+                            return;
+                        }
+                    });
+                }
+
+                TaskLogger.Instance.Track("Please standby as the fortress is being closed...");
+                _hubView = null;
+
+                if (DataAccessService.Instance.DisposeCache())
+                    TaskLogger.Instance.Track("Cache has been disposed.");
+
+                if (StopGuardian(true))
+                    TaskLogger.Instance.Track("Guardian has been stopped.");
+
+                TaskLogger.Instance.Track("Leaving fortress...");
+
+                Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
+            });
+        }
+
+        private void LogoutFortress()
+        {
+            Communication.InformUser("Not yet implemented, sorry. Use the Exit button.");
+        }
 
         /// <summary>
         /// Searches through the nodes, expanding and highlighting the matches

@@ -23,7 +23,7 @@ namespace SensFortress.Data.Database
     /// <summary>
     /// Handles writing and modifying operations in the datacache.
     /// </summary>
-    internal class XmlDataCache
+    internal class XmlDataCache : IDisposable
     {
         private string _databasePath;
         private bool _isInitialized;
@@ -522,5 +522,13 @@ namespace SensFortress.Data.Database
             }
         }
 
+        /// <summary>
+        /// Disposes the cache
+        /// </summary>
+        public void Dispose()
+        {
+            _secureDatacache.Clear();
+            _unsecureDatacache.Clear();            
+        }
     }
 }

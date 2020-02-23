@@ -31,6 +31,7 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
         #endregion
 
         public DelegateCommand DelinkCommand => new DelegateCommand(Delink);
+        public DelegateCommand DeleteCommand => new DelegateCommand(Delete);
 
         /// <summary>
         /// Delinks an externally added fortress.
@@ -44,6 +45,18 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
             if(CurrentBase != null && CurrentBase is LoginViewModel loginBaseVm)
             {
                 loginBaseVm.DelinkExternalFortress(this);
+            }
+        }
+    
+        /// <summary>
+        /// Deletes the selected fortress.
+        /// </summary>
+        private void Delete()
+        {
+            //Inform the current managementBase about the deletion.
+            if (CurrentBase != null && CurrentBase is LoginViewModel loginBaseVm)
+            {
+                loginBaseVm.DeleteFortress(this);
             }
         }
     }

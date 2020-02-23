@@ -70,6 +70,25 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
+        /// Disposes sensible ressources
+        /// </summary>
+        /// <returns></returns>
+        public bool DisposeCache()
+        {
+            try
+            {
+                _xmlDatacache.Dispose();
+                _xmlDatacache = null;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Couldn't dispose cache: {ex}");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Only validate a masterkey with the given fortress.
         /// </summary>
         /// <param name="fortressFullPath"></param>
@@ -85,6 +104,10 @@ namespace SensFortress.Data.Database
                     fortressFullPath = CurrentFortressData.FullPath;
                     fortressName = CurrentFortressData.FortressName;
                 }
+
+                if (_xmlDatacache == null)
+                    _xmlDatacache = new XmlDataCache(fortressFullPath);
+
                 _xmlDatacache.ValidateMasterKey(fortressFullPath, fortressName, password);
                 password = string.Empty;
                 return true;

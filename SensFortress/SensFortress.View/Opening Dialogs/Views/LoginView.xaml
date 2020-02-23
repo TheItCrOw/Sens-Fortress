@@ -105,17 +105,9 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Text="{Binding Information}" Margin="3 2" Style="{StaticResource SubCategoryTextblockStyle}" HorizontalAlignment="Left"/>
-                                                        <!--If the fortress has been externally added / linked-->
-                                                        <Button Height="25" Width="25" Grid.Column="1" ToolTip="De-link fortress." Command="{Binding DelinkCommand}">
-                                                            <Button.Style>
-                                                                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionMiniDarkButton}">
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsDefaultLocated}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </Button.Style>
+                                                        <!--Delete fortress-->
+                                                        <Button Height="25" Width="25" Grid.Column="1" ToolTip="De-link fortress." Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+                                                                Command="{Binding DeleteCommand}">
                                                             <materialDesign:PackIcon Kind="Delete"/>
                                                         </Button>
                                                     </Grid>

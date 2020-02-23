@@ -113,14 +113,15 @@ namespace SensFortress.Guardian
         /// Stops the gurdian.
         /// </summary>
         /// <returns></returns>
-        public static bool StopGuardian()
+        public static bool StopGuardian(bool supressMessage = false)
         {
             try
             {
                 _guardianIsRunning = false;
                 _taskPool.Clear();
                 _upcomingTasks.Clear();
-                GuardianStopped?.Invoke("Guardian has been manually stopped.");
+                if (!supressMessage)
+                    GuardianStopped?.Invoke("Guardian has been manually stopped.");
                 return true;
             }
             catch (Exception ex)

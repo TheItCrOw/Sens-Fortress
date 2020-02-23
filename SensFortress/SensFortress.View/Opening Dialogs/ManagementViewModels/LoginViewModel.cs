@@ -5,6 +5,7 @@ using SensFortress.Utility.Exceptions;
 using SensFortress.Utility.Log;
 using SensFortress.View.Bases;
 using SensFortress.View.Helper;
+using SensFortress.View.Main.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -56,6 +57,39 @@ namespace SensFortress.View.Opening_Dialogs.ViewModels
         {
             Navigation.LoginManagementInstance = this;
             LoadFortresses();
+        }
+
+        /// <summary>
+        /// Deletes a fortress completly.
+        /// </summary>
+        /// <param name="fortressVm"></param>
+        public void DeleteFortress(FortressViewModel fortressVm)
+        {
+            try
+            {
+                var enterMasterkeyView = new EnterMasterkeyView()
+                {
+                    PotFortressName = fortressVm.Name,
+                    PotFortressPath = fortressVm.FullName
+                };
+                enterMasterkeyView.ShowDialog();
+                // If the user entered the valid masterkey
+                if (enterMasterkeyView.DialogResult == true)
+                {
+                    if (File.Exists(fortressVm.FullName))
+                    {
+                        File.Delete(fortressVm.FullName);
+                        Fortresses.Remove(fortressVm);
+                        Communication.InformUser($"{fortressVm.Name} has been deleted.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.SetUserMessage("Couldn't delete the selected fortress. Maybe it has already been deleted.");
+                Communication.InformUserAboutError(ex);
+                Logger.log.Error($"Error trying to delete a fortess: {ex}");
+            }
         }
 
         /// <summary>
