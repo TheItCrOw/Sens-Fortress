@@ -42,6 +42,7 @@ namespace SensFortress.View.Main.ViewModel
             Username = model.Username;
             QuickbarOrder = model.QuickbarOrder;
             InteractedCounter = model.InteractedCounter;
+            Url = model.Url;
         }
         public Guid BranchId { get; set; }
 
@@ -125,8 +126,13 @@ namespace SensFortress.View.Main.ViewModel
                     Communication.InformUser("You have to deposit an Url first.");
                     return;
                 }
-                    
-                Process.Start(Url);
+
+                var ps = new ProcessStartInfo(Url)
+                {
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+                Process.Start(ps);
             }
             catch (Exception ex)
             {
@@ -142,6 +148,7 @@ namespace SensFortress.View.Main.ViewModel
             InteractedCounter++;
             TaskLogger.Instance.Track($"{Name}: Username has been copied.");
         }
+
         private void CopyPassword()
         {
             if (LeafPasswordCopy != null)

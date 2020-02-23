@@ -515,6 +515,7 @@ namespace SensFortress.View.Main.ViewModel
                 var newTreeViewItem = new TreeItemViewModel(newBranchVm, TreeDepth.Root, true);
                 DataAccessService.Instance.AddOneToMemoryDC(newBranch); // Store the newly created model into the MemoryDc.
                 RootNodes.Add(newTreeViewItem);
+                ChangesTracker++;
             }
 
             // We cant add a child if no object is selected
@@ -535,27 +536,40 @@ namespace SensFortress.View.Main.ViewModel
                     DataAccessService.Instance.AddOneToMemoryDC(newBranch); // Store the newly created model into the MemoryDc.
                     SelectedTreeViewItem.Children.Add(newTreeViewItem);
                     SelectedTreeViewItem.IsExpanded = true;
+                    ChangesTracker++;
                 }
                 else if (buttonName == "AddLeaf_Button")
                 {
-                    var newLeaf = new Leaf
+                    var managePasswordView = new ManagePasswordEntryView();
+                    managePasswordView.ShowDialog();
+
+                    if (managePasswordView.DialogResult == true)
                     {
-                        Name = "(new)",
-                        BranchId = SelectedTreeViewItem.CurrentViewModel.Id,
-                        Description = "This is a new password!",
-                        Username = "username123"
-                    };
-                    var exPw = ByteHelper.StringToByteArray("(new password)");
-                    var newLeafPw = new LeafPassword { ForeignId = newLeaf.Id, Value = exPw };
-                    var newLeafVm = new LeafViewModel(newLeaf, this);
-                    var newTreeItem = new TreeItemViewModel(newLeafVm, TreeDepth.Leaf, true);
-                    DataAccessService.Instance.AddOneToMemoryDC(newLeaf);
-                    DataAccessService.Instance.AddOneToMemoryDC(null, true, newLeafPw);
-                    SelectedTreeViewItem.Children.Add(newTreeItem);
-                    SelectedTreeViewItem.IsExpanded = true;
+                        var newLeaf = new Leaf
+                        {
+                            Name = managePasswordView.Name,
+                            BranchId = SelectedTreeViewItem.CurrentViewModel.Id,
+                            Description = managePasswordView.Description,
+                            Username = managePasswordView.Username,
+                            Url = managePasswordView.Url
+                        };
+                        var exPw = ByteHelper.StringToByteArray(managePasswordView.Password);
+
+                        // Delete pw and close view
+                        managePasswordView.ClearPassword();
+                        managePasswordView.Close();
+
+                        var newLeafPw = new LeafPassword { ForeignId = newLeaf.Id, Value = exPw };
+                        var newLeafVm = new LeafViewModel(newLeaf, this);
+                        var newTreeItem = new TreeItemViewModel(newLeafVm, TreeDepth.Leaf, true);
+                        DataAccessService.Instance.AddOneToMemoryDC(newLeaf);
+                        DataAccessService.Instance.AddOneToMemoryDC(null, true, newLeafPw);
+                        SelectedTreeViewItem.Children.Add(newTreeItem);
+                        SelectedTreeViewItem.IsExpanded = true;
+                        ChangesTracker++;
+                    }
                 }
             }
-            ChangesTracker++;
         }
 
         /// <summary>

@@ -52,10 +52,13 @@
         <!--try new ui design-->
         <Grid Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}" Margin="15">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <Grid.Background> 
                 <VisualBrush Stretch="Uniform">
                     <VisualBrush.Visual>
@@ -86,81 +89,84 @@
                 </VisualBrush>
             </Grid.Background>
 
-            <!--Description-->
-            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Margin="20" MaxHeight="250" Background="{StaticResource ThemeDarkBlueBlack}">
-                <StackPanel>
-                    <DockPanel LastChildFill="False" HorizontalAlignment="Center">
-                        <TextBlock Text="Description" Style="{StaticResource CategoryTextblockStyle}" Margin="25 10 10 0"/>
-                        <Button x:Name="EditDescription_Button" Background="GhostWhite" Click="EditDescription_Button_Click" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" Margin="0 10 0 0">
-                            <materialDesign:PackIcon Kind="Edit" Width="15" Height="15"/>
+            <!--buttons-->
+            <StackPanel Grid.Column="1">
+                <!--edit buttons-->
+                <Button x:Name="Edit_Button" Style="{StaticResource TreeViewButtonStyle}" Height="50" Width="50" materialDesign:ShadowAssist.ShadowDepth="Depth5" 
+                        Command="{Binding EditEntryCommand}">
+                    <materialDesign:PackIcon Kind="Edit" Height="30" Width="30" Foreground="White"/>
+                </Button>
+            </StackPanel>
+
+            <!--info card-->
+            <materialDesign:Card Grid.ColumnSpan="2" HorizontalAlignment="Center" Width="300" VerticalAlignment="Center" materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                     Background="{StaticResource ThemeDarkBlueBlack}">
+                <StackPanel Margin="0 10 0 10">
+                    <materialDesign:PackIcon Kind="ShieldUser" Width="175" Height="175" HorizontalAlignment="Center"/>
+                    <!--username-->
+                    <DockPanel Margin="10 0 0 0">
+                        <Button Style="{StaticResource TreeViewButtonStyle}" Command="{Binding CopyUsernameToClipboardCommand}" VerticalAlignment="Center" BorderBrush="White" ToolTip="Copy username">
+                            <materialDesign:PackIcon Kind="ContentCopy" Foreground="White"/>
                         </Button>
+                        <TextBox x:Name="Username_Textbox" Width="250" Text="{Binding Username}" FontFamily="Microsoft YaHei Light" FontSize="16" Focusable="False" BorderThickness="0" Cursor="Arrow"
+                             materialDesign:HintAssist.Hint="Username" materialDesign:HintAssist.IsFloating="True" Margin="10 0 10 0"/>
                     </DockPanel>
-                    <TextBlock x:Name="Description_Textblock" Text="{Binding Description}" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Center" 
-                           Margin="20" AllowDrop="True"/>
-                    <TextBox x:Name="Description_Textbox" LostFocus="Description_Textbox_LostFocus" PreviewKeyDown="Description_Textbox_PreviewKeyDown" Text="{Binding Description}" 
-                         FontSize="15" FontWeight="Light" HorizontalAlignment="Center" Margin="20" AllowDrop="True" Visibility="Collapsed"/>
+                    <!--url-->
+                    <DockPanel Margin="10 5 0 0">
+                        <Button Style="{StaticResource TreeViewButtonStyle}" VerticalAlignment="Center" ToolTip="Open website" BorderBrush="White" BorderThickness="0.1" Command="{Binding OpenUrlCommand}">
+                            <materialDesign:PackIcon Kind="Login" Foreground="White"/>
+                        </Button>
+                        <TextBox x:Name="Url_Textbox" Width="250" Text="{Binding Url}" FontFamily="Microsoft YaHei Light" FontSize="16" Focusable="False" BorderThickness="0" Cursor="Arrow"
+                             materialDesign:HintAssist.Hint="Website" materialDesign:HintAssist.IsFloating="True" Margin="10 0 10 0"/>
+                    </DockPanel>
+                    <!--Password-->
+                    <DockPanel Margin="10 5 0 0">
+                        <Button Style="{StaticResource TreeViewButtonStyle}" ToolTip="Copy password" VerticalAlignment="Center" BorderBrush="White" BorderThickness="0.1"
+                                Command="{Binding CopyPasswordToClipboardCommand}">
+                            <materialDesign:PackIcon Kind="Key" Foreground="White"/>
+                        </Button>
+                        <TextBox x:Name="Password_Textbox" Width="250" Text="{Binding Password}" FontFamily="Microsoft YaHei Light" FontSize="16" Focusable="False" BorderThickness="0" Cursor="Arrow"
+                             materialDesign:HintAssist.Hint="Password" materialDesign:HintAssist.IsFloating="True" Margin="10 0 10 0"/>
+                    </DockPanel>
+                    <!--Description-->
+                    <TextBox x:Name="Description_Textbox" TextWrapping="Wrap" Text="{Binding Description}" FontFamily="Microsoft YaHei Light" FontSize="16" Focusable="False" BorderThickness="0" Cursor="Arrow"
+                             materialDesign:HintAssist.Hint="Description" materialDesign:HintAssist.IsFloating="True" Margin="10 0 10 0"/>
                 </StackPanel>
             </materialDesign:Card>
-
-            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="20 0 20 0">
-                <!--PW strength lvl-->
-                <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="{Binding PasswordStrength}" Margin="0 -40 0 10"/>
-
-                <!--username-->
-                <materialDesign:Card HorizontalAlignment="Center" Width="275" Height="280" materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                                     Background="{StaticResource ThemeDarkBlueBlack}">
-                    <StackPanel Margin="0 20 0 10">
-                        <TextBlock HorizontalAlignment="Center" Text="Username" Style="{StaticResource CategoryTextblockStyle}"/>
-                        <materialDesign:PackIcon Kind="User" Width="100" Height="100" HorizontalAlignment="Center"/>
-                        <TextBlock x:Name="Username_Textblock" TextAlignment="Center" Width="250" Text="{Binding Username}" Style="{StaticResource SubCategoryTextblockStyle}"
-                                       Margin="10 0 10 0"/>
-                        <TextBox x:Name="Username_Textbox" Width="250" Text="{Binding Username}" Style="{StaticResource FillInValueTextboxStyle}" TextAlignment="Center" 
-                                     LostFocus="Username_Textbox_LostFocus" PreviewKeyDown="Username_Textbox_PreviewKeyDown" Margin="10 0 10 0" Visibility="Collapsed"/>
-                        <TextBlock x:Name="Url_Textblock" TextAlignment="Center" Width="250" Text="{Binding Url}" Style="{StaticResource SubCategoryTextblockStyle}"
-                                       Margin="10 5 10 0"/>
-                        <!--Handle editing of username in code behind-->
-                        <Button Margin="0 10 0 0" DockPanel.Dock="Right" Background="GhostWhite" x:Name="EditUsername_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit" 
-                                    Click="EditUsername_Button_Click">
-                            <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
-                        </Button>
-                    </StackPanel>
-                </materialDesign:Card>
-
-                <!--Password area-->
-                <materialDesign:Card Margin="0 30 0 0" Width="700" materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="{StaticResource ThemeDarkBlueBlack}">
-                    <DockPanel Margin="25 15 10 15" HorizontalAlignment="Center">
-                        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="70" Height="40" ToolTip="Copy password" 
+            
+            <!--Password area--><!--
+            <materialDesign:Card Margin="0 30 0 0" Width="700" Grid.Row="2" materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="{StaticResource ThemeDarkBlueBlack}">
+                <DockPanel Margin="25 15 10 15" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Width="70" Height="40" ToolTip="Copy password" 
                                 Command="{Binding CopyPasswordToClipboardCommand}" Background="{StaticResource ThemeDarkBlueBlack}">
-                            <materialDesign:PackIcon Kind="Key" Width="35" Height="35" VerticalAlignment="Center" Foreground="White"/>
-                        </Button>
-                        <!--password textblock-->
-                        <TextBlock VerticalAlignment="Center" x:Name="Password_Textblock" MinWidth="500"
+                        <materialDesign:PackIcon Kind="Key" Width="35" Height="35" VerticalAlignment="Center" Foreground="White"/>
+                    </Button>
+                    --><!--password textblock--><!--
+                    <TextBlock VerticalAlignment="Center" x:Name="Password_Textblock" MinWidth="500"
                                        TextAlignment="Center" Text="{Binding Password}">
-                            <TextBlock.Style>
-                        <Style TargetType="TextBlock" BasedOn="{StaticResource SubCategoryTextblockStyle}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsBlackListed}" Value="True">
-                                    <Setter Property="Foreground" Value="Red"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsBlackListed}" Value="False">
-                                    <Setter Property="Foreground" Value="White"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                        </TextBlock>
-                        <Button Width="30" Height="30" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" 
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource SubCategoryTextblockStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsBlackListed}" Value="True">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsBlackListed}" Value="False">
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Button Width="30" Height="30" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Show/Hide password" 
                                     Margin="0 0 10 0" Command="{Binding ShowHidePasswordCommand}" Background="GhostWhite">
-                            <materialDesign:PackIcon Kind="Show" Width="20" Height="20"/>
-                        </Button>
-                        <Button Width="30" Height="30" x:Name="EditPassword_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit"
+                        <materialDesign:PackIcon Kind="Show" Width="20" Height="20"/>
+                    </Button>
+                    <Button Width="30" Height="30" x:Name="EditPassword_Button" Style="{StaticResource TreeViewButtonStyle}" ToolTip="Edit"
                                     Command="{Binding EditPasswordCommand}" Background="GhostWhite">
-                            <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
-                        </Button>
-                    </DockPanel>
-                </materialDesign:Card>
-
-            </StackPanel>
+                        <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
+                    </Button>
+                </DockPanel>
+            </materialDesign:Card>-->
         </Grid>
         
         <!--Drawer area       

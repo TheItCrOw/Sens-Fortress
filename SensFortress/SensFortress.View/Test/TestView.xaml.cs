@@ -66,7 +66,7 @@ namespace SensFortress.View.Test
                     // Fill in password
                     var pw = document.getElementById("ap_password");
                     if (pw != null)
-                        pw.innerText = "Tonyhawk1998";
+                        pw.innerText = "xd";
 
                     theElementCollection = document.getElementsByTagName("input");
                     if (theElementCollection != null)

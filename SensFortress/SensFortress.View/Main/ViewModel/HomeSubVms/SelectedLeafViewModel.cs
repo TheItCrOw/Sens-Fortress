@@ -32,7 +32,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
     public class SelectedLeafViewModel : ViewModelManagementBase
     {
         private TreeItemViewModel _currentItem;
-        private bool _pwIsHidden;
         private string _password;
         private bool _isLocked;
         private bool _showContent;
@@ -44,13 +43,13 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private string _passwordStrength;
         private double _passwordStrengthValue;
         private bool _isBlackListed;
-        private bool _guardianIsRunning;
+        private string _url;
 
         #region Properties
         public ObservableCollection<WebsiteViewModel> Websites { get; set; } = new ObservableCollection<WebsiteViewModel>();
-        public DelegateCommand ShowHidePasswordCommand => new DelegateCommand(ShowHidePassword);
         public DelegateCommand ShowUnlockCardCommand => new DelegateCommand(ShowUnlockCard);
         public DelegateCommand EditPasswordCommand => new DelegateCommand(EditPassword);
+        public DelegateCommand EditEntryCommand => new DelegateCommand(EditEntry);
         public DelegateCommand CopyPasswordToClipboardCommand => new DelegateCommand(CopyPasswordToClipboard);
         public DelegateCommand CopyUsernameToClipboardCommand => new DelegateCommand(CopyUsernameToClipboard);
         public DelegateCommand OpenUrlCommand => new DelegateCommand(OpenUrl);
@@ -62,7 +61,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _shieldEndPoint, value);
             }
         }
-
         public string PasswordStrength
         {
             get => _passwordStrength;
@@ -71,7 +69,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _passwordStrength, value);
             }
         }
-
         public TreeItemViewModel CurrentItem
         {
             get => _currentItem;
@@ -95,6 +92,15 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             {
                 SetProperty(ref _userName, value);
                 CurrentItem.HandleChangeableProperties(nameof(Username), Username);
+            }
+        }
+        public string Url
+        {
+            get => _url;
+            set
+            {
+                SetProperty(ref _url, value);
+                CurrentItem.HandleChangeableProperties(nameof(Url), Url);
             }
         }
         public string Description
@@ -136,8 +142,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             set
             {
                 SetProperty(ref _showContent, value);
-                _pwIsHidden = false;
-                ShowHidePassword();
             }
         }
         #endregion
@@ -150,10 +154,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 {
                     CurrentItem = selectedLeaf;
                     var storeIsDirty = CurrentItem.IsDirty;
-                    _pwIsHidden = false;
                     _currentBase = (HomeViewModel)currentBase;
                     Username = leafVm.Username;
                     Description = leafVm.Description;
+                    Url = leafVm.Url;
+                    Password = "**********************";
                     Initialize();
                     CurrentItem.IsDirty = storeIsDirty;
                 }
@@ -173,15 +178,61 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private void Initialize()
         {
             LoadPassword();
-            ShowHidePassword();
-            LoadWebsites();
             LoadShieldUI();
         }
 
         /// <summary>
         /// Loads the Shield UI and PasswordStrength Property showing how strong the given PW is.
         /// </summary>
-        private void LoadShieldUI()=> AnimateValueFill(_passwordStrengthValue, 0.001);        
+        private void LoadShieldUI() => AnimateValueFill(_passwordStrengthValue, 0.001);
+
+        /// <summary>
+        /// Opens a new edit view.
+        /// </summary>
+        private void EditEntry()
+        {
+            var manageView = new ManagePasswordEntryView()
+            {
+                Name = CurrentItem.Name,
+                Username = this.Username,
+                Url = this.Url,
+                Password = ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword)),
+                Description = this.Description
+            };
+            manageView.ShowDialog();
+
+            if (manageView.DialogResult == true)
+            {
+                if (CurrentItem.Name != manageView.Name)
+                    CurrentItem.Name = manageView.Name;
+                if (Username != manageView.Username)
+                    Username = manageView.Username;
+                if (Url != manageView.Url)
+                    Url = manageView.Url;
+                if (Description != manageView.Description)
+                    Description = manageView.Description;
+
+                // Encrypt pw again only if changes were made
+                if (ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword)) != manageView.Password)
+                {
+                    _encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(ByteHelper.StringToByteArray(manageView.Password));
+                    // Update strength level
+                    _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword, out var resultTips, out var isBlackListed);
+                    IsBlackListed = isBlackListed;
+
+                    LoadShieldUI();
+                    // For saving's sake: Fill the LeafPassword of the current leafViewModel with the new pw. But encrypted!
+                    if (CurrentItem.CurrentViewModel is LeafViewModel leafVm)
+                    {
+                        var leafPw = new LeafPassword { ForeignId = CurrentItem.CurrentViewModel.Id, EncryptedValue = _encryptedPassword };
+                        leafVm.LeafPasswordCopy = leafPw;
+                    }
+                    CurrentItem.IsDirty = true;
+                    _currentBase.ChangesTracker++;
+                    TaskLogger.Instance.Track($"{CurrentItem.Name}: Changed password.");
+                }
+            }
+        }
 
         /// <summary>
         /// Animating the loading by filling the graph slowly.
@@ -192,10 +243,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             Task.Run(() =>
            {
-               if(_passwordStrengthValue == 0)
+               if (_passwordStrengthValue == 0)
                {
                    PasswordStrength = "This password is blacklisted.";
-                   ShieldEndPoint = new Point(0,1);
+                   ShieldEndPoint = new Point(0, 1);
                    return;
                }
                // Strength level starts at 1 and loops until 1 - end.
@@ -206,17 +257,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                    Thread.Sleep(1); // This is pretty horrible...but for now I don't have a solution.   
                }
            });
-        }
-
-        [Obsolete]
-        /// <summary>
-        /// This is currently not finished. It always opens amazon for now.
-        /// </summary>
-        private void OpenUrlWithLogin()
-        {
-            var adress = new Uri("https://www.amazon.de/ap/signin?showRememberMe=false&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&pageId=deflex&ignoreAuthState=1&openid.return_to=https%3A%2F%2Fwww.amazon.de%2F%3Fref_%3Dnav_signin&prevRID=T028TS6C1NMGVZ4Y8B9B&openid.assoc_handle=deflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJ0d1VzTS9wRTQrcGM4WFY1NzQrdFp3PT0iLCJ2ZXJzaW9uIjoxLCJJViI6Ims3Sm9GMWJncVFjS29kaWIyQk1RK2c9PSJ9&failedSignInCount=0&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&timestamp=1579545861000");
-            var browser = new BrowserView(adress, Username, _encryptedPassword);
-            browser.Show();
         }
 
         /// <summary>
@@ -238,45 +278,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// Give user oppurtunity to unlock fortress
         /// </summary>
         private void ShowUnlockCard() => Navigation.HomeManagementInstance.LockUnlockFortressCommand.Execute();
-
-        /// <summary>
-        /// When user wants to edit the password. We handle that explicitly.
-        /// </summary>
-        private void EditPassword()
-        {
-            try
-            {
-                var changePassordView = new ChangePasswordView(_encryptedPassword);
-                changePassordView.ShowDialog();
-                if (changePassordView.DialogResult == true)
-                {
-                    // Encrypt pw again
-                    _encryptedPassword = changePassordView.ChangedPasswordEncrypted;
-                    // Update strength level
-                    _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword, out var resultTips, out var isBlackListed);
-                    IsBlackListed = isBlackListed;
-
-                    LoadShieldUI();
-                    _pwIsHidden = !_pwIsHidden;
-                    // For saving's sake: Fill the LeafPassword of the current leafViewModel with the new pw. But encrypted!
-                    if (CurrentItem.CurrentViewModel is LeafViewModel leafVm)
-                    {
-                        var leafPw = new LeafPassword { ForeignId = CurrentItem.CurrentViewModel.Id, EncryptedValue = _encryptedPassword };
-                        leafVm.LeafPasswordCopy = leafPw;
-                    }
-                    CurrentItem.IsDirty = true;
-                    _currentBase.ChangesTracker++;
-                    TaskLogger.Instance.Track($"{CurrentItem.Name}: Changed password.");
-                    ShowHidePassword();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.log.Error($"Error while editing password: {ex}");
-                ex.SetUserMessage("An error occured while trying to edit the password. The memory is being flushed to prevent any leaks.");
-                Communication.InformUserAboutError(ex);
-            }
-        }
 
         /// <summary>
         /// Initially load the password
@@ -304,6 +305,57 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 IsBlackListed = isBlackListed;
             }
         }
+
+        [Obsolete]
+        /// <summary>
+        /// This is currently not finished. It always opens amazon for now.
+        /// </summary>
+        private void OpenUrlWithLogin()
+        {
+            var adress = new Uri("https://www.amazon.de/ap/signin?showRememberMe=false&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&pageId=deflex&ignoreAuthState=1&openid.return_to=https%3A%2F%2Fwww.amazon.de%2F%3Fref_%3Dnav_signin&prevRID=T028TS6C1NMGVZ4Y8B9B&openid.assoc_handle=deflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJ0d1VzTS9wRTQrcGM4WFY1NzQrdFp3PT0iLCJ2ZXJzaW9uIjoxLCJJViI6Ims3Sm9GMWJncVFjS29kaWIyQk1RK2c9PSJ9&failedSignInCount=0&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&timestamp=1579545861000");
+            var browser = new BrowserView(adress, Username, _encryptedPassword);
+            browser.Show();
+        }
+
+        [Obsolete]
+        /// <summary>
+        /// When user wants to edit the password. We handle that explicitly.
+        /// </summary>
+        private void EditPassword()
+        {
+            try
+            {
+                var changePassordView = new ChangePasswordView(_encryptedPassword);
+                changePassordView.ShowDialog();
+                if (changePassordView.DialogResult == true)
+                {
+                    // Encrypt pw again
+                    _encryptedPassword = changePassordView.ChangedPasswordEncrypted;
+                    // Update strength level
+                    _passwordStrengthValue = PasswordHelper.CalculatePasswordStrength(_encryptedPassword, out var resultTips, out var isBlackListed);
+                    IsBlackListed = isBlackListed;
+
+                    LoadShieldUI();
+                    // For saving's sake: Fill the LeafPassword of the current leafViewModel with the new pw. But encrypted!
+                    if (CurrentItem.CurrentViewModel is LeafViewModel leafVm)
+                    {
+                        var leafPw = new LeafPassword { ForeignId = CurrentItem.CurrentViewModel.Id, EncryptedValue = _encryptedPassword };
+                        leafVm.LeafPasswordCopy = leafPw;
+                    }
+                    CurrentItem.IsDirty = true;
+                    _currentBase.ChangesTracker++;
+                    TaskLogger.Instance.Track($"{CurrentItem.Name}: Changed password.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Error while editing password-entry: {ex}");
+                ex.SetUserMessage("An error occured while trying to edit the item. The memory is being flushed to prevent any leaks.");
+                Communication.InformUserAboutError(ex);
+            }
+        }
+
+        [Obsolete]
         /// <summary>
         /// Not finished - later the website models should be saved in the DC
         /// </summary>
@@ -325,33 +377,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             Websites.Add(amazonVm);
             Websites.Add(amazonVm);
             Websites.Add(amazonVm);
-        }
-
-        /// <summary>
-        /// Shows or hides the password by getting the sensible data on demand from the secure DC
-        /// </summary>
-        private void ShowHidePassword()
-        {
-            try
-            {
-                if (_pwIsHidden)
-                {
-                    Password = ByteHelper.ByteArrayToString(CryptMemoryProtection.DecryptInMemoryData(_encryptedPassword));
-                    _pwIsHidden = false;
-                }
-                else
-                {
-                    Password = "************************";
-                    _pwIsHidden = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.log.Error(ex);
-                Password = "************************";
-                ex.SetUserMessage("An error occured while trying to handle the password. The memory is being flushed to prevent any leaks.");
-                Communication.InformUserAboutError(ex);
-            }
         }
 
     }

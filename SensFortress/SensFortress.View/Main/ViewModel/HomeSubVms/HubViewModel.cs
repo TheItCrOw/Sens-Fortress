@@ -270,6 +270,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             MediumPasswords = 0;
             WeakPasswords = 0;
             BlacklistedPasswords = 0;
+            TotalPWAnalysisScore = 0;
 
             try
             {
@@ -335,6 +336,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             }
         }
 
+        /// <summary>
+        /// Initializes the passwordchart default values. Otherwise a null ref throws.
+        /// </summary>
         private void LoadPasswordChart()
         {
             StrongPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(1) };
