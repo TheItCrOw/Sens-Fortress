@@ -133,7 +133,7 @@
                                     <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Command="{Binding RestartGuardianCommand}" Background="GhostWhite" BorderBrush="Transparent" 
                                             Height="80" Width="80" Margin="0 0 10 0" materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding GuardianIsRunning}"
                                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IndicatorBackground="Black"
-                                            materialDesign:ButtonProgressAssist.IndicatorForeground="White">
+                                            materialDesign:ButtonProgressAssist.IndicatorForeground="White" ToolTip="Shutdown / launch guardian">
                                         <materialDesign:PackIcon Kind="Guardian" Foreground="{StaticResource ThemeDarkBlueBlack}" Height="75" Width="75" HorizontalAlignment="Center"/>
                                     </Button>
 
@@ -151,7 +151,7 @@
                         </materialDesign:Card>
 
                         <!--lower content-->
-                        <Grid Grid.Row="1" Margin="20 0 0 20">
+                        <Grid Grid.Row="1" Margin="40 0 0 20">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="550"/>
                                 <!--gap-->
@@ -164,60 +164,42 @@
                                 <materialDesign:Flipper x:Name="PWAnalysis_Flipper" Height="500" HorizontalAlignment="Stretch">
                                     <materialDesign:Flipper.FrontContent>
                                         <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="*"/>
                                                 <RowDefinition Height="*"/>
                                             </Grid.RowDefinitions>
 
                                             <!--button in the middle-->
-                                            <materialDesign:Card x:Name="TotalPwStrengh_Card" PreviewMouseLeftButtonDown="TotalPwStrengh_Card_PreviewMouseLeftButtonDown" Grid.RowSpan="2" Panel.ZIndex="1" Background="GhostWhite" materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                                                         Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" MouseEnter="TotalPwStrengh_Card_MouseEnter" MouseLeave="TotalPwStrengh_Card_MouseLeave"
-                                                             Cursor="Hand">
-                                                <StackPanel Margin="10">
-                                                    <materialDesign:PackIcon Kind="ShieldKey" Height="120" Width="120" Foreground="Black"/>
-                                                    <DockPanel LastChildFill="False" HorizontalAlignment="Center">
-                                                        <TextBlock Foreground="Black" Text="{Binding TotalPWAnalysisScore}" Style="{StaticResource CategoryTextblockStyle}"/>
-                                                        <TextBlock Foreground="Black" Text="%" Style="{StaticResource CategoryTextblockStyle}"/>
-                                                    </DockPanel>
-                                                </StackPanel>
-                                            </materialDesign:Card>
-
-                                            <!--left top-->
-                                            <Border x:Name="PWStrength_Border" BorderThickness="0 0 0.2 0.2" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
-                                                <StackPanel VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding StrongPasswords}" Style="{StaticResource CategoryTextblockStyle}" FontSize="60" Foreground="Green"/>
-                                                    <TextBlock Text="Strong" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                                                </StackPanel>
-                                            </Border>
-
-                                            <!--right top-->
-                                            <Border BorderThickness="0 0 0 0.2" Grid.Column="1" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
-                                                <StackPanel VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding MediumPasswords}" Style="{StaticResource CategoryTextblockStyle}" FontSize="60" Foreground="DarkOrange"/>
-                                                    <TextBlock Text="Medium" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                                                </StackPanel>
-                                            </Border>
-
-                                            <!--left bottom-->
-                                            <Border BorderThickness="0 0 0.2 0" Grid.Row="1" BorderBrush="White" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
-                                                <StackPanel VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding WeakPasswords}" Style="{StaticResource CategoryTextblockStyle}" FontSize="60" Foreground="DarkRed"/>
-                                                    <TextBlock Text="Weak" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                                                </StackPanel>
-                                            </Border>
-
-                                            <!--right bottom-->
-                                            <Border Grid.Column="1" Grid.Row="1" MouseEnter="PWStrength_Border_MouseEnter" MouseLeave="PWStrength_Border_MouseLeave">
-                                                <StackPanel VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding BlacklistedPasswords}" Style="{StaticResource CategoryTextblockStyle}" FontSize="60" Foreground="White"/>
-                                                    <TextBlock Text="Blacklisted" Style="{StaticResource InformationTextblockStyle}" Margin="0 0 0 10"/>
-                                                </StackPanel>
-                                            </Border>
-
+                                            <StackPanel Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="1">
+                                                <!--flip and load button-->
+                                                <Button Command="{x:Static materialDesign:Flipper.FlipCommand}" Height="130" Background="{StaticResource ThemeDarkBlueBlack}" BorderBrush="Transparent"
+                                                        materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding PWAnalysisIsLoading}" materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                                        materialDesign:ButtonProgressAssist.IndicatorBackground="Transparent" materialDesign:ButtonProgressAssist.IndicatorForeground="Black"
+                                                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding PWAnalysisIsLoading}">
+                                                    <materialDesign:PackIcon Kind="ShieldKey" Height="120" Width="120" Foreground="White"/>
+                                                </Button>
+                                                <DockPanel LastChildFill="False" HorizontalAlignment="Center" Margin="0 10 0 0">
+                                                    <TextBlock Text="Total score " Style="{StaticResource CategoryTextblockStyle}"/>
+                                                    <TextBlock Text="{Binding TotalPWAnalysisScore}" Style="{StaticResource CategoryTextblockStyle}"/>
+                                                    <TextBlock Text="%" Style="{StaticResource CategoryTextblockStyle}"/>
+                                                </DockPanel>
+                                            </StackPanel>
+                                            
+                                            <!--testing-->
+                                            <lvc:PieChart Name="Chart" Grid.Row="1" LegendLocation="Bottom" InnerRadius="150" Margin="0 15" 
+                                                          Visibility="{Binding PWAnalysisIsLoading, Converter={StaticResource InverseBoolToVisConverter}}">
+                                                <lvc:PieChart.Series>
+                                                    <lvc:PieSeries Values="{Binding StrongPasswordsChart}" Title="Strong" Fill="White" Stroke="Black" StrokeThickness="2.2"/>
+                                                    <lvc:PieSeries Values="{Binding MediumPasswordsChart}" Title="Medium" Fill="#524f4f" Stroke="Black" StrokeThickness="2.2"/>
+                                                    <lvc:PieSeries Values="{Binding WeakPasswordsChart}" Title="Weak" Fill="#292727" Stroke="Black" StrokeThickness="2.2"/>
+                                                    <lvc:PieSeries Values="{Binding BlacklistedPasswordsChart}" Title="Blacklisted" Fill="Black" StrokeThickness="2.2" Stroke="Black"/>
+                                                </lvc:PieChart.Series>
+                                                <lvc:PieChart.ChartLegend>
+                                                    <lvc:DefaultLegend BulletSize="15"></lvc:DefaultLegend>
+                                                </lvc:PieChart.ChartLegend>
+                                                <lvc:PieChart.DataTooltip>
+                                                    <lvc:DefaultTooltip BulletSize="20" Background="{StaticResource ThemeDarkBlueBlack}" BorderBrush="Black" BorderThickness="3"></lvc:DefaultTooltip>
+                                                </lvc:PieChart.DataTooltip>
+                                            </lvc:PieChart>
                                         </Grid>
                                     </materialDesign:Flipper.FrontContent>
                                     <materialDesign:Flipper.BackContent>
@@ -278,8 +260,15 @@
                                         <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Your configurations:" Foreground="Black"/>
                                     </Button>
 
+                                    <!--show this if guardian isnt running-->
+                                    <StackPanel Margin="0 20 0 0" Grid.Row="1" VerticalAlignment="Top" Visibility="{Binding GuardianIsRunning, Converter={StaticResource InverseBoolToVisConverter}}">
+                                        <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" TextAlignment="Center" Text="To use your configurations the guardian must be active."/>
+                                        <materialDesign:PackIcon Margin="0 10 0 0" HorizontalAlignment="Center" Kind="Guardian" Width="50" Height="50"/>
+                                    </StackPanel>
+
                                     <!-- Config list -->
-                                    <ItemsControl ItemsSource="{Binding Configurations}" Grid.IsSharedSizeScope="True" Grid.Row="1" BorderBrush="White" BorderThickness="0.3">
+                                    <ItemsControl ItemsSource="{Binding Configurations}" Grid.IsSharedSizeScope="True" Grid.Row="1" BorderBrush="White" BorderThickness="0.3"
+                                                  Visibility="{Binding GuardianIsRunning, Converter={StaticResource BoolToVisConverter}}">
                                         <ItemsControl.Background>
                                             <SolidColorBrush Color="Black" Opacity="0.6"/>
                                         </ItemsControl.Background>

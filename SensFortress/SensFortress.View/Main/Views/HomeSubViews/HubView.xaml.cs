@@ -78,29 +78,6 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         #endregion
 
         /// <summary>
-        /// When hovering over the border, highlight it
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PWStrength_Border_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (sender is Border border)
-            {
-                border.Background = Brushes.Black;
-                border.Opacity = 1;
-            }
-        }
-
-        private void PWStrength_Border_MouseLeave(object sender, MouseEventArgs e)
-        {
-            if (sender is Border border)
-            {
-                border.Background = Brushes.Transparent;
-                border.Opacity = 1;
-            }
-        }
-
-        /// <summary>
         /// Flip the flipper card
         /// </summary>
         /// <param name="sender"></param>
@@ -108,27 +85,6 @@ namespace SensFortress.View.Main.Views.HomeSubViews
         private void TotalPwStrengh_Card_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Flipper.FlipCommand.Execute(null,PWAnalysis_Flipper);
-        }
-
-        /// <summary>
-        /// Hover over total strength card
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TotalPwStrengh_Card_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if(sender is Card card)
-            {
-                card.Background = Brushes.DarkGray;
-            }
-        }
-
-        private void TotalPwStrengh_Card_MouseLeave(object sender, MouseEventArgs e)
-        {
-            if (sender is Card card)
-            {
-                card.Background = Brushes.GhostWhite;
-            }
         }
     }
 }

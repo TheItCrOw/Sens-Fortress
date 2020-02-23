@@ -167,5 +167,15 @@ namespace SensFortress.View.Main.Views
                 ((HomeViewModel)DataContext).SearchThroughNodesCommand.Execute(Search_Textbox.Text);
         }
 
+        /// <summary>
+        /// Edit upon double click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TreeItemName_Textbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (((TextBox)sender).DataContext is TreeItemViewModel treeItem)
+                treeItem.IsEditable = true;
+        }
     }
 }

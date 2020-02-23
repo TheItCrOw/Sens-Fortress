@@ -186,7 +186,7 @@
                             <extensions:ExtendedTreeView.ItemTemplate>
                                 <HierarchicalDataTemplate DataType="{x:Type vms:TreeItemViewModel}" ItemsSource="{Binding Children}">
                                     <!--Card => this is the trigger point for dragging also-->
-                                    <materialDesign:Card BorderThickness="3" BorderBrush="White" PreviewMouseLeftButtonDown="TreeItem_Card_PreviewMouseLeftButtonDown" AllowDrop="True">
+                                    <materialDesign:Card PreviewMouseLeftButtonDown="TreeItem_Card_PreviewMouseLeftButtonDown" AllowDrop="True">
                                         <!--Highlight the card when selected-->
                                         <materialDesign:Card.Style>
                                             <Style TargetType="materialDesign:Card">
@@ -200,7 +200,7 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </materialDesign:Card.Style>
-                                        <DockPanel x:Name="TreeItem_Dockpanel" Margin="3" >
+                                        <DockPanel x:Name="TreeItem_Dockpanel" Margin="3">
                                             <!--This is a placeholder for the badge, which shows, if the item is saveable!-->
                                             <materialDesign:Badged Background="Transparent" Margin="6 6 0 0" ToolTip="Saveable changes" VerticalAlignment="Top">
                                                 <materialDesign:Badged.Badge>
@@ -222,17 +222,17 @@
                                                     <Style TargetType="materialDesign:PackIcon">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static vms:TreeDepth.Root}">
-                                                                <Setter Property="Kind" Value="FolderMultipleOutline"/>
+                                                                <Setter Property="Kind" Value="FolderHash"/>
                                                                 <Setter Property="Width" Value="35"/>
                                                                 <Setter Property="Height" Value="35"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Path=TreeType}" Value="{x:Static vms:TreeDepth.Branch}">
-                                                                <Setter Property="Kind" Value="FolderOutline"/>
+                                                                <Setter Property="Kind" Value="Folder"/>
                                                                 <Setter Property="Width" Value="35"/>
                                                                 <Setter Property="Height" Value="35"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Path=TreeType}"  Value="{x:Static vms:TreeDepth.Leaf}">
-                                                                <Setter Property="Kind" Value="ShieldKeyOutline"/>
+                                                                <Setter Property="Kind" Value="ShieldKey"/>
                                                                 <Setter Property="Width" Value="35"/>
                                                                 <Setter Property="Height" Value="35"/>
                                                             </DataTrigger>
@@ -247,7 +247,8 @@
                                                 </materialDesign:PackIcon.Style>
                                             </materialDesign:PackIcon>
                                             <!--Name textbox-->
-                                            <TextBox x:Name="TreeItemName_Textbox" Text="{Binding Name}" Margin="3 2" VerticalAlignment="Center" Focusable="{Binding IsEditable}" Cursor="Arrow">
+                                            <TextBox x:Name="TreeItemName_Textbox" Text="{Binding Name}" Margin="3 2" VerticalAlignment="Center" Focusable="{Binding IsEditable}" Cursor="Arrow"
+                                                     MouseDoubleClick="TreeItemName_Textbox_MouseDoubleClick">
                                                 <TextBox.Style>
                                                     <Style TargetType="TextBox" BasedOn="{StaticResource TreeViewTextboxStyle}">
                                                         <Style.Triggers>

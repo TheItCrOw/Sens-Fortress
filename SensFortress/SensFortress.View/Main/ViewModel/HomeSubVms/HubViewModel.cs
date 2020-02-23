@@ -40,6 +40,10 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private int _weakPasswords;
         private int _blacklistedPasswords;
         private bool _guardianIsRunning;
+        private ChartValues<ObservableValue> _strongPasswordsChart;
+        private ChartValues<ObservableValue> _mediumPasswordsChart;
+        private ChartValues<ObservableValue> _weakPasswordsChart;
+        private ChartValues<ObservableValue> _blacklistedPasswordsChart;
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AllAnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
@@ -50,37 +54,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
         public DelegateCommand PrintEmergencySheetCommand => new DelegateCommand(PrintEmergencySheet);
         public DelegateCommand RestartGuardianCommand => new DelegateCommand(RestartGuardian);
-
-        [Obsolete]
-        #region Chart Properties
-        public SeriesCollection ChartSeries { get; set; } = new SeriesCollection();
-        public List<string> ChartLabels { get; set; } = new List<string>();
-        public Func<int, string> ChartFormatter { get; set; }
-        public int ChartMinValue
-        {
-            get => _chartMinValue;
-            set
-            {
-                SetProperty(ref _chartMinValue, value);
-            }
-        }
-        public int ChartMaxValue
-        {
-            get => _chartMaxValue;
-            set
-            {
-                SetProperty(ref _chartMaxValue, value);
-            }
-        }
-        public bool ChartIsLoading
-        {
-            get => _chartIsLoading;
-            set
-            {
-                SetProperty(ref _chartIsLoading, value);
-            }
-        }
-        #endregion
 
         /// <summary>
         /// Determines whether the fortress is currently locked.
@@ -109,6 +82,9 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _pWAnalysisIsLoading, value);
             }
         }
+        public Func<ChartPoint, string> PointLabel { get; set; }
+        public SeriesCollection DoughnutSeries { get; set; } = new SeriesCollection();
+
         #region PW analysis
         public int TotalPWAnalysisScore
         {
@@ -152,19 +128,71 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         }
         #endregion
 
+        #region Chart Properties
+        /// <summary>
+        /// Use these when communicatiing with charts
+        /// </summary>
+        public ChartValues<ObservableValue> StrongPasswordsChart
+        {
+            get => _strongPasswordsChart;
+            set
+            {
+                SetProperty(ref _strongPasswordsChart, value);
+            }
+        }
+        public ChartValues<ObservableValue> MediumPasswordsChart
+        {
+            get => _mediumPasswordsChart;
+            set
+            {
+                SetProperty(ref _mediumPasswordsChart, value);
+            }
+        }
+        public ChartValues<ObservableValue> WeakPasswordsChart
+        {
+            get => _weakPasswordsChart;
+            set
+            {
+                SetProperty(ref _weakPasswordsChart, value);
+            }
+        }
+        public ChartValues<ObservableValue> BlacklistedPasswordsChart
+        {
+            get => _blacklistedPasswordsChart;
+            set
+            {
+                SetProperty(ref _blacklistedPasswordsChart, value);
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Gets called ONCE
+        /// </summary>
+        public HubViewModel()
+        {
+            Settings.HandledSettingHasBeenRaised += Settings_ConfigHasBeenRaised;
+            GuardianController.GuardianStopped += Guardian_Stopped;
+            GuardianController.GuardianStarted += Guardian_Started;
+
+            _allLeafsVmSnapshot = new HashSet<LeafViewModel>();
+            var currentNodes = Navigation.HomeManagementInstance.GetRootNodesSnapshot();
+            LoadConfigurations();
+            LoadQuickbar(currentNodes);
+            LoadPasswordChart();
+            StartPasswordAnalysis();
+        }
+
+        /// <summary>
+        /// Gets called every time the user navigates to hub
+        /// </summary>
         public void Initialize()
         {
             try
             {
-                Settings.HandledSettingHasBeenRaised += Settings_ConfigHasBeenRaised;
-                GuardianController.GuardianStopped += Guardian_Stopped;
-                GuardianController.GuardianStarted += Guardian_Started;
-
                 var currentNodes = Navigation.HomeManagementInstance.GetRootNodesSnapshot();
-                _allLeafsVmSnapshot = new HashSet<LeafViewModel>();
                 LoadConfigurations();
                 LoadQuickbar(currentNodes);
-                //LoadChart();
             }
             catch (Exception ex)
             {
@@ -196,8 +224,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         /// </summary>
         private void RestartGuardian()
         {
-            if (GuardianIsRunning && Communication.AskForAnswer(WellKnownExceptionMessages.StopGuardianMessage()))
-                Navigation.HomeManagementInstance.StopGuardian();
+            if (GuardianIsRunning)
+                if (Communication.AskForAnswer(WellKnownExceptionMessages.StopGuardianMessage()))
+                    Navigation.HomeManagementInstance.StopGuardian();
+                else
+                    return;
             else
                 Navigation.HomeManagementInstance.LaunchGuardian();
         }
@@ -288,6 +319,11 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                         }
                     }
 
+                    // Charts have weird values binding...so handle them seperately
+                    StrongPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(StrongPasswords) };
+                    MediumPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(MediumPasswords) };
+                    WeakPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(WeakPasswords) };
+                    BlacklistedPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(BlacklistedPasswords) };
                     PWAnalysisIsLoading = false;
                 });
             }
@@ -299,6 +335,13 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             }
         }
 
+        private void LoadPasswordChart()
+        {
+            StrongPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(1) };
+            MediumPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(1) };
+            WeakPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(1) };
+            BlacklistedPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(1) };
+        }
 
         /// <summary>
         /// Recursivly loads the quickbar from the RootNodes in the TreeView.
@@ -310,11 +353,67 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 LoadQuickbar(node);
         }
 
+        private void LoadQuickbar(TreeItemViewModel currentItem)
+        {
+            if (currentItem.CurrentViewModel is LeafViewModel leafVm)
+            {
+                _allLeafsVmSnapshot.Add(leafVm);
+
+                if (leafVm.QuickbarOrder > 0)
+                    QuickBar.Add(leafVm);
+            }
+            else
+            {
+                foreach (var child in currentItem.Children)
+                    LoadQuickbar(child);
+            }
+        }
+
+        /// <summary>
+        /// Removes a leafVm from the quickbar. Gets called by a command of <see cref="LeafViewModel"/>
+        /// </summary>
+        /// <param name="leafVm"></param>
+        private void RemoveQuickBarItem(LeafViewModel leafVm)
+        {
+            if (QuickBar.Contains(leafVm))
+            {
+                // QuickbarOrder = 0  equals not being in the quickbar
+                leafVm.QuickbarOrder = 0;
+                QuickBar.Remove(leafVm);
+                TaskLogger.Instance.Track($"Removed {leafVm.Name} from Quickbar.");
+                Navigation.HomeManagementInstance.ChangesTracker++;
+            }
+            else
+                Logger.log.Info("Tried to remove item from quickbar that didnt exist.");
+        }
+
+        /// <summary>
+        /// Adds a dragged item to the Quickbar
+        /// </summary>
+        /// <param name="draggedItem"></param>
+        private void AddQuickBarItem(TreeItemViewModel draggedItem)
+        {
+            if (draggedItem.CurrentViewModel is LeafViewModel leafVm)
+            {
+                if (!QuickBar.Contains(leafVm))
+                {
+                    QuickBar.Add(leafVm);
+                    leafVm.QuickbarOrder = QuickBar.IndexOf(leafVm) + 1;
+                    TaskLogger.Instance.Track($"{leafVm.Name} added to Quickbar.");
+                    Navigation.HomeManagementInstance.ChangesTracker++;
+                }
+                else
+                    Communication.InformUser("Item has already been added to the Quickbar.");
+            }
+            else
+                Communication.InformUser("You can currently only add Password-Entries to the Quickbar.");
+        }
+
         /// <summary>
         /// Currently not supported!
         /// </summary>
         [Obsolete]
-        private void LoadChart()
+        private void LoadChartOBSOLETE()
         {
             ChartIsLoading = true;
             ChartSeries.Clear();
@@ -382,62 +481,35 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
             ChartIsLoading = false;
         }
-
-        private void LoadQuickbar(TreeItemViewModel currentItem)
+        [Obsolete]
+        #region Chart Properties
+        public SeriesCollection ChartSeries { get; set; } = new SeriesCollection();
+        public List<string> ChartLabels { get; set; } = new List<string>();
+        public Func<int, string> ChartFormatter { get; set; }
+        public int ChartMinValue
         {
-            if (currentItem.CurrentViewModel is LeafViewModel leafVm)
+            get => _chartMinValue;
+            set
             {
-                _allLeafsVmSnapshot.Add(leafVm);
-
-                if (leafVm.QuickbarOrder > 0)
-                    QuickBar.Add(leafVm);
-            }
-            else
-            {
-                foreach (var child in currentItem.Children)
-                    LoadQuickbar(child);
+                SetProperty(ref _chartMinValue, value);
             }
         }
-
-        /// <summary>
-        /// Removes a leafVm from the quickbar. Gets called by a command of <see cref="LeafViewModel"/>
-        /// </summary>
-        /// <param name="leafVm"></param>
-        private void RemoveQuickBarItem(LeafViewModel leafVm)
+        public int ChartMaxValue
         {
-            if (QuickBar.Contains(leafVm))
+            get => _chartMaxValue;
+            set
             {
-                // QuickbarOrder = 0  equals not being in the quickbar
-                leafVm.QuickbarOrder = 0;
-                QuickBar.Remove(leafVm);
-                TaskLogger.Instance.Track($"Removed {leafVm.Name} from Quickbar.");
-                Navigation.HomeManagementInstance.ChangesTracker++;
+                SetProperty(ref _chartMaxValue, value);
             }
-            else
-                Logger.log.Info("Tried to remove item from quickbar that didnt exist.");
         }
-
-        /// <summary>
-        /// Adds a dragged item to the Quickbar
-        /// </summary>
-        /// <param name="draggedItem"></param>
-        private void AddQuickBarItem(TreeItemViewModel draggedItem)
+        public bool ChartIsLoading
         {
-            if (draggedItem.CurrentViewModel is LeafViewModel leafVm)
+            get => _chartIsLoading;
+            set
             {
-                if (!QuickBar.Contains(leafVm))
-                {
-                    QuickBar.Add(leafVm);
-                    leafVm.QuickbarOrder = QuickBar.IndexOf(leafVm) + 1;
-                    TaskLogger.Instance.Track($"{leafVm.Name} added to Quickbar.");
-                    Navigation.HomeManagementInstance.ChangesTracker++;
-                }
-                else
-                    Communication.InformUser("Item has already been added to the Quickbar.");
+                SetProperty(ref _chartIsLoading, value);
             }
-            else
-                Communication.InformUser("You can currently only add Password-Entries to the Quickbar.");
         }
-
+        #endregion
     }
 }

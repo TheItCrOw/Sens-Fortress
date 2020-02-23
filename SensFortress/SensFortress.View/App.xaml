@@ -159,7 +159,7 @@
             </Style>
 
             <!--Colors: Black/Turkice: #171b1c-->
-            <SolidColorBrush x:Key="ThemeDarkBlueBlack" Color="#171b1c"/>
+            <SolidColorBrush x:Key="ThemeDarkBlueBlack" Color="#171b1c" />
 
             <!--Converters-->
             
