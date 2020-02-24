@@ -203,7 +203,7 @@ namespace SensFortress.Data.Database
         /// <summary>
         /// Saves all changes made in memory to disk
         /// </summary>
-        internal void SaveFortress(Masterkey masterkey)
+        internal bool SaveFortress(Masterkey masterkey)
         {
             var currentFortress = GetAllFromUnsecure<Fortress>().FirstOrDefault();
             currentFortress.FullPath = _databasePath;
@@ -211,6 +211,7 @@ namespace SensFortress.Data.Database
             currentFortress.Salt = CurrentFortressData.Salt;
             WriteFortress(currentFortress, true);
             masterkey = null;
+            return true;
         }
 
         /// <summary>
@@ -456,6 +457,7 @@ namespace SensFortress.Data.Database
                         }
                         unzippedByteEntriesOfDb = null;
                     }
+                    SecurityParameterProvider.Instance.UpdateFortressHash(fortressFullPath);
                 }
             }
             catch (Exception ex)

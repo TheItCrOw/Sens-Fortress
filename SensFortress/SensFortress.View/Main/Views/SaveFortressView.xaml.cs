@@ -53,24 +53,19 @@ namespace SensFortress.View.Main.Views
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "You have the correct keys my friend.");
 
                         IOPathHelper.CreateDirectory(IOPathHelper.GetBackedUpFortressDirectory()); // Make sure the directory exists.
-                                                                                                   // Backup the fortress next:
+                        // Backup fortress
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Backup-ing your fortress...");
-                        File.Copy(CurrentFortressData.FullPath, // source file...
-                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){CurrentFortressData.FortressName}") // where to..
-                            + TermHelper.GetZippedFileEnding(), // file ending...
-                            true); // overwrite it...
+                        DataAccessService.Instance.BackupFortress(
+                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){CurrentFortressData.FortressName}{TermHelper.GetZippedFileEnding()}"));
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Fortress backed up. Proceeding to save the fortress...");
 
                         // Now save the fortress.                   
                         DataAccessService.Instance.SaveFortress(secureMasterkey);
-
                         Application.Current.Dispatcher.Invoke(() => InformationPanel_Textblock.Text = "Fortress saved successfully.");
 
                         // Backup the fortress again with the newly saved changes.
-                        File.Copy(CurrentFortressData.FullPath, // source file...
-                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){CurrentFortressData.FortressName}") // where to..
-                            + TermHelper.GetZippedFileEnding(), // file ending...
-                            true); // overwrite it...
+                        DataAccessService.Instance.BackupFortress(
+                            System.IO.Path.Combine(IOPathHelper.GetBackedUpFortressDirectory(), $"(Backup){CurrentFortressData.FortressName}{TermHelper.GetZippedFileEnding()}"));
 
                         Thread.Sleep(1000); // Make the user see the result for a second.
 

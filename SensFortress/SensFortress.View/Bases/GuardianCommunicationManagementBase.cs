@@ -2,6 +2,7 @@
 using SensFortress.Guardian;
 using SensFortress.Guardian.Bases;
 using SensFortress.Guardian.Models;
+using SensFortress.Security;
 using SensFortress.Utility;
 using SensFortress.Utility.Log;
 using SensFortress.View.Helper;
@@ -108,8 +109,7 @@ namespace SensFortress.View.Bases
             // Always use dispatcher when handling tasks from outside => you cant know what thread the caller is on.
             Application.Current.Dispatcher.Invoke(() =>
             {
-                TaskLogger.Instance.Track($"{handledTask.Description}: Has been executed at {DateTime.Now}");
-                Logger.log.Info($"{handledTask.Name} has been executed at {DateTime.Now}.");
+                Logger.log.Info($"{handledTask.Name} started execution at {DateTime.Now}.");
 
                 if (handledTask is ScheduledConfig config)
                 {
@@ -141,8 +141,24 @@ namespace SensFortress.View.Bases
         /// <param name="request"></param>
         protected void Guardian_Request(RequestTypes request)
         {
-            if (request == RequestTypes.Save)
-                Navigation.HomeManagementInstance.SaveTreeChangesCommand.Execute();
+            switch (request)
+            {
+                case RequestTypes.Save:
+                    Navigation.HomeManagementInstance.SaveTreeChangesCommand.Execute();
+                    break;
+                case RequestTypes.Backup:
+                    // Backup the fortress. We "split" since we only want the path value.
+                    if (DataAccessService.Instance.BackupFortress(Settings.GetSettingValue<string>("DIP_AutomaticBackupIntervall").Split(',')[2]))
+                        TaskLogger.Instance.Track("Guardian backed up fortress successfully!");
+                    else
+                        TaskLogger.Instance.Track("Couldn't backup fortress.");
+                    break;
+                case RequestTypes.Scan:
+                    var scanner = new FortressScanner();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

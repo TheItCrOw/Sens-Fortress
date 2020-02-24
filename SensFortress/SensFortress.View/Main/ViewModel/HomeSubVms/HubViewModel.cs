@@ -82,8 +82,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 SetProperty(ref _pWAnalysisIsLoading, value);
             }
         }
-        public Func<ChartPoint, string> PointLabel { get; set; }
-        public SeriesCollection DoughnutSeries { get; set; } = new SeriesCollection();
 
         #region PW analysis
         public int TotalPWAnalysisScore

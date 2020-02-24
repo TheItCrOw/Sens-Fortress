@@ -10,6 +10,7 @@
              AllowDrop="True"
              d:DesignHeight="900" d:DesignWidth="1100"           
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            xmlns:extensions="clr-namespace:SensFortress.View.Extensions"
             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             TextElement.FontWeight="Regular"
             TextElement.FontSize="13"
@@ -34,10 +35,10 @@
             </Grid.RowDefinitions>
 
             <!--Title-->
-            <materialDesign:Card VerticalAlignment="Stretch" Margin="1 0 0 0" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57" 
+            <!--<materialDesign:Card VerticalAlignment="Stretch" Margin="1 0 0 0" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57" 
                                  Background="{StaticResource ThemeDarkBlueBlack}">
                 <TextBlock Text="Home-Hub" Style="{StaticResource InformationTextblockStyle}" Foreground="White"/>
-            </materialDesign:Card>
+            </materialDesign:Card>-->
 
             <!--Main Content-->
             <ScrollViewer Grid.Row="1">
@@ -122,6 +123,12 @@
                                 </Grid.RowDefinitions>
 
                                 <DockPanel Grid.RowSpan="3" Panel.ZIndex="1" LastChildFill="False" HorizontalAlignment="Center">
+
+                                    <!--scan fortress button-->
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" BorderBrush="Transparent" Height="65" Width="65"
+                                             Command="{Binding StartPasswordAnalysisCommand}" ToolTip="Perform a fortress security-scan" Background="Transparent">
+                                        <materialDesign:PackIcon Kind="SecurityHome" Foreground="White" Height="65" Width="65"/>
+                                    </Button>
 
                                     <!--start pw analysis-->
                                     <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" BorderBrush="Transparent" Height="65" Width="65" Margin="0 0 10 0"
@@ -256,7 +263,8 @@
                                     </Grid.RowDefinitions>
 
                                     <!--title-->
-                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Background="GhostWhite" Command="{Binding OpenSettingsCommand}">
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Background="GhostWhite" Command="{Binding OpenSettingsCommand}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth5">
                                         <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Your configurations:" Foreground="Black"/>
                                     </Button>
 
@@ -290,13 +298,10 @@
                                                             <ColumnDefinition />
                                                         </Grid.ColumnDefinitions>
                                                         <!--progress button-->
-                                                        <Button VerticalAlignment="Center" FontSize="20" Height="30" Width="30" Background="GhostWhite" Style="{StaticResource MaterialDesignFloatingActionButton}"
-                                                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="False" >
-                                                            <materialDesign:PackIcon Kind="Settings"/>
-                                                        </Button>
+                                                        <materialDesign:PackIcon Height="30" Width="30" Kind="Settings" VerticalAlignment="Center"/>
                                                         <!--Description and name-->
                                                         <StackPanel Margin="10 0 0 0" Grid.Column="1">
-                                                            <TextBlock FontWeight="Bold" Text="{Binding Description}" Style="{StaticResource SubCategoryTextblockStyle}" HorizontalAlignment="Left"/>
+                                                            <TextBlock Text="{Binding Description}" Style="{StaticResource SettingsTextblockStyle}" FontSize="16" HorizontalAlignment="Left"/>
                                                             <TextBlock Text="{Binding NextExecution}" FontStyle="Italic" FontWeight="Light" Margin="0 2 0 0"/>
                                                         </StackPanel>
                                                     </Grid>
@@ -304,30 +309,11 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+
                                 </Grid>
                             </materialDesign:Card>
                         </Grid>
 
-
-                        <!--chart OBSOLETE FOR NOW-->
-                        <!--<materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Grid.ColumnSpan="2" 
-                                         Visibility="{Binding ChartIsLoading, Converter={StaticResource InverseBoolToVisConverter}}">
-                        <lvc:CartesianChart Series="{Binding ChartSeries}" LegendLocation="Top" FontSize="15" Margin="7">
-                            <lvc:CartesianChart.DataTooltip>
-                                <lvc:DefaultTooltip BulletSize="20" Background="Black"/>
-                            </lvc:CartesianChart.DataTooltip>
-                            <lvc:CartesianChart.AxisX>
-                                <lvc:Axis Foreground="White" Labels="{Binding ChartLabels}" FontSize="15"/>
-                            </lvc:CartesianChart.AxisX>
-                            <lvc:CartesianChart.AxisY>
-                                <lvc:Axis FontSize="15" Foreground="White" MinValue="{Binding ChartMinValue}" MaxValue="{Binding ChartMaxValue}"></lvc:Axis>
-                            </lvc:CartesianChart.AxisY>
-                        </lvc:CartesianChart>
-                    </materialDesign:Card>-->
-
-                        <!--Loading symbol if charts need some time to load-->
-                        <!--<ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="50" Height="100" Width="100" Grid.ColumnSpan="3" FontStretch="UltraCondensed" Foreground="White" 
-                                 IsIndeterminate="True" Grid.Row="1" Visibility="{Binding ChartIsLoading, Converter={StaticResource BoolToVisConverter}}"/>-->
 
                     </Grid>
 

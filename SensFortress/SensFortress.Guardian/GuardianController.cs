@@ -17,6 +17,8 @@ namespace SensFortress.Guardian
     public enum RequestTypes
     {
         Save,
+        Backup,
+        Scan
     }
     /// <summary>
     /// The CronJob that handles configs, settings, scans, etc. It always runs in the background.
@@ -200,7 +202,7 @@ namespace SensFortress.Guardian
                 switch (config.Name)
                 {
                     case "DIP_AutomaticBackupIntervall":
-                        BackupFortress(config);
+                        GuardianRequest?.Invoke(RequestTypes.Backup);
                         break;
                     case "DI_AutomaticScans":
                         //not yet implemented
@@ -218,22 +220,9 @@ namespace SensFortress.Guardian
             }
         }
 
-        /// <summary>
-        /// Backups the fortress to the given path of the <see cref="ScheduledConfig"/>
-        /// </summary>
-        /// <param name="config"></param>
-        private static void BackupFortress(ScheduledConfig config)
+        private static void ScanFortress()
         {
-            // Get only the directory
-            var directory = Path.GetDirectoryName((string)config.Parameters[2]);
-            var copyPath = (string)config.Parameters[2];
 
-            if (!File.Exists(UtilityParameters.FortressPath))
-                throw new GuardianException($"Fortress could not be found - path {UtilityParameters.FortressPath} was invalid.");
-            else if (!Directory.Exists(directory))
-                throw new GuardianException($"Given backup path couldn't be found: {directory}");
-
-            File.Copy(UtilityParameters.FortressPath, copyPath, true);
         }
 
         /// <summary>

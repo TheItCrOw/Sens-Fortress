@@ -89,6 +89,35 @@ namespace SensFortress.Data.Database
         }
 
         /// <summary>
+        /// Backups the fortress to the given path
+        /// </summary>
+        /// <param name="copyPath"></param>
+        public bool BackupFortress(string copyPath)
+        {
+            try
+            {
+                // Get only the directory
+                var directory = Path.GetDirectoryName(copyPath);
+
+                if (!File.Exists(CurrentFortressData.FullPath))
+                    throw new FileNotFoundException($"Fortress could not be found - path {CurrentFortressData.FullPath} was invalid.");
+                else if (!Directory.Exists(directory))
+                    throw new FileNotFoundException($"Given backup path couldn't be found: {directory}");
+
+                File.Copy(CurrentFortressData.FullPath, copyPath, true);
+                Logger.log.Info($"Backed up fortress to: {copyPath}");
+                SecurityParameterProvider.Instance.UpdateFortressHash();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Error while trying to backup fortress: {ex}");
+                return false;
+            }
+
+        }
+
+        /// <summary>
         /// Only validate a masterkey with the given fortress.
         /// </summary>
         /// <param name="fortressFullPath"></param>
@@ -142,7 +171,7 @@ namespace SensFortress.Data.Database
             _xmlDatacache.AddToUnsecureMemoryDC(subBranch);
             _xmlDatacache.AddToUnsecureMemoryDC(leaf);
             var leafPwAsBytes = ByteHelper.ObjectToByteArray(leafPw);
-            _xmlDatacache.AddToSecureMemoryDC(leafPw.ForeignId,leafPwAsBytes);
+            _xmlDatacache.AddToSecureMemoryDC(leafPw.ForeignId, leafPwAsBytes);
             leafPw = null;
             // end exampel data
 
@@ -180,8 +209,12 @@ namespace SensFortress.Data.Database
         /// </summary>
         /// <param name="masterKey"></param>
         /// <param name="alsoSaveSecureDC"></param>
-        public void SaveFortress(Masterkey masterKey) => _xmlDatacache.SaveFortress(masterKey);
-
+        public void SaveFortress(Masterkey masterKey)
+        {
+            // If successfully saved => Update the fortress hash.
+            if (_xmlDatacache.SaveFortress(masterKey))
+                SecurityParameterProvider.Instance.UpdateFortressHash();
+        }
         /// <summary>
         /// Get all non sensible models of type T. Can return null.
         /// </summary>
