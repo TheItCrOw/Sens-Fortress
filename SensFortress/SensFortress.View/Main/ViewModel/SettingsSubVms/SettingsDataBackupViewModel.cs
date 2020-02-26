@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Prism.Commands;
+using SensFortress.Security;
 using SensFortress.Utility;
 using SensFortress.View.Bases;
 using SensFortress.View.Helper;
@@ -173,7 +174,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 return $"{DateTime.MinValue},{I_AutomaticSaves}";
         }
         // <=
-
         public override bool IsLocked
         {
             get => _isLocked;
@@ -182,7 +182,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 SetProperty(ref _isLocked, value);
             }
         }
-
         public void Initialize()
         {
             LoadSettings();
@@ -216,6 +215,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             HasUnsavedChanges = false;
             Navigation.HomeManagementInstance.ReloadGuardianTasks();
             TaskLogger.Instance.Track($"Data backup settings have been saved.");
+            SecurityParameterProvider.Instance.UpdateHash(nameof(Settings), IOPathHelper.GetSettingsFile());
         }
 
         /// <summary>

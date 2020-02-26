@@ -104,7 +104,7 @@ namespace SensFortress.View.Main.ViewModel
         }
         private void DeleteFromQuickbar()
         {
-            if (Navigation.HomeManagementInstance.GetCurrentHub().DataContext is HubViewModel hubVm)
+            if (Navigation.HomeManagementInstance.GetCurrentHubView().DataContext is HubViewModel hubVm)
             {
                 hubVm.RemoveQuickBarItemCommand.Execute(this);
             }

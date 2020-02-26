@@ -106,7 +106,7 @@ namespace SensFortress.Data.Database
 
                 File.Copy(CurrentFortressData.FullPath, copyPath, true);
                 Logger.log.Info($"Backed up fortress to: {copyPath}");
-                SecurityParameterProvider.Instance.UpdateFortressHash();
+                SecurityParameterProvider.Instance.UpdateHash(nameof(Fortress), CurrentFortressData.FullPath);
                 return true;
             }
             catch (Exception ex)
@@ -114,7 +114,6 @@ namespace SensFortress.Data.Database
                 Logger.log.Error($"Error while trying to backup fortress: {ex}");
                 return false;
             }
-
         }
 
         /// <summary>
@@ -213,7 +212,7 @@ namespace SensFortress.Data.Database
         {
             // If successfully saved => Update the fortress hash.
             if (_xmlDatacache.SaveFortress(masterKey))
-                SecurityParameterProvider.Instance.UpdateFortressHash();
+                SecurityParameterProvider.Instance.UpdateHash(nameof(Fortress), CurrentFortressData.FullPath);
         }
         /// <summary>
         /// Get all non sensible models of type T. Can return null.

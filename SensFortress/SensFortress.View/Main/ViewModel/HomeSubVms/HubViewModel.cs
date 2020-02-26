@@ -48,12 +48,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AllAnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
         public ObservableCollection<ConfigViewModel> Configurations { get; set; } = new ObservableCollection<ConfigViewModel>();
+        public ObservableCollection<GuardianLogEntry> GuardianLogs { get; set; } = new ObservableCollection<GuardianLogEntry>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
         public DelegateCommand StartPasswordAnalysisCommand => new DelegateCommand(StartPasswordAnalysis);
         public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
         public DelegateCommand PrintEmergencySheetCommand => new DelegateCommand(PrintEmergencySheet);
         public DelegateCommand RestartGuardianCommand => new DelegateCommand(RestartGuardian);
+        public DelegateCommand QuickScanFortressCommand => new DelegateCommand(QuickScanFortress);
 
         /// <summary>
         /// Determines whether the fortress is currently locked.
@@ -170,6 +172,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public HubViewModel()
         {
             Settings.HandledSettingHasBeenRaised += Settings_ConfigHasBeenRaised;
+            GuardianLogger.Instance.GuardianLogEntryAdded += GuardianLogger_EntryAdded;
             GuardianController.GuardianStopped += Guardian_Stopped;
             GuardianController.GuardianStarted += Guardian_Started;
 
@@ -218,6 +221,44 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         }
 
         /// <summary>
+        /// Scans the fortress.
+        /// </summary>
+        private void QuickScanFortress()
+        {
+            try
+            {
+                var scanner = new FortressScanner();
+                TaskLogger.Instance.Track("Scanning fortress...");
+
+                // Scan the fortress fil.
+                if (scanner.ScanFortressFile())
+                    TaskLogger.Instance.Track($"{TermHelper.GetDatabaseTerm()} doesn't contain malicous changes.");
+                else
+                    InformUserOfBadScanResults("Fortress");
+
+                // Scan settings
+                if (scanner.ScanSettings())
+                    TaskLogger.Instance.Track($"Your configurations do not contain malicous changes.");
+                else
+                    InformUserOfBadScanResults("Settings");
+            }
+            catch (Exception ex)
+            {
+                Logger.log.Error($"Error while scanning fortress: {ex}");
+                ex.SetUserMessage($"An error occured while trying to scan the fortress - Try to restart the application.");
+                Communication.InformUserAboutError(ex);
+            }
+        }
+
+        private void InformUserOfBadScanResults(string currentName)
+        {
+            TaskLogger.Instance.Track(
+                        $"The guardian found changes made to your {currentName} from outside of Sen's fortess walls. " +
+                        $"If you do not recall having modified this file yourself on the harddrive, something else must've done it. " +
+                        $"I suggest starting a scan with your antivirus system.");
+        }
+
+        /// <summary>
         /// Restars/starts the guardian.
         /// </summary>
         private void RestartGuardian()
@@ -232,6 +273,8 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         }
         private void Guardian_Started() => GuardianIsRunning = true;
         private void Guardian_Stopped(string message) => GuardianIsRunning = false;
+        private void GuardianLogger_EntryAdded(GuardianLogEntry entry) => 
+            Application.Current.Dispatcher?.Invoke(() => GuardianLogs.Add(entry));
 
         /// <summary>
         /// Triggers, when a scheduledConfig has been raised by <see cref="Settings"/>.
@@ -284,12 +327,14 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                         if (parent != null)
                         {
                             byte[] encryptedPassword = null;
+                            // Get the password
                             if (leafVm.LeafPasswordCopy != null)
                                 encryptedPassword = leafVm.LeafPasswordCopy.EncryptedValue;
                             else if (DataAccessService.Instance.TryGetSensible<LeafPassword>(leafVm.Id, out var leafPw))
                             {
                                 encryptedPassword = CryptMemoryProtection.EncryptInMemoryData(leafPw.Value);
                             }
+                            // Caclculate strength
                             var passwordStrength = PasswordHelper.CalculatePasswordStrength(encryptedPassword, out var resultTips, out var isBlackListed);
                             totalPasswordStrength += (int)(passwordStrength * 100);
                             encryptedPassword = null;
@@ -335,7 +380,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         }
 
         /// <summary>
-        /// Initializes the passwordchart default values. Otherwise a null ref throws.
+        /// Initializes the passwordchart default values. Otherwise a null ref gets thrown.
         /// </summary>
         private void LoadPasswordChart()
         {

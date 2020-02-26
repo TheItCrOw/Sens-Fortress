@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace SensFortress.Utility
@@ -59,6 +60,29 @@ namespace SensFortress.Utility
                     ms.Write(buffer, 0, read);
                 }
                 return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Returns the hash of the given path
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <returns></returns>
+        public static string ReadHash(string fullPath)
+        {
+            if (!File.Exists(fullPath))
+                throw new FileNotFoundException($"Couldn't hash the path: {fullPath}");
+
+            // Write hash out of file bytes.
+            using (var md5 = new MD5CryptoServiceProvider())
+            {
+                var buffer = md5.ComputeHash(File.ReadAllBytes(fullPath));
+                var sb = new StringBuilder();
+                for (var i = 0; i < buffer.Length; i++)
+                {
+                    sb.Append(buffer[i].ToString("x2"));
+                }
+                return sb.ToString();
             }
         }
 

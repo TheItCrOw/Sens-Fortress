@@ -61,7 +61,7 @@ namespace SensFortress.Utility
         /// </summary>
         private static Dictionary<string, string> _wellKnownHandledSettingDescriptions = new Dictionary<string, string>
         {
-            { "DIP_AutomaticBackupIntervall", "Automatically backup fortress"}, { "DI_AutomaticScans", "Automatically scan fortress" }, { "DI_AutomaticSaves", "Not sure." }
+            { "DIP_AutomaticBackupIntervall", "Backup fortress"}, { "DI_AutomaticScans", "Scan fortress" }, { "DI_AutomaticSaves", "Not sure." }
         };
 
         /// <summary>

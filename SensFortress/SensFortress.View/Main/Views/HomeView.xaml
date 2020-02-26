@@ -344,7 +344,7 @@
                             <DataTemplate>
                                 <DockPanel>
                                     <materialDesign:PackIcon Kind="ChangeHistory" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" TextWrapping="Wrap" Style="{StaticResource SmallTextblockStyle}"/>
+                                    <TextBlock MaxWidth="900" Margin="10 0 10 0" HorizontalAlignment="Left" Text="{Binding}" TextWrapping="Wrap" Style="{StaticResource SmallTextblockStyle}"/>
                                 </DockPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

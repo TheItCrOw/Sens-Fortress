@@ -13,6 +13,7 @@ namespace SensFortress.View.TaskLog
     /// </summary>
     public sealed class TaskLogger
     {
+        #region lazy behaviour
         /// <summary>
         /// Implement the lazy pattern.
         /// </summary>
@@ -25,18 +26,13 @@ namespace SensFortress.View.TaskLog
         /// Instance of the <see cref="Factory"/> class.
         /// </summary>
         public static TaskLogger Instance { get { return lazy.Value; } }
+        #endregion
 
+        public delegate void TaskLoggerEntryAddedEvent(string message);
         /// <summary>
-        /// For communcating with the current HomeVm.
+        /// Raises, when a new entry has been added to the task logger.
         /// </summary>
-        private HomeViewModel _currentHome;
-
-        public void SetHomeView(HomeViewModel homeVm)
-        {
-            _currentHome = homeVm;
-            // Subscribe to locked event
-            CurrentFortressData.FortressLockedStatusChanged += IsLocked_Changed;
-        }
+        public event TaskLoggerEntryAddedEvent TaskLoggerEntryAdded;
 
         /// <summary>
         /// Track when the locked status changes.
@@ -49,16 +45,11 @@ namespace SensFortress.View.TaskLog
                 Track("The fortress has been unlocked.");
         }
 
-        public void Track(string message)
-        {
-            if (_currentHome == null)
-            {
-                Logger.log.Error("CurrentHome of TaskLogger hasn't been set.");
-                return;
-            }
-
-            Application.Current.Dispatcher.Invoke(() => _currentHome.TaskLogs.Add($"{DateTime.Now.ToShortTimeString()}: {message}"));
-        }
+        /// <summary>
+        /// Tracks a message into the Task-Logger
+        /// </summary>
+        /// <param name="message"></param>
+        public void Track(string message) => TaskLoggerEntryAdded?.Invoke(message);
 
     }
 }

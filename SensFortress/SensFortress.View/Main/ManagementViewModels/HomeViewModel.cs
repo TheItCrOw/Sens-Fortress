@@ -38,6 +38,7 @@ namespace SensFortress.View.Main.ViewModel
         private object _selectedContent;
         private bool _showLockCard;
         private HubView _hubView;
+        private HubViewModel _hubViewModel;
 
         /// <summary>
         /// Collection showing in the TreeView
@@ -135,12 +136,15 @@ namespace SensFortress.View.Main.ViewModel
             {
                 // Event subscription
                 TaskLogs.CollectionChanged += TaskLogs_CollectionChanges;
+                TaskLogger.Instance.TaskLoggerEntryAdded += TaskLogger_EntryAdded;
 
-                TaskLogger.Instance.SetHomeView(this);
                 LoadTreeView();
                 TaskLogger.Instance.Track($"Got the {TermHelper.GetDatabaseTerm()}!");
+
                 Settings.Initialize();
+                SecurityParameterProvider.Instance.UpdateHash(nameof(Settings), IOPathHelper.GetSettingsFile());
                 TaskLogger.Instance.Track($"Configurations have been set up!");
+
                 // Load the settings once.
                 OpenSettingsCommand.Execute();
                 NavigateToHomeHub();
@@ -160,8 +164,8 @@ namespace SensFortress.View.Main.ViewModel
         /// Returns the current instance of the Hub. Return null if not instantiated.
         /// </summary>
         /// <returns></returns>
-        public HubView GetCurrentHub() => _hubView;
-
+        public HubView GetCurrentHubView() => _hubView;
+        public HubViewModel GetCurrentHubViewModel() => _hubViewModel;
         /// <summary>
         /// Returns a snapshot of the current RootNodes.
         /// </summary>
@@ -191,6 +195,7 @@ namespace SensFortress.View.Main.ViewModel
 
                 TaskLogger.Instance.Track("Please standby as the fortress is being closed...");
                 _hubView = null;
+                _hubViewModel = null;
 
                 if (DataAccessService.Instance.DisposeCache())
                     TaskLogger.Instance.Track("Cache has been disposed.");
@@ -250,6 +255,7 @@ namespace SensFortress.View.Main.ViewModel
                 _hubView = new HubView();
                 var hubVm = new HubViewModel();
                 _hubView.DataContext = hubVm;
+                _hubViewModel = hubVm;
             }
             SelectedContent = _hubView;
             ((HubViewModel)_hubView.DataContext).Initialize();
@@ -329,6 +335,7 @@ namespace SensFortress.View.Main.ViewModel
             ScrollToBottom = true;
             ScrollToBottom = false;
         }
+        private void TaskLogger_EntryAdded(string message) => TaskLogs.Add(message);
 
         /// <summary>
         /// Saves changes made in the fortress.

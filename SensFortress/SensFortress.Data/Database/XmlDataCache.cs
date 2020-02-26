@@ -457,7 +457,8 @@ namespace SensFortress.Data.Database
                         }
                         unzippedByteEntriesOfDb = null;
                     }
-                    SecurityParameterProvider.Instance.UpdateFortressHash(fortressFullPath);
+                    // Track the security parameters for scans later.
+                    SecurityParameterProvider.Instance.UpdateHash(nameof(Fortress),fortressFullPath);
                 }
             }
             catch (Exception ex)

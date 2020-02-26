@@ -26,7 +26,7 @@ namespace SensFortress.Guardian
     public static class GuardianController
     {
         public delegate void GuardianHandledTaskEvent(GuardianTask handledTask);
-        public delegate void GuardianThrewExceptionEvent(Exception ex);
+        public delegate void GuardianThrewExceptionEvent(Exception ex, string description);
         public delegate void GuardianRequestEvent(RequestTypes request);
         public delegate void GuardianStoppedEvent(string reason);
         public delegate void GuardianStartedEvent();
@@ -106,7 +106,7 @@ namespace SensFortress.Guardian
             }
             catch (Exception ex)
             {
-                GuardianThrewException?.Invoke(ex);
+                GuardianThrewException?.Invoke(ex, "Couldn't launch the guardian.");
                 return false;
             }
         }
@@ -128,7 +128,7 @@ namespace SensFortress.Guardian
             }
             catch (Exception ex)
             {
-                GuardianThrewException?.Invoke(ex);
+                GuardianThrewException?.Invoke(ex, "Couldn't stop the guardian.");
                 return false;
             }
         }
@@ -147,7 +147,7 @@ namespace SensFortress.Guardian
             }
             catch (Exception ex)
             {
-                GuardianThrewException?.Invoke(ex);
+                GuardianThrewException?.Invoke(ex, "There was an error reloading your scheduled configs.");
             }
         }
 
@@ -178,7 +178,7 @@ namespace SensFortress.Guardian
                             }
                         }
                         // Maybe let the user decide the frequency of the Guardian later.
-                        Thread.Sleep(500);
+                        Thread.Sleep(1000);
                     }
                 }
                 catch (Exception ex)
@@ -205,7 +205,7 @@ namespace SensFortress.Guardian
                         GuardianRequest?.Invoke(RequestTypes.Backup);
                         break;
                     case "DI_AutomaticScans":
-                        //not yet implemented
+                        GuardianRequest?.Invoke(RequestTypes.Scan);
                         break;
                     case "DI_AutomaticSaves":
                         GuardianRequest?.Invoke(RequestTypes.Save);
@@ -218,11 +218,6 @@ namespace SensFortress.Guardian
                 _upcomingTasks.Remove(config.Gtid);
                 GuardianHandledTask?.Invoke(config);
             }
-        }
-
-        private static void ScanFortress()
-        {
-
         }
 
         /// <summary>

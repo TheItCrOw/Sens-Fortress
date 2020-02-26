@@ -69,7 +69,6 @@ namespace SensFortress.View.Bases
         /// <param name="tasks"></param>
         public void ReloadGuardianTasks() => GuardianController.ReloadTasks(Settings.GetSettingsForGuardian());
 
-
         /// <summary>
         /// Events that triggers, when the guardian has been stopped.
         /// </summary>
@@ -117,6 +116,8 @@ namespace SensFortress.View.Bases
                     var raisedTask = Settings.RaiseHandledSetting(handledTask);
                     // Add the raisedTask. The old version has already been removed by the guardian when he handled the task.
                     GuardianController.AddTask(raisedTask);
+                    // Update the hash
+                    SecurityParameterProvider.Instance.UpdateHash(nameof(Settings), IOPathHelper.GetSettingsFile());
                 }
             });
         }
@@ -125,7 +126,7 @@ namespace SensFortress.View.Bases
         /// Event that raises when the guardian threw an exception.
         /// </summary>
         /// <param name="ex"></param>
-        protected void Guardian_ThrewExecption(Exception ex)
+        protected void Guardian_ThrewExecption(Exception ex, string description)
         {
             Logger.log.Error($"Guardian threw an exception: {ex}");
             Application.Current.Dispatcher.Invoke(() =>
@@ -141,24 +142,28 @@ namespace SensFortress.View.Bases
         /// <param name="request"></param>
         protected void Guardian_Request(RequestTypes request)
         {
-            switch (request)
+            Application.Current.Dispatcher?.Invoke(() =>
             {
-                case RequestTypes.Save:
-                    Navigation.HomeManagementInstance.SaveTreeChangesCommand.Execute();
-                    break;
-                case RequestTypes.Backup:
-                    // Backup the fortress. We "split" since we only want the path value.
-                    if (DataAccessService.Instance.BackupFortress(Settings.GetSettingValue<string>("DIP_AutomaticBackupIntervall").Split(',')[2]))
-                        TaskLogger.Instance.Track("Guardian backed up fortress successfully!");
-                    else
-                        TaskLogger.Instance.Track("Couldn't backup fortress.");
-                    break;
-                case RequestTypes.Scan:
-                    var scanner = new FortressScanner();
-                    break;
-                default:
-                    break;
-            }
+                switch (request)
+                {
+                    case RequestTypes.Save:
+                        Navigation.HomeManagementInstance.SaveTreeChangesCommand.Execute();
+                        break;
+                    case RequestTypes.Backup:
+                        // Backup the fortress. We "split" since we only want the path value.
+                        if (DataAccessService.Instance.BackupFortress(Settings.GetSettingValue<string>("DIP_AutomaticBackupIntervall").Split(',')[2]))
+                            TaskLogger.Instance.Track("Guardian backed up fortress successfully!");
+                        else
+                            TaskLogger.Instance.Track("Couldn't backup fortress.");
+                        break;
+                    case RequestTypes.Scan:
+                        Navigation.HomeManagementInstance?.GetCurrentHubViewModel().QuickScanFortressCommand.Execute();
+                        TaskLogger.Instance.Track("Guardian scanned the fortress.");
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
     }
 }

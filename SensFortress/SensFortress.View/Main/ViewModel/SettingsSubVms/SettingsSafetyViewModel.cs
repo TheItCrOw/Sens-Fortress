@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using SensFortress.Security;
 using SensFortress.Utility;
 using SensFortress.Utility.Exceptions;
 using SensFortress.View.Bases;
@@ -144,6 +145,7 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             HasUnsavedChanges = false;
             Navigation.HomeManagementInstance.ReloadGuardianTasks();
             TaskLogger.Instance.Track($"Safety settings have been saved.");
+            SecurityParameterProvider.Instance.UpdateHash(nameof(Settings), IOPathHelper.GetSettingsFile());
         }
     }
 }

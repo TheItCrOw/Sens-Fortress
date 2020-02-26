@@ -12,6 +12,7 @@ namespace SensFortress.Security
     /// </summary>
     public class SecurityParameterProvider
     {
+        #region lazy pattern
         /// <summary>
         /// Implement the lazy pattern.
         /// </summary>
@@ -24,41 +25,32 @@ namespace SensFortress.Security
         /// Instance of the <see cref="Factory"/> class.
         /// </summary>
         public static SecurityParameterProvider Instance { get { return lazy.Value; } }
+        #endregion
+        /// <summary>
+        /// In order to see, if any changes were made to the fortress outside of the applciation - we hash entities and compare the hash afterwards.
+        /// </summary>
+        private Dictionary<string, string> _compareHashes = new Dictionary<string, string>();
 
         /// <summary>
-        /// In order to see, if any changes were made to the fortress outside of the applciation - we hash it and compare the hash afterwards.
+        /// Updates the given name in the hashes dictionary. If name doesn't exist yet, it is added into the dict.
         /// </summary>
-        private Dictionary<string, string> _fortressHashes = new Dictionary<string, string>();
-
-        /// <summary>
-        /// Holds the current hash of the fortress.
-        /// </summary>
-        private string _currentFortressHash;
-
-        /// <summary>
-        /// Updates the fortress hash for comparing it later.
-        /// </summary>
-        public void UpdateFortressHash(string nonDefaultPath = null)
+        /// <param name="nOfupdateable"></param>
+        /// <param name="nonDefaultPath"></param>
+        public void UpdateHash(string nOfupdateable, string path)
         {
-            using (var md5 = new MD5CryptoServiceProvider())
+            // Check if dict has an entry for the given name
+            if (_compareHashes.ContainsKey(nOfupdateable))
             {
-                var path = (nonDefaultPath == null) ? CurrentFortressData.FullPath : nonDefaultPath;
-                var buffer = md5.ComputeHash(File.ReadAllBytes(path));
-                var sb = new StringBuilder();
-                for (var i = 0; i < buffer.Length; i++)
-                {
-                    sb.Append(buffer[i].ToString("x2"));
-                }
-
-                _currentFortressHash = sb.ToString();
+                _compareHashes[nOfupdateable] = ByteHelper.ReadHash(path);
             }
+            else // If it doesnt exist => add it to the dict
+                _compareHashes.Add(nOfupdateable, ByteHelper.ReadHash(path));
         }
 
         /// <summary>
-        /// Returns the hash of the current fortress.
+        /// Returns the hash of the given name. Returns null if not found.
         /// </summary>
         /// <returns></returns>
-        public string GetHashOfFortress() => _currentFortressHash;
-
+        public string GetCurrentHashOf(string name) => _compareHashes.ContainsKey(name) == true ? _compareHashes[name] : null;
     }
 }
