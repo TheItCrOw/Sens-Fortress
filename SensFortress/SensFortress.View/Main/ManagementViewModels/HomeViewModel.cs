@@ -55,6 +55,7 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand LockUnlockFortressCommand => new DelegateCommand(LockUnlockFortress);
         public DelegateCommand NavigateToHomeHubCommand => new DelegateCommand(NavigateToHomeHub);
         public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
+        public DelegateCommand OpenSecurityManagementCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Security));
         public DelegateCommand LogoutFortressCommand => new DelegateCommand(LogoutFortress);
         public DelegateCommand ExitFortressCommand => new DelegateCommand(ExitFortress);
         public DelegateCommand<string> SearchThroughNodesCommand => new DelegateCommand<string>(SearchThroughNodes);

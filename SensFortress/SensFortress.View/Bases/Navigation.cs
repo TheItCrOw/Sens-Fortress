@@ -17,11 +17,14 @@ namespace SensFortress.View.Helper
     {
         public static HomeView HomeView;
 
-        public static SettingsView Settings;
+        public static SettingsView SettingsView;
+
+        public static SecurityManagementView SecurityView;
         public static Frame MainFrame { get; set; }
         public static LoginViewModel LoginManagementInstance { get; set; }
         public static HomeViewModel HomeManagementInstance { get; set; }
         public static SettingsViewModel SettingsMangementInstance { get; set; }
+        public static SecurityManagementViewModel SecurityMangementInstance { get; set; }
         /// <summary>
         /// The view that contains the MainFrame and where all others views are being showed in.
         /// </summary>
@@ -38,22 +41,31 @@ namespace SensFortress.View.Helper
                     if (HomeView == null)
                     {
                         HomeView = new HomeView();
-                        var homeVm = new HomeViewModel();
-                        HomeManagementInstance = homeVm;
-                        HomeView.DataContext = homeVm;
+                        HomeManagementInstance = new HomeViewModel();
+                        HomeView.DataContext = HomeManagementInstance;
                     }
                     MainFrame.Content = HomeView;
-                    ((HomeViewModel)HomeView.DataContext).Initialize();
+                    HomeManagementInstance.Initialize();
                     return true;
                 case NavigationViews.Settings:
-                    if(Settings == null)
+                    if(SettingsView == null)
                     {
-                        Settings = new SettingsView();
+                        SettingsView = new SettingsView();
                         SettingsMangementInstance = new SettingsViewModel();
-                        Settings.DataContext = SettingsMangementInstance;
+                        SettingsView.DataContext = SettingsMangementInstance;
                     }
-                    ((SettingsViewModel)Settings.DataContext).Initialize();
-                    HomeManagementInstance.SelectedContent = Settings;
+                    SettingsMangementInstance.Initialize();
+                    HomeManagementInstance.SelectedContent = SettingsView;
+                    return true;
+                case NavigationViews.Security:
+                    if(SecurityView == null)
+                    {
+                        SecurityView = new SecurityManagementView();
+                        SecurityMangementInstance = new SecurityManagementViewModel();
+                        SecurityView.DataContext = SecurityMangementInstance;
+                    }
+                    SecurityMangementInstance.Initialize();
+                    HomeManagementInstance.SelectedContent = SecurityView;
                     return true;
                 default:
                     return false;
@@ -69,5 +81,6 @@ namespace SensFortress.View.Helper
     {
         HomeView,
         Settings,
+        Security
     }
 }

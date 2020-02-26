@@ -128,9 +128,13 @@
                         <materialDesign:PackIcon Kind="Gate" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>
                 </materialDesign:Badged>
-                <!--settings button Button-->
-                <Button Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding OpenSettingsCommand}">
+                <!--settings Button-->
+                <Button Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Configurations" Command="{Binding OpenSettingsCommand}">
                     <materialDesign:PackIcon Kind="Settings" Height="30" Width="30" VerticalAlignment="Center"/>
+                </Button>
+                <!--Security management Button-->
+                <Button Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Security management" Command="{Binding OpenSecurityManagementCommand}">
+                    <materialDesign:PackIcon Kind="SecurityAccount"   Height="27" Width="30" VerticalAlignment="Center"/>
                 </Button>
             </DockPanel>
         </materialDesign:Card>

@@ -48,7 +48,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AllAnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
         public ObservableCollection<ConfigViewModel> Configurations { get; set; } = new ObservableCollection<ConfigViewModel>();
-        public ObservableCollection<GuardianLogEntry> GuardianLogs { get; set; } = new ObservableCollection<GuardianLogEntry>();
+        public ObservableCollection<GuardianLogEntry> ReducedGuardianLogs { get; set; } = new ObservableCollection<GuardianLogEntry>();
         public DelegateCommand<TreeItemViewModel> AddQuickBarItemCommand => new DelegateCommand<TreeItemViewModel>(AddQuickBarItem);
         public DelegateCommand<LeafViewModel> RemoveQuickBarItemCommand => new DelegateCommand<LeafViewModel>(RemoveQuickBarItem);
         public DelegateCommand StartPasswordAnalysisCommand => new DelegateCommand(StartPasswordAnalysis);
@@ -273,8 +273,15 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         }
         private void Guardian_Started() => GuardianIsRunning = true;
         private void Guardian_Stopped(string message) => GuardianIsRunning = false;
-        private void GuardianLogger_EntryAdded(GuardianLogEntry entry) => 
-            Application.Current.Dispatcher?.Invoke(() => GuardianLogs.Add(entry));
+        private void GuardianLogger_EntryAdded(GuardianLogEntry entry)
+        {
+            // Errors are too long for the quick view. They will be shown in the guardian window.
+            if (entry.LogType == EntryType.Error || entry.LogType == EntryType.Danger)
+                entry.Description = "Consult the guardian window!";
+
+            Application.Current.Dispatcher?.Invoke(() => ReducedGuardianLogs.Add(entry));
+        }
+
 
         /// <summary>
         /// Triggers, when a scheduledConfig has been raised by <see cref="Settings"/>.
@@ -299,6 +306,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
 
         /// <summary>
         /// Analysies all passwords and calculates it's strength
+        /// Use this later in a seperate password analysis tab!
         /// </summary>
         private void StartPasswordAnalysis()
         {
@@ -354,15 +362,12 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                             else if (analysisVm.PasswordStrength <= 0)
                                 Application.Current.Dispatcher.Invoke(() => BlacklistedPasswords++);
 
-                            // Can be deleted later
-                            Thread.Sleep(50);
                             // add the result to the list
                             Application.Current.Dispatcher.Invoke(() => AllAnalyseResults.Add(analysisVm));
                             // calculate the total score
                             TotalPWAnalysisScore = (totalPasswordStrength / AllAnalyseResults.Count);
                         }
                     }
-
                     // Charts have weird values binding...so handle them seperately
                     StrongPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(StrongPasswords) };
                     MediumPasswordsChart = new ChartValues<ObservableValue> { new ObservableValue(MediumPasswords) };
