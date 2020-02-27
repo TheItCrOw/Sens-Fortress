@@ -52,14 +52,16 @@ namespace SensFortress.Guardian
         public void Log(string name) => 
             GuardianLogEntryAdded?.Invoke(new GuardianLogEntry()
             {
-                    Name = name
+                    Name = name,
+                    Date = DateTime.Now
             });
 
         public void Log(string name, string description) =>
             GuardianLogEntryAdded?.Invoke(new GuardianLogEntry()
             {
                 Name = name,
-                Description = description
+                Description = description,
+                Date = DateTime.Now
             });
 
         public void Log(string name, string description, EntryType logType) =>
@@ -67,7 +69,8 @@ namespace SensFortress.Guardian
             {
                 Name = name,
                 Description = description,
-                LogType = logType
+                LogType = logType,
+                Date = DateTime.Now
             });
 
     }

@@ -131,13 +131,14 @@ namespace SensFortress.View.Bases
             Logger.log.Error($"Guardian threw an exception: {ex}");
             Application.Current.Dispatcher.Invoke(() =>
             {
-                    // Change that later to a guardian info box
-                    Communication.InformUser(ex.Message);
+                // Change that later to a guardian info box
+                Communication.InformUser(ex.Message);
             });
         }
 
         /// <summary>
         /// Event that raises when the Guardian wants a request to be executed.
+        /// Let the guardian do the exception handling.
         /// </summary>
         /// <param name="request"></param>
         protected void Guardian_Request(RequestTypes request)
@@ -151,10 +152,8 @@ namespace SensFortress.View.Bases
                         break;
                     case RequestTypes.Backup:
                         // Backup the fortress. We "split" since we only want the path value.
-                        if (DataAccessService.Instance.BackupFortress(Settings.GetSettingValue<string>("DIP_AutomaticBackupIntervall").Split(',')[2]))
-                            TaskLogger.Instance.Track("Guardian backed up fortress successfully!");
-                        else
-                            TaskLogger.Instance.Track("Couldn't backup fortress.");
+                        DataAccessService.Instance.BackupFortress(Settings.GetSettingValue<string>("DIP_AutomaticBackupIntervall").Split(',')[2]);
+                        TaskLogger.Instance.Track("Guardian backed up fortress successfully!");
                         break;
                     case RequestTypes.Scan:
                         Navigation.HomeManagementInstance?.GetCurrentHubViewModel().QuickScanFortressCommand.Execute();

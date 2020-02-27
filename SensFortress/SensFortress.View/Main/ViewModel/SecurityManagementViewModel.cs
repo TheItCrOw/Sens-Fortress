@@ -1,13 +1,19 @@
-﻿using SensFortress.View.Bases;
+﻿using SensFortress.Guardian;
+using SensFortress.Guardian.Models;
+using SensFortress.View.Bases;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows;
 
 namespace SensFortress.View.Main.ViewModel
 {
     public class SecurityManagementViewModel : ViewModelManagementBase
     {
         private bool _isLocked;
+
+        public ObservableCollection<GuardianLogEntry> GuardianLogs { get; set; } = new ObservableCollection<GuardianLogEntry>();
 
         public override bool IsLocked 
         { 
@@ -22,5 +28,12 @@ namespace SensFortress.View.Main.ViewModel
         {
 
         }
+
+        public SecurityManagementViewModel()
+        {
+            GuardianLogger.Instance.GuardianLogEntryAdded += GuardianLogger_EntryAdded;
+        }
+
+        private void GuardianLogger_EntryAdded(GuardianLogEntry entry) => Application.Current.Dispatcher?.Invoke(() => GuardianLogs.Add(entry));
     }
 }

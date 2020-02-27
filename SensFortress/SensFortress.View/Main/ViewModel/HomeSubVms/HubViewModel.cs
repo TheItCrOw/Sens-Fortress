@@ -275,13 +275,18 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private void Guardian_Stopped(string message) => GuardianIsRunning = false;
         private void GuardianLogger_EntryAdded(GuardianLogEntry entry)
         {
-            // Errors are too long for the quick view. They will be shown in the guardian window.
+            var storeDesc = string.Empty;
+            // Errors are too long for the quick view. They will be shown in the security tab.
+            // For the quicklog: Change the message to a generic one.
             if (entry.LogType == EntryType.Error || entry.LogType == EntryType.Danger)
-                entry.Description = "Consult the guardian window!";
-
+            {
+                storeDesc = entry.Description;
+                entry.Description = "Consult the security management!";
+            }
             Application.Current.Dispatcher?.Invoke(() => ReducedGuardianLogs.Add(entry));
+            // We do not want to modify the descr. we just want a diff message in this particular view.
+            entry.Description = string.IsNullOrEmpty(storeDesc) ? entry.Description : storeDesc;
         }
-
 
         /// <summary>
         /// Triggers, when a scheduledConfig has been raised by <see cref="Settings"/>.

@@ -146,8 +146,9 @@ namespace SensFortress.View.Main.ViewModel
                 SecurityParameterProvider.Instance.UpdateHash(nameof(Settings), IOPathHelper.GetSettingsFile());
                 TaskLogger.Instance.Track($"Configurations have been set up!");
 
-                // Load the settings once.
+                // Load every window once to subscribe to events and to make sure all views are working.
                 OpenSettingsCommand.Execute();
+                OpenSecurityManagementCommand.Execute();
                 NavigateToHomeHub();
                 LaunchGuardian();
 

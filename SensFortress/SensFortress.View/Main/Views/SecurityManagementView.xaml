@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:tt="clr-namespace:SensFortress.Guardian.Models;assembly=SensFortress.Guardian"
              xmlns:local="clr-namespace:SensFortress.View.Main.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -42,8 +43,54 @@
             </Grid.RowDefinitions>
                         
             <!--guardian log top left-->
-            
-            
+            <ScrollViewer Margin="5 5 0 5">
+                <ItemsControl ItemsSource="{Binding GuardianLogs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border x:Name="Border" Padding="2" BorderThickness="0 0 0 1" BorderBrush="Transparent">
+                                <Expander Background="{StaticResource ThemeDarkBlueBlack}">
+                                    <Expander.Header>
+                                        <DockPanel>
+                                            <!--icon-->
+                                            <materialDesign:PackIcon Height="25" Width="25" VerticalAlignment="Center">
+                                                <materialDesign:PackIcon.Style>
+                                                    <Style TargetType="materialDesign:PackIcon">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding LogType}" Value="{x:Static tt:EntryType.Success}">
+                                                                <Setter Property="Kind" Value="Check"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding LogType}" Value="{x:Static tt:EntryType.Error}">
+                                                                <Setter Property="Kind" Value="Error"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding LogType}" Value="{x:Static tt:EntryType.Danger}">
+                                                                <Setter Property="Kind" Value="Dangerous"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </materialDesign:PackIcon.Style>
+                                            </materialDesign:PackIcon>
+                                            <!--Description and name-->                                            
+                                                <TextBlock Text="{Binding Name}" Margin="10 0 0 0" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
+                                        </DockPanel>
+                                    </Expander.Header>
+                                    <Grid Margin="25 0 0 10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <!--date-->
+                                        <TextBlock Text="{Binding Date}" Margin="0 0 0 3"/>
+                                        <!--desc-->
+                                        <TextBlock Text="{Binding Description}" FontStyle="Italic" FontWeight="Thin" TextWrapping="Wrap" Grid.Row="1"/>
+                                    </Grid>
+                                </Expander>
+                                
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
             <!--scan etc top right-->
             <materialDesign:Card Grid.Column="1" Margin="10 20 20 10" materialDesign:ShadowAssist.ShadowDepth="Depth5"
                                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource ThemeDarkBlueBlack}">

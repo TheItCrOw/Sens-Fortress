@@ -14,6 +14,7 @@ namespace SensFortress.Guardian.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public EntryType LogType { get; set; }
+        public DateTime Date { get; set; }
     }
 
     public enum EntryType

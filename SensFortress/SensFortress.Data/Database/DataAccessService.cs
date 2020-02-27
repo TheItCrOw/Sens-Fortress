@@ -92,28 +92,19 @@ namespace SensFortress.Data.Database
         /// Backups the fortress to the given path
         /// </summary>
         /// <param name="copyPath"></param>
-        public bool BackupFortress(string copyPath)
+        public void BackupFortress(string copyPath)
         {
-            try
-            {
-                // Get only the directory
-                var directory = Path.GetDirectoryName(copyPath);
+            // Get only the directory
+            var directory = Path.GetDirectoryName(copyPath);
 
-                if (!File.Exists(CurrentFortressData.FullPath))
-                    throw new FileNotFoundException($"Fortress could not be found - path {CurrentFortressData.FullPath} was invalid.");
-                else if (!Directory.Exists(directory))
-                    throw new FileNotFoundException($"Given backup path couldn't be found: {directory}");
+            if (!File.Exists(CurrentFortressData.FullPath))
+                throw new FileNotFoundException($"Fortress could not be found - path {CurrentFortressData.FullPath} was invalid.");
+            else if (!Directory.Exists(directory))
+                throw new FileNotFoundException($"Given backup path couldn't be found: {directory}");
 
-                File.Copy(CurrentFortressData.FullPath, copyPath, true);
-                Logger.log.Info($"Backed up fortress to: {copyPath}");
-                SecurityParameterProvider.Instance.UpdateHash(nameof(Fortress), CurrentFortressData.FullPath);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.log.Error($"Error while trying to backup fortress: {ex}");
-                return false;
-            }
+            File.Copy(CurrentFortressData.FullPath, copyPath, true);
+            Logger.log.Info($"Backed up fortress to: {copyPath}");
+            SecurityParameterProvider.Instance.UpdateHash(nameof(Fortress), CurrentFortressData.FullPath);
         }
 
         /// <summary>

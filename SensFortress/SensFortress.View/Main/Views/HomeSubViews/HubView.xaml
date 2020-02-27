@@ -362,11 +362,8 @@
                                                                             </Style>
                                                                         </materialDesign:PackIcon.Style>
                                                                     </materialDesign:PackIcon>
-                                                                    <!--Description and name-->
-                                                                    <StackPanel Margin="10 0 0 0" Grid.Column="1">
-                                                                        <TextBlock Text="{Binding Name}" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
-                                                                        <TextBlock Text="{Binding Description}" FontStyle="Italic" FontWeight="Thin" TextWrapping="Wrap" Margin="0 2 0 0"/>
-                                                                    </StackPanel>
+                                                                    <!--Description and name-->                                                                    
+                                                                        <TextBlock Margin="10 0 0 0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
                                                                 </Grid>
                                                             </Border>
                                                         </DataTemplate>

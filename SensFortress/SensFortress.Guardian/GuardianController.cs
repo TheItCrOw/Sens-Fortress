@@ -183,6 +183,7 @@ namespace SensFortress.Guardian
                 }
                 catch (Exception ex)
                 {
+                    GuardianThrewException?.Invoke(ex, ex.Message);
                     GuardianStopped?.Invoke($"The guardian detected an error and has been shut down. " +
                         $"After the error has been fixed, try to restart him manually via the Home-Hub. {Environment.NewLine}" +
                         $"Error: {ex.Message}");
