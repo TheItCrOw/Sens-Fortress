@@ -41,7 +41,5 @@ namespace SensFortress.Security.AES
 
             return salt;
         }
-
-
     }
 }

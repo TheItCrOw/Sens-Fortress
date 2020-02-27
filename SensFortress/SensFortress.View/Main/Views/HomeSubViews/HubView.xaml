@@ -145,7 +145,6 @@
                                         <materialDesign:PackIcon Kind="SecurityHome" Foreground="White" Height="65" Width="65"/>
                                     </Button>
                                 </DockPanel>
-
                                 <!--white stripe-->
                                 <!--<materialDesign:ColorZone Background="GhostWhite" Grid.Row="1" HorizontalAlignment="Stretch" Height="2"/>-->
                             </Grid>

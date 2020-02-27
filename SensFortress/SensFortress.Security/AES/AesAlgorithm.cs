@@ -20,7 +20,7 @@ namespace SensFortress.Security
      * -> The hashed key is the key for the AES-Encryption
      * -> A random IV Vector is generated that the AES also takes in.
      * -> The IV Vector is saved with the cipher text. It doesn't matter if the attacker knows this variable.
-     * -> A minimum of 1000 iterations is at least requiered.
+     * -> A minimum of 15000 iterations is at least requiered.
      * -> The data is then encrypted and stored as a *.sfdb (Sen's Fortress data base) file
      * -> To decrypt it, the IV Vector, salt and masterkey (hashed user input) is needed.
      * 
@@ -45,7 +45,7 @@ namespace SensFortress.Security
             using (AesCryptoServiceProvider provider = new AesCryptoServiceProvider())
             {
                 provider.GenerateIV();
-                // Create a byte array out of the secure string
+                // Create a byte array out of the encrypted bytes
                 var passwordBytes = CryptMemoryProtection.DecryptInMemoryData(encryptedPassword);
                 provider.Key = passwordBytes;
                 provider.Mode = CipherMode.CBC;
@@ -80,7 +80,7 @@ namespace SensFortress.Security
 
             using (AesCryptoServiceProvider provider = new AesCryptoServiceProvider())
             {
-                // Create a byte array out of the secure string
+                // Create a byte array out of the encrypted bytes
                 var passwordBytes = CryptMemoryProtection.DecryptInMemoryData(encryptedPassword);
                 provider.Key = passwordBytes;
                 provider.Mode = CipherMode.CBC;
