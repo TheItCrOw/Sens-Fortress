@@ -43,7 +43,7 @@ namespace SensFortress.Guardian
         private void Log_GuardianStarted() => Log("Guardian started", "The guardian has been successfully launched.", EntryType.Success);
         private void Log_GuardianStopped(string message) => Log("Guardian stopped", message, EntryType.Danger);
         private void Log_GuardianThrewEx(Exception ex, string description) => Log("Guardian error", description, EntryType.Error);
-        private void Log_GuardianHandledTask(GuardianTask task) => Log("Executed a task", $"Executed: {task.Description}", EntryType.Success);
+        private void Log_GuardianHandledTask(GuardianTask task) => Log("Guardian executed a task", $"Executed: {task.Description}", EntryType.Success);
 
         /// <summary>
         /// Log a <see cref="GuardianLogEntry"/>

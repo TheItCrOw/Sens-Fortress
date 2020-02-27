@@ -43,12 +43,27 @@
             </Grid.RowDefinitions>
                         
             <!--guardian log top left-->
-            <ScrollViewer Margin="5 5 0 5">
-                <ItemsControl ItemsSource="{Binding GuardianLogs}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border x:Name="Border" Padding="2" BorderThickness="0 0 0 1" BorderBrush="Transparent">
-                                <Expander Background="{StaticResource ThemeDarkBlueBlack}">
+            <Grid Margin="10 10 0 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!--Reset guardian log-->
+                <Button Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Background="GhostWhite" Command="{Binding ClearGuardianLog}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth5" ToolTip="Clear all log entries.">
+                    <DockPanel>
+                        <materialDesign:PackIcon Kind="Clear" Height="25" Width="25" VerticalAlignment="Bottom" Margin="0 0 5 0"/>
+                        <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Clear Guardian Log" Foreground="Black"/>
+                    </DockPanel>
+                </Button>
+
+                <!--log-->
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding GuardianLogs}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Expander Background="{StaticResource ThemeDarkBlueBlack}" Padding="2" Margin="0 4 0 0">
                                     <Expander.Header>
                                         <DockPanel>
                                             <!--icon-->
@@ -63,14 +78,14 @@
                                                                 <Setter Property="Kind" Value="Error"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding LogType}" Value="{x:Static tt:EntryType.Danger}">
-                                                                <Setter Property="Kind" Value="Dangerous"/>
+                                                                <Setter Property="Kind" Value="Alert"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </materialDesign:PackIcon.Style>
                                             </materialDesign:PackIcon>
-                                            <!--Description and name-->                                            
-                                                <TextBlock Text="{Binding Name}" Margin="10 0 0 0" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
+                                            <!--Name-->
+                                            <TextBlock Text="{Binding Name}" Margin="10 0 0 0" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
                                         </DockPanel>
                                     </Expander.Header>
                                     <Grid Margin="25 0 0 10">
@@ -84,25 +99,141 @@
                                         <TextBlock Text="{Binding Description}" FontStyle="Italic" FontWeight="Thin" TextWrapping="Wrap" Grid.Row="1"/>
                                     </Grid>
                                 </Expander>
-                                
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
 
             <!--scan etc top right-->
-            <materialDesign:Card Grid.Column="1" Margin="10 20 20 10" materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource ThemeDarkBlueBlack}">
-                <materialDesign:PackIcon Kind="ShieldAccount" Height="250" Width="250" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <materialDesign:Card Grid.Column="1" Margin="10 10 20 10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                 Background="{StaticResource ThemeDarkBlueBlack}" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!--title-->
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Background="GhostWhite" Command="{Binding ScanFortressCommand}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth5" ToolTip="Start scanning now"
+                            materialDesign:ButtonProgressAssist.IsIndeterminate="True" 
+                                 materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding IsScanning}" materialDesign:ButtonProgressAssist.IndicatorForeground="Lime"
+                                 materialDesign:ButtonProgressAssist.IndicatorBackground="Transparent">
+                        <DockPanel>
+                            <materialDesign:PackIcon Kind="SecurityCamera" Height="25" Width="25" VerticalAlignment="Top" Margin="0 0 5 0"/>
+                            <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Scan now" Foreground="Black"/>
+                        </DockPanel>
+                    </Button>
+
+                    <materialDesign:PackIcon Margin="5" Kind="ShieldAccount" Height="250" Width="250" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
             </materialDesign:Card>
             
             <!--password analysis bottom left-->
+            <materialDesign:Card Background="{StaticResource ThemeDarkBlueBlack}" Grid.Row="1" VerticalAlignment="Stretch" Margin="10 0 0 10">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!--button tabs-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-            <!--pw analyis icon bottom right-->
-            <materialDesign:Card Grid.Column="1" Grid.Row="1" Margin="10 10 20 20" materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource ThemeDarkBlueBlack}">
-                <materialDesign:PackIcon Kind="ShieldKey" Height="250" Width="250" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <!--All-->
+                        <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Background="GhostWhite"
+                                Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="All" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="All" Foreground="Black"/>
+                        </Button>
+
+                        <!--Strong-->
+                        <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="1" Background="GhostWhite" 
+                                            Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="Strong" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Strong" Foreground="Black"/>
+                        </Button>
+
+                        <!--Medium-->
+                        <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="2" Background="GhostWhite"
+                                            Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="Medium" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Medium" Foreground="Black"/>
+                        </Button>
+
+                        <!--Weak-->
+                        <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="3" Background="GhostWhite"
+                                            Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="Weak" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Weak" Foreground="Black"/>
+                        </Button>
+
+                        <!--Blacklisted-->
+                        <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="4" Background="GhostWhite"
+                                            Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="Blacklisted" materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Blacklisted" Foreground="Black"/>
+                        </Button>
+
+                    </Grid>
+                    
+                    <!--password analysed list-->
+                    <ListView Margin="0 0 0 5" ItemsSource="{Binding AnalysedPasswordsList}" Grid.Row="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Category}" Header="Category" Width="200"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" Width="200"/>
+                                <GridViewColumn Header="PW strength in %" Width="300">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding PasswordStrength}" Width="30"/>
+                                                <ProgressBar IsIndeterminate="False" Foreground="{Binding Color}" Width="300" Value="{Binding PasswordStrength}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <!--Inspect button-->
+                                            <Button Style="{StaticResource TreeViewButtonStyle}" Width="15" Height="15" ToolTip="Inspect" Background="GhostWhite"
+                                                                                Command="{Binding InspectResultCommand}">
+                                                <materialDesign:PackIcon Kind="InfoOutline" Width="25" Height="25" 
+                                                                                 VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </materialDesign:Card>
+            
+            <!--analyse pw bottom right-->
+            <materialDesign:Card Grid.Column="1" Grid.Row="1" Margin="10 0 20 10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                 Background="{StaticResource ThemeDarkBlueBlack}" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!--title-->
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Background="GhostWhite" Command="{Binding AnalysePasswordsCommand}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                        <DockPanel>
+                            <materialDesign:PackIcon Kind="GoogleAnalytics" Height="25" Width="25" VerticalAlignment="Top" Margin="0 0 5 0"/>
+                            <TextBlock Style="{StaticResource CategoryTextblockStyle}" Text="Analyse passwords now" Foreground="Black"/>
+                        </DockPanel>
+                    </Button>
+
+                    <materialDesign:PackIcon Margin="5" Kind="ShieldKey" Height="250" Width="250" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
             </materialDesign:Card>
 
         </Grid>

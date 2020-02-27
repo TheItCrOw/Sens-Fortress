@@ -156,7 +156,7 @@ namespace SensFortress.View.Bases
                         TaskLogger.Instance.Track("Guardian backed up fortress successfully!");
                         break;
                     case RequestTypes.Scan:
-                        Navigation.HomeManagementInstance?.GetCurrentHubViewModel().QuickScanFortressCommand.Execute();
+                        Navigation.SecurityMangementInstance?.ScanFortressCommand.Execute();
                         TaskLogger.Instance.Track("Guardian scanned the fortress.");
                         break;
                     default:

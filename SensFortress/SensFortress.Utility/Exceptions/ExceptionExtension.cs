@@ -4,7 +4,6 @@ using System.Text;
 
 namespace SensFortress.Utility.Exceptions
 {
-    using static Exception;
     public static class ExceptionExtension
     {
         private static string _userMessage;

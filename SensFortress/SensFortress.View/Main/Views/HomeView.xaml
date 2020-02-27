@@ -118,16 +118,16 @@
         <!--Header Title-->
         <materialDesign:Card Height="50" Background="{StaticResource ThemeDarkBlueBlack}">
             <DockPanel HorizontalAlignment="Left" Margin="80 0 20 0" VerticalAlignment="Center" LastChildFill="False">
-                <!--Home Button-->
-                <Button  Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding NavigateToHomeHubCommand}">
-                    <materialDesign:PackIcon Kind="Home" Height="30" Width="30" VerticalAlignment="Center"/>
-                </Button>
                 <!--Save button-->
                 <materialDesign:Badged Badge="{Binding ChangesTracker}" BadgeColorZoneMode="Dark" ToolTip="Saveable changes" VerticalAlignment="Center" Margin="10 0 0 0">
                     <Button Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Save" Command="{Binding SaveTreeChangesCommand}">
                         <materialDesign:PackIcon Kind="Gate" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>
                 </materialDesign:Badged>
+                <!--Home Button-->
+                <Button  Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Home" Command="{Binding NavigateToHomeHubCommand}">
+                    <materialDesign:PackIcon Kind="Home" Height="30" Width="30" VerticalAlignment="Center"/>
+                </Button>
                 <!--settings Button-->
                 <Button Margin="10 0 0 0" Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="Configurations" Command="{Binding OpenSettingsCommand}">
                     <materialDesign:PackIcon Kind="Settings" Height="30" Width="30" VerticalAlignment="Center"/>

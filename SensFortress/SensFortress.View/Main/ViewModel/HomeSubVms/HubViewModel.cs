@@ -220,6 +220,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 Configurations.Add(config);
         }
 
+
         /// <summary>
         /// Scans the fortress.
         /// </summary>
@@ -227,20 +228,22 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         {
             try
             {
+                bool foundMal = false;
                 var scanner = new FortressScanner();
                 TaskLogger.Instance.Track("Scanning fortress...");
 
                 // Scan the fortress fil.
-                if (scanner.ScanFortressFile())
-                    TaskLogger.Instance.Track($"{TermHelper.GetDatabaseTerm()} doesn't contain malicous changes.");
-                else
-                    InformUserOfBadScanResults("Fortress");
+                if (!scanner.ScanFortressFile())
+                    foundMal = true;
 
                 // Scan settings
-                if (scanner.ScanSettings())
-                    TaskLogger.Instance.Track($"Your configurations do not contain malicous changes.");
+                if (!scanner.ScanSettings())
+                    foundMal = true;
+
+                if (!foundMal)
+                    TaskLogger.Instance.Track("Finished scanning: No malicous elements were found.");
                 else
-                    InformUserOfBadScanResults("Settings");
+                    TaskLogger.Instance.Track("Finished scanning: Irregularities were found - seek the security management.");
             }
             catch (Exception ex)
             {
@@ -248,14 +251,6 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
                 ex.SetUserMessage($"An error occured while trying to scan the fortress - Try to restart the application.");
                 Communication.InformUserAboutError(ex);
             }
-        }
-
-        private void InformUserOfBadScanResults(string currentName)
-        {
-            TaskLogger.Instance.Track(
-                        $"The guardian found changes made to your {currentName} from outside of Sen's fortess walls. " +
-                        $"If you do not recall having modified this file yourself on the harddrive, something else must've done it. " +
-                        $"I suggest starting a scan with your antivirus system.");
         }
 
         /// <summary>
@@ -273,20 +268,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         }
         private void Guardian_Started() => GuardianIsRunning = true;
         private void Guardian_Stopped(string message) => GuardianIsRunning = false;
-        private void GuardianLogger_EntryAdded(GuardianLogEntry entry)
-        {
-            var storeDesc = string.Empty;
-            // Errors are too long for the quick view. They will be shown in the security tab.
-            // For the quicklog: Change the message to a generic one.
-            if (entry.LogType == EntryType.Error || entry.LogType == EntryType.Danger)
-            {
-                storeDesc = entry.Description;
-                entry.Description = "Consult the security management!";
-            }
-            Application.Current.Dispatcher?.Invoke(() => ReducedGuardianLogs.Add(entry));
-            // We do not want to modify the descr. we just want a diff message in this particular view.
-            entry.Description = string.IsNullOrEmpty(storeDesc) ? entry.Description : storeDesc;
-        }
+        private void GuardianLogger_EntryAdded(GuardianLogEntry entry) => Application.Current.Dispatcher?.Invoke(() => ReducedGuardianLogs.Add(entry));
 
         /// <summary>
         /// Triggers, when a scheduledConfig has been raised by <see cref="Settings"/>.

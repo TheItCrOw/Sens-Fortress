@@ -108,7 +108,7 @@
                     </materialDesign:Card>
 
                     <!--Middle content: password analysis, shields etc.-->
-                    <Grid Grid.Row="1" Margin="1 0 0 0" Visibility="Visible">
+                    <Grid Grid.Row="1" Margin="1 0 0 0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="110"/>
                             <RowDefinition Height="*"/>
