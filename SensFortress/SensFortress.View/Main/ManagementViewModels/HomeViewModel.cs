@@ -337,7 +337,8 @@ namespace SensFortress.View.Main.ViewModel
             ScrollToBottom = true;
             ScrollToBottom = false;
         }
-        private void TaskLogger_EntryAdded(string message) => TaskLogs.Add(message);
+        // Events of guardian ALWAYS with dispatcher!
+        private void TaskLogger_EntryAdded(string message) => Application.Current.Dispatcher.Invoke(() => TaskLogs.Add(message));
 
         /// <summary>
         /// Saves changes made in the fortress.
@@ -473,7 +474,7 @@ namespace SensFortress.View.Main.ViewModel
             DataAccessService.Instance.DeleteOneFromMemoryDC(SelectedTreeViewItem.CurrentViewModel.Model); // Delete from cache
             Application.Current.Dispatcher.Invoke(() => RootNodes.Remove(SelectedTreeViewItem)); // Delete from UI
             TaskLogger.Instance.Track($"{SelectedTreeViewItem.Name} has been deleted."); // Inform logger
-            ChangesTracker++; // Track changes
+            Application.Current.Dispatcher.Invoke(() => ChangesTracker++); // Track changes
         }
 
         /// <summary>

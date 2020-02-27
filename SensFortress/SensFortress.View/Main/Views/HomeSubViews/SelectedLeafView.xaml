@@ -67,7 +67,7 @@
                                 <Style TargetType="materialDesign:PackIcon">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsBlackListed}" Value="True">
-                                            <Setter Property="Kind" Value="WarningBoxOutline"/>
+                                            <Setter Property="Kind" Value="AlertOutline"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsBlackListed}" Value="False">
                                             <Setter Property="Kind" Value="ShieldOutline"/>
