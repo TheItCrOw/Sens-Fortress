@@ -32,6 +32,7 @@ namespace SensFortress.View.Main.ViewModel
         private int _weakPasswords;
         private int _blacklistedPasswords;
         private int _totalPWAnalysisScore;
+        private Point _shieldEndPoint;
 
         public ObservableCollection<GuardianLogEntry> GuardianLogs { get; set; } = new ObservableCollection<GuardianLogEntry>();
         public ObservableCollection<AnalysedEntryViewModel> AnalysedPasswordsList { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
@@ -93,6 +94,14 @@ namespace SensFortress.View.Main.ViewModel
                 SetProperty(ref _blacklistedPasswords, value);
             }
         }
+        public Point ShieldEndPoint
+        {
+            get => _shieldEndPoint;
+            set
+            {
+                SetProperty(ref _shieldEndPoint, value);
+            }
+        }
         #endregion
 
         /// <summary>
@@ -148,7 +157,13 @@ namespace SensFortress.View.Main.ViewModel
             {
                 _allAnalysedPasswords = new HashSet<AnalysedEntryViewModel>();
 
+                StrongPasswords = 0;
+                MediumPasswords = 0;
+                WeakPasswords = 0;
+                BlacklistedPasswords = 0;
+                TotalPWAnalysisScore = 0;
                 AnalysedPasswordsList.Clear();
+
                 // Get all LeafVm's
                 var analyseableLeafsVm = DataAccessService.Instance
                     .GetAll<Leaf>()
@@ -201,6 +216,8 @@ namespace SensFortress.View.Main.ViewModel
                             Application.Current.Dispatcher.Invoke(() => AnalysedPasswordsList.Add(analysisVm));
                             // calculate the total score
                             TotalPWAnalysisScore = (totalPasswordStrength / AnalysedPasswordsList.Count);
+                            ShieldEndPoint = new Point(0, (double)TotalPWAnalysisScore/100);
+                            Thread.Sleep(50);
                         }
                     }
                     PWAnalysisIsLoading = false;

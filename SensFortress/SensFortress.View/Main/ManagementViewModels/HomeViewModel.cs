@@ -56,6 +56,7 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand NavigateToHomeHubCommand => new DelegateCommand(NavigateToHomeHub);
         public DelegateCommand OpenSettingsCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Settings));
         public DelegateCommand OpenSecurityManagementCommand => new DelegateCommand(() => Navigation.NavigateTo(NavigationViews.Security));
+        public DelegateCommand PrintEmergencySheetCommand => new DelegateCommand(PrintEmergencySheet);
         public DelegateCommand LogoutFortressCommand => new DelegateCommand(LogoutFortress);
         public DelegateCommand ExitFortressCommand => new DelegateCommand(ExitFortress);
         public DelegateCommand<string> SearchThroughNodesCommand => new DelegateCommand<string>(SearchThroughNodes);
@@ -173,6 +174,15 @@ namespace SensFortress.View.Main.ViewModel
         /// </summary>
         /// <returns></returns>
         public List<TreeItemViewModel> GetRootNodesSnapshot() => RootNodes.ToList();
+
+        /// <summary>
+        /// Opens a new print view for printing a password emergency sheet
+        /// </summary>
+        private void PrintEmergencySheet()
+        {
+            var printVm = new PrintViewModel();
+            printVm.StartPasswordEntriesPrintProcess(GetCurrentHubViewModel()?.GetAllLeafsSnapshot());
+        }
 
         /// <summary>
         /// Exit the app right

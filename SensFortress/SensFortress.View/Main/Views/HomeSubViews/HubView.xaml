@@ -115,7 +115,7 @@
                         </Grid.RowDefinitions>
 
                         <!--middle content-->
-                        <materialDesign:Card HorizontalAlignment="Stretch" Height="100" Background="Transparent">
+                        <materialDesign:Card Margin="15 0 0 0" HorizontalAlignment="Stretch" Height="100" Background="Transparent">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
@@ -143,12 +143,6 @@
                                     <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" BorderBrush="Transparent" Height="65" Width="65"
                                              Command="{Binding QuickScanFortressCommand}" ToolTip="Perform a quick fortress security-scan" Background="Transparent">
                                         <materialDesign:PackIcon Kind="SecurityHome" Foreground="White" Height="65" Width="65"/>
-                                    </Button>
-                                    
-                                    <!--print emergency sheet-->
-                                    <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" Background="Transparent" BorderBrush="Transparent" Height="65" Width="65" Margin="10 0 0 0"
-                                             Command="{Binding PrintEmergencySheetCommand}" ToolTip="Print emergency sheet">
-                                        <materialDesign:PackIcon Kind="Printer" Foreground="White" Height="65" Width="65"/>
                                     </Button>
                                 </DockPanel>
 
@@ -245,7 +239,8 @@
                                             <Button Height="130" Background="Transparent" BorderBrush="Transparent" ToolTip="Show in depth analysis"
                                                         materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding PWAnalysisIsLoading}" materialDesign:ShadowAssist.ShadowDepth="Depth5"
                                                         materialDesign:ButtonProgressAssist.IndicatorBackground="Transparent" materialDesign:ButtonProgressAssist.IndicatorForeground="Black"
-                                                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding PWAnalysisIsLoading}">
+                                                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding PWAnalysisIsLoading}"
+                                                    Command="{Binding OpenSecurityManagementCommand}">
                                                 <materialDesign:PackIcon Kind="ShieldKey" Height="120" Width="120" Foreground="White"/>
                                             </Button>
                                             <DockPanel LastChildFill="False" HorizontalAlignment="Center" Margin="0 10 0 0">

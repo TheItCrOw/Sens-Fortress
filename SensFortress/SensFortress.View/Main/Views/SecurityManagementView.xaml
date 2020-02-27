@@ -59,7 +59,7 @@
                 </Button>
 
                 <!--log-->
-                <ScrollViewer Grid.Row="1">
+                <ScrollViewer Grid.Row="1" Margin="0 0 0 5">
                     <ItemsControl ItemsSource="{Binding GuardianLogs}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -149,7 +149,7 @@
                         </Grid.ColumnDefinitions>
 
                         <!--All-->
-                        <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Background="GhostWhite"
+                        <Button Margin="0 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Background="GhostWhite"
                                 Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="All" materialDesign:ShadowAssist.ShadowDepth="Depth5">
                                 <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="All" Foreground="Black"/>
                         </Button>
@@ -157,25 +157,37 @@
                         <!--Strong-->
                         <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="1" Background="GhostWhite" 
                                             Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="Strong" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Strong" Foreground="Black"/>
+                            <DockPanel>
+                                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Strong" Foreground="Black"/>
+                                <TextBlock Margin="3 0 0 0" Text="{Binding StrongPasswords, StringFormat=({0})}" Style="{StaticResource SmallTextblockStyle}" VerticalAlignment="Bottom"/>
+                            </DockPanel>
                         </Button>
 
                         <!--Medium-->
                         <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="2" Background="GhostWhite"
                                             Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="Medium" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Medium" Foreground="Black"/>
+                            <DockPanel>
+                                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Medium" Foreground="Black"/>
+                                <TextBlock Margin="3 0 0 0" Text="{Binding MediumPasswords, StringFormat=({0})}" Style="{StaticResource SmallTextblockStyle}" VerticalAlignment="Bottom"/>
+                            </DockPanel>
                         </Button>
 
                         <!--Weak-->
                         <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="3" Background="GhostWhite"
                                             Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="Weak" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Weak" Foreground="Black"/>
+                            <DockPanel>
+                                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Weak" Foreground="Black"/>
+                                <TextBlock Margin="3 0 0 0" Text="{Binding WeakPasswords, StringFormat=({0})}" Style="{StaticResource SmallTextblockStyle}" VerticalAlignment="Bottom"/>
+                            </DockPanel>
                         </Button>
 
                         <!--Blacklisted-->
-                        <Button Margin="3 0 3 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="4" Background="GhostWhite"
+                        <Button Margin="3 0 0 0" Style="{StaticResource MaterialDesignRaisedButton}" Height="35" Grid.Column="4" Background="GhostWhite"
                                             Command="{Binding FilterAnalysedPasswordListCommand}" CommandParameter="Blacklisted" materialDesign:ShadowAssist.ShadowDepth="Depth5">
-                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Blacklisted" Foreground="Black"/>
+                            <DockPanel>
+                                <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Blacklisted" Foreground="Black"/>
+                                <TextBlock Margin="3 0 0 0" Text="{Binding BlacklistedPasswords, StringFormat=({0})}" Style="{StaticResource SmallTextblockStyle}" VerticalAlignment="Bottom"/>
+                            </DockPanel>
                         </Button>
 
                     </Grid>
@@ -232,7 +244,19 @@
                         </DockPanel>
                     </Button>
 
-                    <materialDesign:PackIcon Margin="5" Kind="ShieldKey" Height="250" Width="250" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding TotalPWAnalysisScore}" Grid.Row="1" Style="{StaticResource TitleHeaderTextblockStyle}" 
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <materialDesign:PackIcon Margin="5" Kind="ShieldOutline" Height="250" Width="250" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon.Foreground>
+                            <LinearGradientBrush StartPoint="0 0" EndPoint="{Binding ShieldEndPoint}">
+                                <LinearGradientBrush.GradientStops>
+                                    <!--This is a dark gray-->
+                                    <GradientStop Offset="1" Color="#5B5C5C"/>
+                                    <GradientStop Offset="1" Color="White" />
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+                        </materialDesign:PackIcon.Foreground>
+                    </materialDesign:PackIcon>
                 </Grid>
             </materialDesign:Card>
 

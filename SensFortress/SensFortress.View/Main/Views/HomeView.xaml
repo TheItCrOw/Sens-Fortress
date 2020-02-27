@@ -182,7 +182,15 @@
                         <StackPanel>
                             <Expander IsExpanded="True" Background="{StaticResource ThemeDarkBlueBlack}" Foreground="White">
                                 <Expander.Header>
-                                    <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Storage"/>
+                                    <DockPanel LastChildFill="False" HorizontalAlignment="Center">
+                                        <TextBlock HorizontalAlignment="Center" Style="{StaticResource InformationTextblockStyle}" Text="Storage"/>
+                                        <!--print emergency sheet button-->
+                                        <Button Margin="15 0 0 0" ToolTip="Print emergency sheet" HorizontalAlignment="Right" Background="{StaticResource ThemeDarkBlueBlack}"
+                                                materialDesign:ShadowAssist.ShadowDepth="Depth5" BorderBrush="White" Command="{Binding PrintEmergencySheetCommand}">
+                                            <materialDesign:PackIcon Kind="Printer" Foreground="White" Width="25" Height="25"/>
+                                        </Button>
+                                    </DockPanel>
+
                                 </Expander.Header>
                                 <DockPanel HorizontalAlignment="Stretch" Margin="30 0 30 0">
                                     <materialDesign:PackIcon Kind="Search" VerticalAlignment="Top" Height="25" Width="25"/>
