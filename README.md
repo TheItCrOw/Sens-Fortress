@@ -132,3 +132,11 @@ That is where Sen's fortress comes in place. As it has already been mentioned: T
 * Printing an emergency sheet in case of complete shutdown.
 
 ![SensFortress View_y8XG4iqSgM](https://user-images.githubusercontent.com/49918134/75568430-8ea22d80-5a53-11ea-8294-44505e8589ca.png)
+
+### Locked / Unlocked mode
+
+* When not editing any passwords Sen's fortress can be locked, which means no modifications to the storage chamber are possible. Via Settings one can configure what will be locked exactly.
+
+![SensFortress View_YLOQmERvZ8](https://user-images.githubusercontent.com/49918134/75568771-30c21580-5a54-11ea-9288-f494c4d82089.png)
+
+
