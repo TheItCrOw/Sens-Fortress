@@ -154,7 +154,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
+           
             <!--left side Tree View here-->
             <Expander ExpandDirection="Left" FlowDirection="LeftToRight" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Foreground="Black">
                 <Expander.Background>
@@ -170,6 +170,7 @@
                         </TextBlock>
                     </StackPanel>
                 </Expander.Header>
+
                 <!--Little gap to the left with Margin here-->
                 <Grid Width="400" Margin="0 0 0 6">
                     <Grid.RowDefinitions>
@@ -177,8 +178,18 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
+
+                    <!--if locked, show this instead of treeview-->
+                    <materialDesign:Card Grid.Row="1" Width="400" VerticalAlignment="Stretch" Background="{StaticResource ThemeDarkBlueBlack}"
+                                         Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}">
+                        <StackPanel VerticalAlignment="Center">
+                            <materialDesign:PackIcon Kind="ShieldCheck" Width="270" Height="270" HorizontalAlignment="Center" Foreground="White"/>
+                            <TextBlock Text="Fortress is locked." Style="{StaticResource InformationTextblockStyle}" Foreground="GhostWhite"/>
+                        </StackPanel>
+                    </materialDesign:Card>
+
                     <!--Title-->
-                    <materialDesign:Card>
+                    <materialDesign:Card Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}">
                         <StackPanel>
                             <Expander IsExpanded="True" Background="{StaticResource ThemeDarkBlueBlack}" Foreground="White">
                                 <Expander.Header>
@@ -202,7 +213,8 @@
                     </materialDesign:Card>
 
                     <!--Storage chamber list-->
-                    <materialDesign:Card Grid.Row="1" materialDesign:ShadowAssist.ShadowDepth="Depth5" VerticalAlignment="Stretch" Margin="0 5 0 0" Grid.RowSpan="1">
+                    <materialDesign:Card Grid.Row="1" materialDesign:ShadowAssist.ShadowDepth="Depth5" VerticalAlignment="Stretch" Margin="0 5 0 0" Grid.RowSpan="1"
+                                          Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}">
                         <extensions:ExtendedTreeView x:Name="RootNodes_TreeView" ItemsSource="{Binding RootNodes}" 
                                                      SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                      BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="{StaticResource ThemeDarkBlueBlack}">
@@ -332,7 +344,7 @@
                     <!--Add root => Name is used in code!-->
                     <Button Grid.Row="2" Background="{StaticResource ThemeDarkBlueBlack}" x:Name="AddRootItem_Button" ToolTip="Add a new root" Style="{StaticResource MaterialDesignRaisedDarkButton}" 
                             Margin="0 10 0 10" Command="{Binding AddTreeItemCommand}" CommandParameter="{Binding ElementName=AddRootItem_Button, Path=Name}" 
-                            materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                            materialDesign:ShadowAssist.ShadowDepth="Depth2"  Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}">
                         <materialDesign:PackIcon Kind="FolderAdd" Height="30" Width="30" VerticalAlignment="Center"/>
                     </Button>
                 </Grid>

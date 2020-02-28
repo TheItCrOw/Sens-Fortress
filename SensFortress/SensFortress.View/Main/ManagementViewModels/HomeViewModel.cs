@@ -347,6 +347,7 @@ namespace SensFortress.View.Main.ViewModel
             ScrollToBottom = true;
             ScrollToBottom = false;
         }
+
         // Events of guardian ALWAYS with dispatcher!
         private void TaskLogger_EntryAdded(string message) => Application.Current.Dispatcher.Invoke(() => TaskLogs.Add(message));
 

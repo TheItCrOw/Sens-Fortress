@@ -32,7 +32,7 @@
         <ScrollViewer>
             <StackPanel Margin="10 20 10 20">
                 <!--Locking configs-->
-                <materialDesign:Card>
+                <materialDesign:Card Background="{StaticResource ThemeDarkBlueBlack}">
                     <DockPanel Margin="0 5 5 5" LastChildFill="False" HorizontalAlignment="Center">
                     <TextBlock Text="Locking configurations" Style="{StaticResource CategoryTextblockStyle}"/>
                     <materialDesign:PackIcon Kind="Lock" Height="30" Width="30" Margin="10 0 0 0"/>
@@ -49,7 +49,7 @@
                 </CheckBox>
                 
                 <!--Lock quickbar as well-->
-                <materialDesign:Card>
+                <materialDesign:Card Background="{StaticResource ThemeDarkBlueBlack}">
                     <TextBlock Text="Upon locking include..." Style="{StaticResource CategoryTextblockStyle}" Margin="0 5 0 5"/>
                 </materialDesign:Card>
                 <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_LockingIncludeQuickBar}">
@@ -65,17 +65,24 @@
                     </DockPanel>
                 </CheckBox>
 
-                <!--Lock everything-->
-                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_LockingIncludeAll}">
+                <!--Settings-->
+                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_LockingIncludeSettings}">
                     <DockPanel>
-                        <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Everything."/>
+                        <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Settings."/>
+                    </DockPanel>
+                </CheckBox>
+
+                <!--Security Management-->
+                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_LockingIncludeSecurityManagement}">
+                    <DockPanel>
+                        <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Security management."/>
                     </DockPanel>
                 </CheckBox>
 
                 <!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
                 
                 <!--Masterkeyconfigs-->
-                <materialDesign:Card>
+                <materialDesign:Card Background="{StaticResource ThemeDarkBlueBlack}">
                     <DockPanel Margin="0 5 5 5" LastChildFill="False" HorizontalAlignment="Center">
                         <TextBlock Text="Masterkey configurations" Style="{StaticResource CategoryTextblockStyle}"/>
                         <materialDesign:PackIcon Kind="Key" Height="30" Width="30" Margin="10 0 0 0"/>
@@ -83,15 +90,9 @@
                 </materialDesign:Card>
 
                 <!--Ask for masterkey when-->
-                <materialDesign:Card Margin="0 10 0 0">
+                <materialDesign:Card Margin="0 10 0 0" Background="{StaticResource ThemeDarkBlueBlack}">
                     <TextBlock Text="Ask for masterkey when..." Style="{StaticResource CategoryTextblockStyle}" Margin="0 5 0 5"/>
                 </materialDesign:Card>
-                <!--Saving-->
-                <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_MasterkeyAskForSaving}">
-                    <DockPanel>
-                        <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Trying to save."/>
-                    </DockPanel>
-                </CheckBox>
                 
                 <!--config settings-->
                 <CheckBox Margin="0 8 0 8" IsChecked="{Binding B_MasterkeyAskForConfigSettings}">
@@ -99,7 +100,6 @@
                         <TextBlock Margin="10 0 10 0" Style="{StaticResource SettingsTextblockStyle}" Text="Configure settings."/>
                     </DockPanel>
                 </CheckBox>
-
 
             </StackPanel>
         </ScrollViewer>

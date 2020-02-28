@@ -27,8 +27,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private SettingInterval _i_AutomaticSaves;
         private DateTime _t_AutomaticBackupIntervall;
         private DateTime _t_AutomaticScans;
-        private bool _guardianIsRunning;
-
         public DelegateCommand SaveSettingsCommand => new DelegateCommand(SaveSettings);
         public DelegateCommand ChooseBackupPathCommand => new DelegateCommand(ChooseBackupPath);
         /// <summary>
@@ -147,33 +145,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         }
         // <=
 
-        // These 3 are on setting: Auto saves
-        public bool B_AutomaticSaves
-        {
-            get => _b_AutomaticSaves;
-            set
-            {
-                SetProperty(ref _b_AutomaticSaves, value);
-                HasUnsavedChanges = true;
-            }
-        }
-        public SettingInterval I_AutomaticSaves
-        {
-            get => _i_AutomaticSaves;
-            set
-            {
-                SetProperty(ref _i_AutomaticSaves, value);
-                HasUnsavedChanges = true;
-            }
-        }
-        private string DI_AutomaticSaves()
-        {
-            if (!B_AutomaticSaves)
-                return "Void";
-            else // for atuo saving, we do not need a date. So jsut use the empty dateTime.
-                return $"{DateTime.MinValue},{I_AutomaticSaves}";
-        }
-        // <=
         public override bool IsLocked
         {
             get => _isLocked;
@@ -209,7 +180,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             // Save automatic backup
             Settings.SaveSetting("DIP_AutomaticBackupIntervall", DIP_AutomaticBackupIntervall());
             Settings.SaveSetting("DI_AutomaticScans", DI_AutomaticScans());
-            Settings.SaveSetting("DI_AutomaticSaves", DI_AutomaticSaves());
 
             //Inform the home about saved settings.
             HasUnsavedChanges = false;
@@ -225,7 +195,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         {
             LoadDIPAutomaticBackup();
             LoadDIAutomaticScans();
-            LoadDIAutomaticSaves();
 
             HasUnsavedChanges = false;
         }
@@ -270,24 +239,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 T_AutomaticScans = Convert.ToDateTime(splited[0]);
                 if (Enum.TryParse(splited[1], out SettingInterval interval))
                     I_AutomaticScans = interval;
-            }
-        }
-        private void LoadDIAutomaticSaves()
-        {
-            //Scan
-            var di_AutomaticSaves = Settings.GetSettingValue<string>("DI_AutomaticSaves");
-            if (di_AutomaticSaves == default)
-            {
-                B_AutomaticSaves = false;
-                I_AutomaticSaves = SettingInterval.Hourly;
-            }
-            else
-            {
-                B_AutomaticSaves = true;
-                var splited = di_AutomaticSaves.Split(',');
-                //D_AutomaticScans = Convert.ToDateTime(splited[0]); We do not need a date for autoamtic saving.
-                if (Enum.TryParse(splited[1], out SettingInterval interval))
-                    I_AutomaticSaves = interval;
             }
         }
     }

@@ -43,8 +43,18 @@ namespace SensFortress.View.Main.ViewModel
 
         public override bool IsLocked
         {
-            get => _isLocked;
-            set => SetProperty(ref _isLocked, value);
+            get
+            {
+                return _isLocked;
+            }
+            set
+            {
+                bool locked = false;
+                if (value == true)
+                    locked = Settings.GetSettingValue<bool>("B_LockingIncludeSecurityManagement") == true ? true : false;
+
+                SetProperty(ref _isLocked, locked);
+            }
         }
         public bool IsScanning
         {
@@ -138,10 +148,10 @@ namespace SensFortress.View.Main.ViewModel
                     AnalysedPasswordsList.AddRange(_allAnalysedPasswords.Where(l => l.PasswordStrength < 70 && l.PasswordStrength >= 50));
                     break;
                 case "Weak":
-                    AnalysedPasswordsList.AddRange(_allAnalysedPasswords.Where(l => l.PasswordStrength < 50 && l.PasswordStrength > 0)); 
+                    AnalysedPasswordsList.AddRange(_allAnalysedPasswords.Where(l => l.PasswordStrength < 50 && l.PasswordStrength > 0));
                     break;
                 case "Blacklisted":
-                    AnalysedPasswordsList.AddRange(_allAnalysedPasswords.Where(l => l.PasswordStrength <= 0)); 
+                    AnalysedPasswordsList.AddRange(_allAnalysedPasswords.Where(l => l.PasswordStrength <= 0));
                     break;
                 default:
                     break;
@@ -216,7 +226,7 @@ namespace SensFortress.View.Main.ViewModel
                             Application.Current.Dispatcher.Invoke(() => AnalysedPasswordsList.Add(analysisVm));
                             // calculate the total score
                             TotalPWAnalysisScore = (totalPasswordStrength / AnalysedPasswordsList.Count);
-                            ShieldEndPoint = new Point(0, (double)TotalPWAnalysisScore/100);
+                            ShieldEndPoint = new Point(0, (double)TotalPWAnalysisScore / 100);
                             Thread.Sleep(50);
                         }
                     }

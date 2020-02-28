@@ -43,9 +43,11 @@ namespace SensFortress.Utility
         /// </summary>
         private static Dictionary<string, SettingType> _wellKnownSettings = new Dictionary<string, SettingType>
         {
-            { "B_LockingIncludeQuickBar", SettingType.B }, {"B_LockingIncludeHomeHub", SettingType.B}, {"B_LockingIncludeAll", SettingType.B},
-            {"B_MasterkeyAskForConfigSettings", SettingType.B }, {"B_MasterkeyAskForSaving", SettingType.B},
-            { "DIP_AutomaticBackupIntervall", SettingType.DIP }, { "DI_AutomaticScans", SettingType.DI }, { "DI_AutomaticSaves", SettingType.DI }
+            { "B_LockingIncludeQuickBar", SettingType.B }, {"B_LockingIncludeHomeHub", SettingType.B},
+            {"B_LockingIncludeSettings", SettingType.B }, {"B_LockingIncludeSecurityManagement", SettingType.B },
+
+            {"B_MasterkeyAskForConfigSettings", SettingType.B },
+            { "DIP_AutomaticBackupIntervall", SettingType.DIP }, { "DI_AutomaticScans", SettingType.DI }
         };
 
         /// <summary>
@@ -61,7 +63,7 @@ namespace SensFortress.Utility
         /// </summary>
         private static Dictionary<string, string> _wellKnownHandledSettingDescriptions = new Dictionary<string, string>
         {
-            { "DIP_AutomaticBackupIntervall", "Backup fortress"}, { "DI_AutomaticScans", "Scan fortress" }, { "DI_AutomaticSaves", "Not sure." }
+            { "DIP_AutomaticBackupIntervall", "Backup fortress"}, { "DI_AutomaticScans", "Scan fortress" }
         };
 
         /// <summary>
@@ -69,9 +71,11 @@ namespace SensFortress.Utility
         /// </summary>
         private static Dictionary<string, string> _defaultSettings = new Dictionary<string, string>
         {
-            { "B_LockingIncludeQuickBar", "False" }, {"B_LockingIncludeHomeHub", "False"}, {"B_LockingIncludeAll", "False"},
-            {"B_MasterkeyAskForConfigSettings", "False" }, {"B_MasterkeyAskForSaving", "True"},
-            { "DIP_AutomaticBackupIntervall", "Void"}, { "DI_AutomaticScans", "Void" }, { "DI_AutomaticSaves", "Void" }
+            { "B_LockingIncludeQuickBar", "False" }, {"B_LockingIncludeHomeHub", "False"},
+            {"B_LockingIncludeSettings", "False" }, {"B_LockingIncludeSecurityManagement", "False"},
+
+            {"B_MasterkeyAskForConfigSettings", "False" },
+            { "DIP_AutomaticBackupIntervall", "Void"}, { "DI_AutomaticScans", "Void" }
         };
 
         /// <summary>

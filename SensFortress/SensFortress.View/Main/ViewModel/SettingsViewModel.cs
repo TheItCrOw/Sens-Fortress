@@ -29,10 +29,17 @@ namespace SensFortress.View.Main.ViewModel
         public DelegateCommand<string> NavigateToSettingCategoryCommand => new DelegateCommand<string>(NavigateToSettingCategory);
         public override bool IsLocked
         {
-            get => _isLocked;
+            get
+            {
+                return _isLocked;
+            }
             set
             {
-                SetProperty(ref _isLocked, value);
+                bool locked = false;
+                if (value == true)
+                    locked = Settings.GetSettingValue<bool>("B_LockingIncludeSettings") == true ? true : false;
+
+                SetProperty(ref _isLocked, locked);
             }
         }
         public string CurrentTitel

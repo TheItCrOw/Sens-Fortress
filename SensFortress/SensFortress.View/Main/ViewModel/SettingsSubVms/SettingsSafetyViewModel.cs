@@ -19,10 +19,9 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
         private bool _isLocked;
         private bool _b_LockingIncludeQuickBar;
         private bool _b_LockingIncludeHomeHub;
-        private bool _b_LockingIncludeAll;
-        private bool _b_MasterkeyAskForSaving;
         private bool _b_MasterkeyAskForConfigSettings;
-        private bool _guardianIsRunning;
+        private bool _b_LockingIncludeSettings;
+        private bool _b_LockingIncludeSecurityManagement;
 
         public DelegateCommand SaveSettingsCommand => new DelegateCommand(SaveSettings);
 
@@ -41,7 +40,6 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 if (B_LockingIncludeQuickBar)
                 {
                     B_LockingIncludeHomeHub = false;
-                    B_LockingIncludeAll = false;
                 }
                 HasUnsavedChanges = true;
             }
@@ -55,35 +53,29 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
                 if (B_LockingIncludeHomeHub)
                 {
                     B_LockingIncludeQuickBar = false;
-                    B_LockingIncludeAll = false;
                 }
                 HasUnsavedChanges = true;
             }
         }
-        public bool B_LockingIncludeAll
+        public bool B_LockingIncludeSettings
         {
-            get => _b_LockingIncludeAll;
+            get => _b_LockingIncludeSettings;
             set
             {
-                SetProperty(ref _b_LockingIncludeAll, value);
-                if (B_LockingIncludeAll)
-                {
-                    B_LockingIncludeQuickBar = false;
-                    B_LockingIncludeHomeHub = false;
-                }
+                SetProperty(ref _b_LockingIncludeSettings, value);
+                HasUnsavedChanges = true;
+            }
+        }
+        public bool B_LockingIncludeSecurityManagement
+        {
+            get => _b_LockingIncludeSecurityManagement;
+            set
+            {
+                SetProperty(ref _b_LockingIncludeSecurityManagement, value);
                 HasUnsavedChanges = true;
             }
         }
 
-        public bool B_MasterkeyAskForSaving
-        {
-            get => _b_MasterkeyAskForSaving;
-            set
-            {
-                SetProperty(ref _b_MasterkeyAskForSaving, value);
-                HasUnsavedChanges = true;
-            }
-        }
         public bool B_MasterkeyAskForConfigSettings
         {
             get => _b_MasterkeyAskForConfigSettings;
@@ -118,10 +110,10 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             //Locking
             B_LockingIncludeQuickBar = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeQuickBar));
             B_LockingIncludeHomeHub = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeHomeHub));
-            B_LockingIncludeAll = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeAll));
+            B_LockingIncludeSettings = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeSettings));
+            B_LockingIncludeSecurityManagement = Settings.GetSettingValue<bool>(nameof(B_LockingIncludeSecurityManagement));
 
             //Masterkey
-            B_MasterkeyAskForSaving = Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForSaving));
             B_MasterkeyAskForConfigSettings = Settings.GetSettingValue<bool>(nameof(B_MasterkeyAskForConfigSettings));
 
             HasUnsavedChanges = false;
@@ -135,10 +127,10 @@ namespace SensFortress.View.Main.ViewModel.SettingsSubVms
             //Locking
             Settings.SaveSetting(nameof(B_LockingIncludeQuickBar), B_LockingIncludeQuickBar.ToString());
             Settings.SaveSetting(nameof(B_LockingIncludeHomeHub), B_LockingIncludeHomeHub.ToString());
-            Settings.SaveSetting(nameof(B_LockingIncludeAll), B_LockingIncludeAll.ToString());
+            Settings.SaveSetting(nameof(B_LockingIncludeSettings), B_LockingIncludeSettings.ToString());
+            Settings.SaveSetting(nameof(B_LockingIncludeSecurityManagement), B_LockingIncludeSecurityManagement.ToString());
 
             //Masterkey
-            Settings.SaveSetting(nameof(B_MasterkeyAskForSaving), B_MasterkeyAskForSaving.ToString());
             Settings.SaveSetting(nameof(B_MasterkeyAskForConfigSettings), B_MasterkeyAskForConfigSettings.ToString());
 
             //Inform the home about saved settings.

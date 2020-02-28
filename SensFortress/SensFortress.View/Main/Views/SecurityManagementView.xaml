@@ -30,9 +30,17 @@
         <materialDesign:Card Background="{StaticResource ThemeDarkBlueBlack}" Margin="1 0 0 0" Height="60" materialDesign:ShadowAssist.ShadowDepth="Depth5" HorizontalAlignment="Stretch">
             <TextBlock Text="Security Management" Style="{StaticResource InformationTextblockStyle}"/>
         </materialDesign:Card>
+        
+        <!--show this if it's locked-->
+        <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <materialDesign:PackIcon Kind="ShieldCheck" Height="350" Width="350"/>
+                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Fortress is locked."/>
+            </StackPanel>
+        </materialDesign:Card>
 
         <!--main content-->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="0.4*"/>

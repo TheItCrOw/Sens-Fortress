@@ -12,7 +12,7 @@
             TextElement.FontSize="13"
             TextOptions.TextFormattingMode="Ideal"
             TextOptions.TextRenderingMode="Auto"
-            Background="{DynamicResource MaterialDesignPaper}"
+            Background="{StaticResource ThemeDarkBlueBlack}"
             FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
         <Grid.RowDefinitions>
@@ -25,27 +25,37 @@
         </Grid.ColumnDefinitions>
            
         <!--Title depending of selected settings-->
-        <materialDesign:Card Grid.Column="1" Margin="1 0 0 0" Background="Transparent">
+        <materialDesign:Card Grid.ColumnSpan="2" materialDesign:ShadowAssist.ShadowDepth="Depth5" Margin="1 0 0 0" Height="60" Background="{StaticResource ThemeDarkBlueBlack}">
             <TextBlock Text="{Binding CurrentTitel}" Margin="0 10 0 10" Style="{StaticResource InformationTextblockStyle}"/>
         </materialDesign:Card>
 
         <!--left side button menu-->
         <!--be careful => Button ahve command parameters which are being used in the ViewModel-->
-        <StackPanel Grid.Row="1">
+        <StackPanel Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}">
             <!--savety configurations-->
             <Button Margin="5 5 5 5" Style="{StaticResource SettingsButtonStyle}" x:Name="Safety_Button" Command="{Binding NavigateToSettingCategoryCommand}" CommandParameter="Safety">
                 <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Safety"/>
             </Button>
-            
+
             <!--data backup configs-->
             <Button Margin="5" Grid.Row="1" Style="{StaticResource SettingsButtonStyle}" x:Name="DataBackup_Button" Command="{Binding NavigateToSettingCategoryCommand}" CommandParameter="DataBackup">
                 <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Data backup"/>
             </Button>
 
         </StackPanel>
-        
+
+        <!--show this if it's locked-->
+        <materialDesign:Card Grid.ColumnSpan="3" Grid.Row="1"  VerticalAlignment="Stretch" Background="Transparent" 
+                             Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <materialDesign:PackIcon Kind="ShieldCheck" Height="350" Width="350"/>
+                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Fortress is locked."/>
+            </StackPanel>
+        </materialDesign:Card>
+
         <!--right side contetn => actual settings-->
-        <Frame Grid.Column="1" Grid.Row="1" Content="{Binding SelectedContent}" NavigationUIVisibility="Hidden"/>
+        <Frame Grid.Column="1" Grid.Row="1" Content="{Binding SelectedContent}" NavigationUIVisibility="Hidden" 
+               Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}"/>
 
     </Grid>
 </UserControl>
