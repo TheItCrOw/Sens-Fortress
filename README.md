@@ -73,7 +73,7 @@ As a consequence, browser extensions that store and autofill in your password ar
 
 *Using such an extension is like going to the cinema and standing before a cashbox but being to lazy to actually pull out your wallet, so you gave it beforehand to the random person outside the building so he can pay for you while you just walk through.*
 
-Quick tip: Do not use browser extensions that handle sensible data.**
+Quick tip: **Do not use browser extensions that handle sensible data.**
 
 This is of course topped by - and we finally adress the elephant in the room - the concept of the **cloud**.
 All of your passwords will be available to you at any time on any hardware you'd like (provided there is a stable internet connection). You no longer need to worry about losing your passwords on your computer or not having access to them on your secondary laptop. The cloud saves you RAM, CPU and storage. So why would I still never even consider using the cloud of any provider? 
