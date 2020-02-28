@@ -47,6 +47,17 @@ namespace SensFortress.Security
                 _compareHashes.Add(nOfupdateable, ByteHelper.ReadHash(path));
         }
 
+        public void UpdateHash(string nOfupdateable, object hashableO)
+        {
+            // Check if dict has an entry for the given name
+            if (_compareHashes.ContainsKey(nOfupdateable))
+            {
+                _compareHashes[nOfupdateable] = hashableO.GetHashCode().ToString();
+            }
+            else // If it doesnt exist => add it to the dict
+                _compareHashes.Add(nOfupdateable, hashableO.GetHashCode().ToString());
+        }
+
         /// <summary>
         /// Returns the hash of the given name. Returns null if not found.
         /// </summary>

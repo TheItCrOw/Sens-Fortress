@@ -65,9 +65,8 @@
                         </StackPanel>
                     </materialDesign:Card>
 
-                    <!--Quickbar and locked status-->
+                    <!--Quickbar-->
                     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="{StaticResource ThemeDarkBlueBlack}" Visibility="{Binding QuickbarIsLocked, Converter={StaticResource InverseBoolToVisConverter}}">
-                        <!--Quickbar-->
                         <DockPanel Height="168" Grid.ColumnSpan="3" Margin="20 0 0 0">
                             <materialDesign:Card Background="White" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"
                                              VerticalAlignment="Center" Height="110" Width="120" Margin="0 -22 10 0" Panel.ZIndex="1" materialDesign:ShadowAssist.ShadowDepth="Depth5">
@@ -140,7 +139,7 @@
                                 </Grid.RowDefinitions>
 
                                 <DockPanel Grid.RowSpan="3" Panel.ZIndex="1" LastChildFill="False" HorizontalAlignment="Center">
-                                    
+
                                     <!--start pw analysis-->
                                     <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" BorderBrush="Transparent" Height="65" Width="65" Margin="0 0 10 0"
                                              Command="{Binding StartPasswordAnalysisCommand}" ToolTip="Start quick password analysis" Background="Transparent">
@@ -154,7 +153,7 @@
                                             materialDesign:ButtonProgressAssist.IndicatorForeground="White" ToolTip="Shutdown / launch guardian">
                                         <materialDesign:PackIcon Kind="Guardian" Foreground="{StaticResource ThemeDarkBlueBlack}" Height="75" Width="75" HorizontalAlignment="Center"/>
                                     </Button>
-                                    
+
                                     <!--scan fortress button-->
                                     <Button Style="{StaticResource MaterialDesignFloatingActionLightButton}" BorderBrush="Transparent" Height="65" Width="65"
                                              Command="{Binding QuickScanFortressCommand}" ToolTip="Perform a quick fortress security-scan" Background="Transparent">
@@ -372,8 +371,8 @@
                                                                             </Style>
                                                                         </materialDesign:PackIcon.Style>
                                                                     </materialDesign:PackIcon>
-                                                                    <!--Description and name-->                                                                    
-                                                                        <TextBlock Margin="10 0 0 0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
+                                                                    <!--Description and name-->
+                                                                    <TextBlock Margin="10 0 0 0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource SmallTextblockStyle}" HorizontalAlignment="Left"/>
                                                                 </Grid>
                                                             </Border>
                                                         </DataTemplate>

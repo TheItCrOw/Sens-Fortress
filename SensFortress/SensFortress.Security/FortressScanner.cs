@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace SensFortress.Security
 {
@@ -23,6 +24,5 @@ namespace SensFortress.Security
         /// <returns></returns>
         public bool ScanSettings() =>
             SecurityParameterProvider.Instance.GetCurrentHashOf(nameof(Settings)) == ByteHelper.ReadHash(IOPathHelper.GetSettingsFile()) ? true : false;
-
     }
 }
