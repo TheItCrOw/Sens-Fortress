@@ -59,5 +59,6 @@ Let's adress the elephant in the room immediately. Anyone that has been interest
 
 so on and so forth. The inner conflict of anyone that tries to develop a password manager now lies in the combination of comfort and security. How much comfort is the user ready to sacrifice in order to actually use a password manager, while also being provided the highest level of security. 
 **The answer is: pretty damn little.**
-Actually it is so little that password managers today focus more on developing new comfort features than actually trying to increase the level of security. To push this even further, one may throw in the daring statement: **They are ready to sacrifice security for comfort**.
+Actually it is so little that password managers today focus more on developing new comfort features than actually trying to increase the level of security. To push this even further, one may throw in the daring statement: 
+**They are ready to sacrifice security for comfort**.
 
