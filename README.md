@@ -85,9 +85,11 @@ This example is obviously over the top. You would hide your wallet in a carton b
 There are three main reasons which have already been described in the example afore why people tend to use the cloud:
 
 * Synchronization
+
 Now that you use a password manager you can no longer memorize any of your login credentials. If at some point you wanted to login to a website outside of your usual work enviroment you must have some access to your password manager. The cloud makes sure that you can access them from anywhere you want without you having to do anything.
 You could however, right before you leave, start a manual synchronization process within your own closed WiFi network that automatically shares all passwords on the every harddware you've chosen. If you then leave and add/edit passwords you will have them at you and when you are at home again, you simply synchronize again. (A feature that will soon be in Sen's fortress)
 
 * Backups
+
 The cloud of course mirrors each harddrive in a given interval, making sure that all your passwords remain save even when servers start burning. Backing up passwords however is so easily done at home: All you need is a USB-Stick or anything that can store data and one click of a button. You can even schedule automatic backups that will do the job for you. (Already implemented in Sen's fortress). All that without using the cloud or any internet connection.
 
