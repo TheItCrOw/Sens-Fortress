@@ -57,8 +57,10 @@ Let's adress the elephant in the room immediately. Anyone that has been interest
 * VPN
 * SSH
 
-so on and so forth. The inner conflict of anyone that tries to develop a password manager now lies in the combination of comfort and security. How much comfort is the user ready to sacrifice in order to actually use a password manager, while also being provided the highest level of security. 
-**The answer is: pretty damn little.**
-Actually it is so little that password managers today focus more on developing new comfort features than actually trying to increase the level of security. To push this even further, one may throw in the daring statement: 
-**They are ready to sacrifice security for comfort**.
+so on and so forth. The inner conflict of anyone that tries to develop a password manager now lies in the combination of comfort and security. How much comfort is the user ready to sacrifice in order to actually use a password manager, while also being provided the highest level of security. **The answer is: pretty damn little.**
+It is actually so little that password managers today focus more on developing new comfort features than actually trying to increase the level of security. To push this even further, one may throw in the daring statement: **They are ready to sacrifice security for comfort**.
 
+Let's elaborate on this statement.
+There are some that critizise password managers on very deepest level: **Storing passwords on the harddrive in the first place instead of just remebembering or writing them down.** While it is true that a hacker/virus cannot steal something that is not a computer, they can certainly leak databases of big coorporations thousands of miles away from your home PC or your notepad. In this case there is only one thing that decides whether your passwords will be leaked or not: **The password itself.**
+Anyone that has thought "password123" was a good idea will be in for a rude awakening. 
+Others however who may have used a password manager and actually used it properly can calmly relax: Generated strong passwords such as: *Y!Y-iuicn.h;gT/RqUtfY$uI<yFH/D>g* have a 99,99% of not being leaked. They are however pretty difficult to memorize or written down. **And that is why you should use a password manager.** 
