@@ -169,6 +169,7 @@ Sen's fortress contains a guardian that is constantly running if not shut down b
 
 * AES256 encrypting the whole storage chamber. (Storing salt and IV within it)
 * CryptMemoryProtection for storing data savely in RAM in an _unsecureDataCache_ and a _secureDatacache_ depending on the data type.
+* Deriving/Hashing the masterkey
 * Constantly hashing fortress files and configs and comparing them with each other. If anything has been changed from the outside, a scan will expose it.
 * The masterkey is NEVER stored on the hard drive nor is it EVER stored in the RAM after it's usage. The passwords itself are kept encryptedly in the RAM.
 * Locking/Unlocking the fortress
