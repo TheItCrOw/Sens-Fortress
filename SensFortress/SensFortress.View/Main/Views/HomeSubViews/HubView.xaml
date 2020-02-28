@@ -36,21 +36,37 @@
             </Grid.RowDefinitions>
 
             <!--Title-->
-            <!--<materialDesign:Card VerticalAlignment="Stretch" Margin="1 0 0 0" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="57" 
-                                 Background="{StaticResource ThemeDarkBlueBlack}">
+            <materialDesign:Card VerticalAlignment="Stretch" Margin="1 0 0 0" materialDesign:ShadowAssist.ShadowDepth="Depth5" Height="60" 
+                                 Background="{StaticResource ThemeDarkBlueBlack}" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}">
                 <TextBlock Text="Home-Hub" Style="{StaticResource InformationTextblockStyle}" Foreground="White"/>
-            </materialDesign:Card>-->
+            </materialDesign:Card>
+
+            <!--show this if hub is locked-->
+            <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Background="Transparent" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ShieldCheck" Height="350" Width="350" HorizontalAlignment="Center"/>
+                    <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Home-Hub is locked."/>
+                </StackPanel>
+            </materialDesign:Card>
 
             <!--Main Content-->
-            <ScrollViewer Grid.Row="1">
+            <ScrollViewer Grid.Row="1" Visibility="{Binding IsLocked, Converter={StaticResource InverseBoolToVisConverter}}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="150"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
+                    <!--show this if quickbar is locked-->
+                    <materialDesign:Card Margin="5 0 0 0" VerticalAlignment="Stretch" Background="Transparent" Visibility="{Binding QuickbarIsLocked, Converter={StaticResource BoolToVisConverter}}">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="ShieldCheck" Height="100" Width="100" HorizontalAlignment="Center"/>
+                            <TextBlock Style="{StaticResource SubCategoryTextblockStyle}" Text="Quickbar is locked."/>
+                        </StackPanel>
+                    </materialDesign:Card>
+
                     <!--Quickbar and locked status-->
-                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="{StaticResource ThemeDarkBlueBlack}">
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth5" Background="{StaticResource ThemeDarkBlueBlack}" Visibility="{Binding QuickbarIsLocked, Converter={StaticResource InverseBoolToVisConverter}}">
                         <!--Quickbar-->
                         <DockPanel Height="168" Grid.ColumnSpan="3" Margin="20 0 0 0">
                             <materialDesign:Card Background="White" x:Name="AddDragItem_Card" DragOver="AddDragItem_Card_DragOver" DragLeave="AddDragItem_Card_DragLeave" Drop="AddDragItem_Card_Drop"

@@ -49,7 +49,7 @@
                              Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisConverter}}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <materialDesign:PackIcon Kind="ShieldCheck" Height="350" Width="350"/>
-                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Fortress is locked."/>
+                <TextBlock Style="{StaticResource InformationTextblockStyle}" Text="Settings are locked."/>
             </StackPanel>
         </materialDesign:Card>
 

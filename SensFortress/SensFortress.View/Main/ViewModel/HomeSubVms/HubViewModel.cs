@@ -44,6 +44,7 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
         private ChartValues<ObservableValue> _mediumPasswordsChart;
         private ChartValues<ObservableValue> _weakPasswordsChart;
         private ChartValues<ObservableValue> _blacklistedPasswordsChart;
+        private bool _quickbarIsLocked;
 
         public ObservableCollection<LeafViewModel> QuickBar { get; set; } = new ObservableCollection<LeafViewModel>();
         public ObservableCollection<AnalysedEntryViewModel> AllAnalyseResults { get; set; } = new ObservableCollection<AnalysedEntryViewModel>();
@@ -65,7 +66,24 @@ namespace SensFortress.View.Main.ViewModel.HomeSubVms
             get => _isLocked;
             set
             {
-                SetProperty(ref _isLocked, value);
+                bool locked = false;
+                bool quickbarLocked = false;
+                if (value == true)
+                {
+                    locked = Settings.GetSettingValue<bool>("B_LockingIncludeHomeHub") == true ? true : false;
+                    quickbarLocked = Settings.GetSettingValue<bool>("B_LockingIncludeQuickBar") == true ? true : false;
+                }
+
+                QuickbarIsLocked = quickbarLocked;
+                SetProperty(ref _isLocked, locked);
+            }
+        }
+        public bool QuickbarIsLocked
+        {
+            get => _quickbarIsLocked;
+            set
+            {
+                SetProperty(ref _quickbarIsLocked, value);
             }
         }
         public bool GuardianIsRunning
