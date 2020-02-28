@@ -65,7 +65,7 @@ There are some that critizise password managers on very deepest level: **Storing
 Spoiler alert: Anyone that has thought "password123" was a good idea will be in for a rude awakening. 
 Others however who may have used a password manager and actually used it properly can calmly relax: Generated strong passwords such as: *Y!Y-iuicn.h;gT/RqUtfY$uI<yFH/D>g* have a 99,99% of not being leaked. They are however pretty difficult to memorize or written down. **And that is why you should use a password manager.** 
 
-In the age of digitalisation where your internet identity is no longer just that one silly ICQ or myspace account but your whole sensible online banking credibility, a password manager should remind everyone that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions. That is the core of any password manager. **Well, it should be.**
+In the age of digitalisation where your internet identity is no longer just that one silly ICQ or myspace account but your whole sensible online banking credibility, a password manager should remind the user that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions. That is the core of any password manager. **Well, it should be.**
 
 Somewhere along the road of the last years that core principle of any password manager has slowly been forgotten. It is now a race of: Which password manager on the market takes the least clicks to set up and use. Which software provides the least effort for me to have my passwords anywhere at any time on every hardware I have without me even copy and pasting in the passwords on a website. Are the developers or coorporations to blame for that? The answer is pretty obvious. **The market provides what the customer wants.** In a time where people actually order water and food from amazon instead of going to the supermarket down the street, it's pretty much no surprise.   
 
@@ -103,3 +103,6 @@ You do not have to worry about any of these things and if anything happens you c
 ### Sen's fortress mission
 
 ![7EVcJlwaAC](https://user-images.githubusercontent.com/49918134/75565172-c908cc00-5a4d-11ea-9a55-80f6757b54ae.png)
+
+< *"[...]a password manager should remind the user that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions."* >
+
