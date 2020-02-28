@@ -112,7 +112,9 @@ You do not have to worry about any of these things and if anything happens you c
 
 That is where Sen's fortress comes in place. As it has already been mentioned: This password manager can run 100% offline without the need of creating any user accounts. All you need to create is a fortress where you will store your passwords and a masterkey to lock it. I do firmly believe that any addition to a software such as a password manager must be very well thought through. Any feature could be a potential loophole. While this does sound very extreme to some - this statement is taken very seriously by those in charge of large security department.
 
-#### Implemented features:
+### Implemented features:
+
+### Storage chamber / Password storage
 
 * Opening deposited URL's, copying passwords and username.
 * Choose your own folder structure - no predefined categories.
@@ -123,6 +125,10 @@ That is where Sen's fortress comes in place. As it has already been mentioned: T
 
 ![oUNaPpRXDI](https://user-images.githubusercontent.com/49918134/75567432-d031d900-5a51-11ea-8478-82d45c9914f2.png)
 
-* Blacklist. Sen's fortress has a list of millions of actually leaked passwords. If your password is on this list, it is blacklisted and highly recommended to change it.
+* Writing a blacklist. Sen's fortress has a list of millions of actually leaked passwords. If your password is on this list, it is blacklisted and highly recomended to change it since it's hash has already been discovered.
 
 ![qvuNxYdTGC](https://user-images.githubusercontent.com/49918134/75567812-6d8d0d00-5a52-11ea-99b8-145aac0f9d5b.png)
+
+* Printing an emergency sheet in case of complete shutdown.
+
+![SensFortress View_y8XG4iqSgM](https://user-images.githubusercontent.com/49918134/75568430-8ea22d80-5a53-11ea-8294-44505e8589ca.png)
