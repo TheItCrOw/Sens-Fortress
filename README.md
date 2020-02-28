@@ -116,7 +116,13 @@ That is where Sen's fortress comes in place. As it has already been mentioned: T
 
 * Opening deposited URL's, copying passwords and username.
 * Choose your own folder structure - no predefined categories.
+
 ![G1aoKmev4L](https://user-images.githubusercontent.com/49918134/75567103-4124c100-5a51-11ea-9375-48c90e86451a.png)
 
-* Password generator & password analysis
-![7pE1dkk7WH](https://user-images.githubusercontent.com/49918134/75567208-6adde800-5a51-11ea-9b66-2eaaecf0b2cf.png)
+* Password generator & password analysis to guarantee strong passwords
+
+![oUNaPpRXDI](https://user-images.githubusercontent.com/49918134/75567432-d031d900-5a51-11ea-8478-82d45c9914f2.png)
+
+* Blacklist. Sen's fortress has a list of millions of actually leaked passwords. If your password is on this list, it is blacklisted and highly recommended to change it.
+
+![qvuNxYdTGC](https://user-images.githubusercontent.com/49918134/75567812-6d8d0d00-5a52-11ea-99b8-145aac0f9d5b.png)
