@@ -91,7 +91,7 @@ You could however, right before you leave, start a manual synchronization proces
 
 * Backups
 
-The cloud of course mirrors each hardrive in a given interval, making sure that all your passwords remain save even when servers start burning. Backing up passwords however is so easily done at home: All you need is a USB-Stick or anything that can store data and one click of a button. You can even schedule automatic backups that will do the job for you. (Already implemented in Sen's fortress). All that without using the cloud or any internet connection.
+The cloud of course mirrors each hard drive in a given interval, making sure that all your passwords remain save even when servers start burning. Backing up passwords however is so easily done at home: All you need is a USB-Stick or anything that can store data and one click of a button. You can even schedule automatic backups that will do the job for you. (Already implemented in Sen's fortress). All that without using the cloud or any internet connection.
 
 * Responsibility
 
@@ -152,5 +152,25 @@ Sen's fortress contains a guardian that is constantly running if not shut down b
 
 ![SensFortress View_ScnH0NO6Qs](https://user-images.githubusercontent.com/49918134/75572679-864df080-5a5b-11ea-81e8-4b8a93f4d91b.png)
 
+### Planned implementations
 
+* Synchronization with isntances of Sen's fortress within a given closed network (Home WiFi).
+* A simple app to always have the passwords at hand (completly offline)
+* Change passwords automatically if said so.
+* Make building your own home server as a cloud replacement easy if wanted. 
 
+### Not planned
+
+* Cloud access
+* Webaccess / Shifting to webapplication
+* TWA (for now)
+
+## Keynotes for security
+
+* AES256 encrypting the whole storage chamber. (Storing salt and IV within it)
+* CryptMemoryProtection for storing data savely in RAM in an _unsecureDataCache_ and a _secureDatacache_ depending on the data type.
+* Constantly hashing fortress files and configs and comparing them with each other. If anything has been changed from the outside, a scan will expose it.
+* The masterkey is NEVER stored on the hard drive nor is it EVER stored in the RAM after it's usage. The passwords itself are kept encryptedly in the RAM.
+* Locking/Unlocking the fortress
+* No changes in the fortress are ever being accepted if it is not being saved explicitly. Saving is only possible with the masterkey.
+* Every file the fortress has to read (e.g. config file or database) is always explicitly checked with it's template. If it contains any others symbols, orders or words than expected, it will not be read at all.
