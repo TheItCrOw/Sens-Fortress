@@ -104,5 +104,5 @@ You do not have to worry about any of these things and if anything happens you c
 
 ![7EVcJlwaAC](https://user-images.githubusercontent.com/49918134/75565172-c908cc00-5a4d-11ea-9a55-80f6757b54ae.png)
 
-< *"[...]a password manager should remind the user that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions."* >
+> *"[...]a password manager should remind the user that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions."*
 
