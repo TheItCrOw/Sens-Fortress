@@ -71,10 +71,13 @@ Somewhere along the road of the last years that core principle of any password m
 
 As a consequence, browser extensions that store and autofill in your password are being developed in **javascript** - a programming language that was initially developed for dynamic webbrowsers - a language so easy to use and modify that it offers any attacker a simple API will be in charge of all your passwords. It's no wonder that countless security holes have been popping up left and right. 
 
-*Using such an extension is like going to the cinema and standing before a cashbox but being to lazy to actually pull out your wallet, so you gave it beforehand to the random person outside the building so he can pay for you while you just walk through.*
+*Using such an extension is like going to the cinema and standing before a cashbox but being to lazy to actually pull out your wallet, so you gave 100$ beforehand to a random person outside the building so he can pay for you while you just walk through.*
 
 Quick tip: **Do not use browser extensions that handle sensible data.**
 
 This is of course topped by - and we finally adress the elephant in the room - the concept of the **cloud**.
 All of your passwords will be available to you at any time on any hardware you'd like (provided there is a stable internet connection). You no longer need to worry about losing your passwords on your computer or not having access to them on your secondary laptop. The cloud saves you RAM, CPU and storage. So why would I still never even consider using the cloud of any provider? 
- 
+
+*Using the cloud for storing passwords is like giving that random person not only the 100$, but tellimg him to run 100 feet away from you, so you can throw him your whole wallet with credit card, Id, driver license and banking accounts so he can make sure that everything is in order, you always have enough money in your wallet and you never have to worry about **your** additions*
+
+This example is obviously over the top. You would hide your wallet in a carton before throwing it and the random person would never get the key to the carton. The rest is however pretty accurate.
