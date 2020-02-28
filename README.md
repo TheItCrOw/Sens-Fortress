@@ -104,5 +104,19 @@ You do not have to worry about any of these things and if anything happens you c
 
 ![7EVcJlwaAC](https://user-images.githubusercontent.com/49918134/75565172-c908cc00-5a4d-11ea-9a55-80f6757b54ae.png)
 
-> **"[...]a password manager should remind the user that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions."**
 
+
+> *"[...] a password manager should remind the user that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions."**
+
+
+
+That is where Sen's fortress comes in place. As it has already been mentioned: This password manager can run 100% offline without the need of creating any user accounts. All you need to create is a fortress where you will store your passwords and a masterkey to lock it. I do firmly believe that any addition to a software such as a password manager must be very well thought through. Any feature could be a potential loophole. While this does sound very extreme to some - this statement is taken very seriously by those in charge of large security department.
+
+#### Implemented features:
+
+* Opening deposited URL's, copying passwords and username.
+* Choose your own folder structure - no predefined categories.
+![G1aoKmev4L](https://user-images.githubusercontent.com/49918134/75567103-4124c100-5a51-11ea-9375-48c90e86451a.png)
+
+* Password generator & password analysis
+![7pE1dkk7WH](https://user-images.githubusercontent.com/49918134/75567208-6adde800-5a51-11ea-9b66-2eaaecf0b2cf.png)
