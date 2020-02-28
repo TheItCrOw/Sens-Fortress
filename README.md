@@ -61,6 +61,10 @@ so on and so forth. The inner conflict of anyone that tries to develop a passwor
 It is actually so little that password managers today focus more on developing new comfort features than actually trying to increase the level of security. To push this even further, one may throw in the daring statement: **They are ready to sacrifice security for comfort**.
 
 Let's elaborate on this statement.
-There are some that critizise password managers on very deepest level: **Storing passwords on the harddrive in the first place instead of just remebembering or writing them down.** While it is true that a hacker/virus cannot steal something that is not a computer, they can certainly leak databases of big coorporations thousands of miles away from your home PC or your notepad. In this case there is only one thing that decides whether your passwords will be leaked or not: **The password itself.**
-Anyone that has thought "password123" was a good idea will be in for a rude awakening. 
+There are some that critizise password managers on very deepest level: **Storing passwords on the harddrive in the first place instead of just remembering or writing them down.** While it is true that a hacker/virus cannot steal something that is not a computer, they can certainly leak databases of big coorporations thousands of miles away from your home PC or your notepad. In this case there is only one thing that decides whether your passwords will be leaked or not: **The password itself.**
+Spoiler alert: Anyone that has thought "password123" was a good idea will be in for a rude awakening. 
 Others however who may have used a password manager and actually used it properly can calmly relax: Generated strong passwords such as: *Y!Y-iuicn.h;gT/RqUtfY$uI<yFH/D>g* have a 99,99% of not being leaked. They are however pretty difficult to memorize or written down. **And that is why you should use a password manager.** 
+
+In the age of digitalisation where your internet identity is no longer just that one silly ICQ or myspace account but your whole sensible online banking credibility, a password manager should remind everyone that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions. That is the core of any password manager. **Well, it should be.**
+
+
