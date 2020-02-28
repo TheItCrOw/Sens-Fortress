@@ -156,7 +156,7 @@
             </Grid.ColumnDefinitions>
            
             <!--left side Tree View here-->
-            <Expander ExpandDirection="Left" FlowDirection="LeftToRight" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Foreground="Black">
+            <Expander ExpandDirection="Left" IsExpanded="True" FlowDirection="LeftToRight" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Foreground="Black">
                 <Expander.Background>
                     <SolidColorBrush Color="White" Opacity="1"/>
                 </Expander.Background>

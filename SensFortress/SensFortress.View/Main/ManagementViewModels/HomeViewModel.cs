@@ -191,34 +191,31 @@ namespace SensFortress.View.Main.ViewModel
         {
             IsLoading = true;
 
-            Task.Run(() =>
+            if (ChangesTracker > 0)
             {
-                if (ChangesTracker > 0)
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
+                    if (Communication.AskForAnswer("There are currently unsaved changes. Save them first?"))
                     {
-                        if (Communication.AskForAnswer("There are currently unsaved changes. Save them first?"))
-                        {
-                            SaveFortress();
-                            return;
-                        }
-                    });
-                }
+                        SaveFortress();
+                        return;
+                    }
+                });
+            }
 
-                TaskLogger.Instance.Track("Please standby as the fortress is being closed...");
-                _hubView = null;
-                _hubViewModel = null;
+            TaskLogger.Instance.Track("Please standby as the fortress is being closed...");
+            _hubView = null;
+            _hubViewModel = null;
 
-                if (DataAccessService.Instance.DisposeCache())
-                    TaskLogger.Instance.Track("Cache has been disposed.");
+            if (DataAccessService.Instance.DisposeCache())
+                TaskLogger.Instance.Track("Cache has been disposed.");
 
-                if (StopGuardian(true))
-                    TaskLogger.Instance.Track("Guardian has been stopped.");
+            if (StopGuardian(true))
+                TaskLogger.Instance.Track("Guardian has been stopped.");
 
-                TaskLogger.Instance.Track("Leaving fortress...");
+            TaskLogger.Instance.Track("Leaving fortress...");
 
-                Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
-            });
+            Application.Current.Shutdown();
         }
 
         private void LogoutFortress()

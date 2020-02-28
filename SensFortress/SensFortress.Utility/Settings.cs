@@ -186,7 +186,7 @@ namespace SensFortress.Utility
                 switch (config.Gtid.Interval.Trim())
                 {
                     case "Hourly":
-                        while (config.Gtid.ExecutionDate.TimeOfDay < DateTime.Now.TimeOfDay)
+                        while (config.Gtid.ExecutionDate.Date <= DateTime.Now.Date && config.Gtid.ExecutionDate.TimeOfDay < DateTime.Now.TimeOfDay)
                             config.Gtid.ExecutionDate = config.Gtid.ExecutionDate.AddHours(1);
                         break;
                     case "Daily":

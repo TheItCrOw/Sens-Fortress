@@ -19,7 +19,7 @@
         <StackPanel>
             <TextBox Margin="0 0 0 20" x:Name="Masterkey_Textbox" Height="40" materialDesign:HintAssist.Hint="Masterkey" materialDesign:HintAssist.IsFloating="True" FontSize="17"/>
             <Button x:Name="Varify_Button" Click="Varify_Button_Click" Style="{StaticResource MaterialDesignRaisedLightButton}">
-                <TextBlock Text="Varify" Style="{StaticResource SubCategoryTextblockStyle}"/>
+                <TextBlock Text="Verify" Style="{StaticResource SubCategoryTextblockStyle}"/>
             </Button>
         </StackPanel>
     </Grid>
