@@ -46,4 +46,16 @@ Start
 ## About
 ![SensFortress View_AGQcJO348o](https://user-images.githubusercontent.com/49918134/75542539-50d7e180-5a20-11ea-82ad-19363c28d4ef.png)
 
-Sen's fortress currently is completly offline. Against the trend of many other password managers, there are no future plans in implementing a cloud structure - instead a local synchronisation progress with other instances (PC's, Mobile-apps) in a closed network (Home WiFi) will be featured. 
+Sen's fortress is currently completly offline. Against the trend of many other password managers, there are no future plans in implementing a cloud structure - instead a local synchronisation progress with other instances (PC's, Mobile-apps) in a closed network (Home WiFi) will be featured.
+
+### Why no cloud?
+Let's adress the elephant in the room immediately. Anyone that has been interested in Cryptography may have heard about some standard procedures which password managers perform, to obtain maximum security for highly sensitive data such as your passwords.
+
+* AES
+* Hashes
+* SSL/TCP
+* VPN
+* SSH
+
+so on and so forth. The inner conflict of anyone that tries to develop a password manager now lies in the combination of comfort and security. How much comfort is the user ready to sacrifice in order to actually use a password manager, while also being provided the highest level of security.
+
