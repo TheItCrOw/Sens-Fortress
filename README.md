@@ -95,10 +95,7 @@ The cloud of course mirrors each hardrive in a given interval, making sure that 
 
 * Responsibility
 
-The cloud manages your most sensible data for you. It will make sure that: 
+The cloud manages your most sensible data for you. It will make sure that:
+Your data is being backed up. Your data is at a save place. You can access this data from anywhere you'd like.
 
-Your data is being backed up.
-Your data is at a save place.
-You can access this data from anywhere you'd like.
-
-You do not have to
+You do not have to worry about any of these things and if anything happens you can blame a big cooporation for that. This might not be mentioned often but I do believe that this plays a huge role on why the cloud is so widely spread.
