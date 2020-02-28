@@ -139,4 +139,18 @@ That is where Sen's fortress comes in place. As it has already been mentioned: T
 
 ![SensFortress View_YLOQmERvZ8](https://user-images.githubusercontent.com/49918134/75568771-30c21580-5a54-11ea-9288-f494c4d82089.png)
 
+### Guardian
+
+Sen's fortress contains a guardian that is constantly running if not shut down by the user. The guardian can then execute scheduled tasks by the user, e.g.
+
+* Backing up the fortress in a chosen interval to a given path
+* Scanning all fortress files for any malicious changes.
+
+![SensFortress View_fDRnl6MAv2](https://user-images.githubusercontent.com/49918134/75572507-31aa7580-5a5b-11ea-9e96-b5dccf52b853.png)
+
+* The guardian has it's own log which the user can consult in case of exceptions or errors. The log also records when a task or scan has been executed with its result. 
+
+![SensFortress View_ScnH0NO6Qs](https://user-images.githubusercontent.com/49918134/75572679-864df080-5a5b-11ea-81e8-4b8a93f4d91b.png)
+
+
 
