@@ -102,4 +102,5 @@ You do not have to worry about any of these things and if anything happens you c
 
 ### Sen's fortress mission
 
+![EwECkIRoM2](https://user-images.githubusercontent.com/49918134/75565060-92cb4c80-5a4d-11ea-9403-5ab2e98ccb36.png)
 
