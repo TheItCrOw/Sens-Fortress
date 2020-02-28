@@ -49,7 +49,7 @@ Start
 Sen's fortress is currently completly offline. Against the trend of many other password managers, there are no future plans in implementing a cloud structure - instead a local synchronisation progress with other instances (PC's, Mobile-apps) in a closed network (Home WiFi) will be featured.
 
 ### Why no cloud?
-Let's adress the elephant in the room immediately. Anyone that has been interested in Cryptography may have heard about some standard procedures which password managers perform, to obtain maximum security for highly sensitive data such as your passwords.
+Let's adress the elephant in the room immediately. Anyone who has been interested in Cryptography may have heard about some standard procedures which password managers perform, to obtain maximum security for highly sensitive data such as your passwords.
 
 * AES
 * Hashes
@@ -104,5 +104,5 @@ You do not have to worry about any of these things and if anything happens you c
 
 ![7EVcJlwaAC](https://user-images.githubusercontent.com/49918134/75565172-c908cc00-5a4d-11ea-9a55-80f6757b54ae.png)
 
-> *"[...]a password manager should remind the user that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions."*
+> **"[...]a password manager should remind the user that it is crucial to be caucious, preventively and save and in that matter helps achieving these conditions."**
 
