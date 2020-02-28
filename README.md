@@ -43,7 +43,7 @@ Start
 * Git
 * Material Design
 
-## About
+## About / Sen's fortress mission
 ![SensFortress View_AGQcJO348o](https://user-images.githubusercontent.com/49918134/75542539-50d7e180-5a20-11ea-82ad-19363c28d4ef.png)
 
 Sen's fortress is currently completly offline. Against the trend of many other password managers, there are no future plans in implementing a cloud structure - instead a local synchronisation progress with other instances (PC's, Mobile-apps) in a closed network (Home WiFi) will be featured.
@@ -98,4 +98,8 @@ The cloud of course mirrors each hardrive in a given interval, making sure that 
 The cloud manages your most sensible data for you. It will make sure that:
 Your data is being backed up. Your data is at a save place. You can access this data from anywhere you'd like.
 
-You do not have to worry about any of these things and if anything happens you can blame a big cooporation for that. This might not be mentioned often but I do believe that this plays a huge role on why the cloud is so widely spread.
+You do not have to worry about any of these things and if anything happens you can blame a big cooporation for that. This might not be mentioned often but I do believe that this plays a huge role on why the cloud is so widely spread. 
+
+### Sen's fortress mission
+
+
