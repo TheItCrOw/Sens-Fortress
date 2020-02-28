@@ -70,7 +70,9 @@ In the age of digitalisation where your internet identity is no longer just that
 Somewhere along the road of the last years that core principle of any password manager has slowly been forgotten. It is now a race of: Which password manager on the market takes the least clicks to set up and use. Which software provides the least effort for me to have my passwords anywhere at any time on every hardware I have without me even copy and pasting in the passwords on a website. Are the developers or coorporations to blame for that? The answer is pretty obvious. **The market provides what the customer wants.** In a time where people actually order water and food from amazon instead of going to the supermarket down the street, it's pretty much no surprise.   
 
 As a consequence, browser extensions that store and autofill in your password are being developed in **javascript** - a programming language that was initially developed for dynamic webbrowsers - a language so easy to use and modify that it offers any attacker a simple API will be in charge of all your passwords. It's no wonder that countless security holes have been popping up left and right. 
+
 *Using such an extension is like going to the cinema and standing before a cashbox but being to lazy to actually pull out your wallet, so you gave it beforehand to the random person outside the building so he can pay for you while you just walk through.*
+
 Quick tip: Do not use browser extensions that handle sensible data.**
 
 This is of course topped by - and we finally adress the elephant in the room - the concept of the **cloud**.
